@@ -1,0 +1,983 @@
+<!--///////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
+//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
+//                                                                           //
+////////////////////////////////////////////////////////////////////////////-->
+
+<html>
+<head>
+<title>All Mangas Reader Bookmarks</title></head>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/MangaElt.js" type="text/javascript"></script>
+<script src="js/mgEntry.js" type="text/javascript"></script>
+<script src="js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery.simplemodal-1.4.1.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<script src="js/analytics.js" type="text/javascript"></script>
+<script src="js/innermenu.js" type="text/javascript"></script>
+<script src="js/amrcsql.js" type="text/javascript"></script>
+<script src="js/wssql.js" type="text/javascript"></script>
+     
+<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/jquery-ui-1.8.7.custom.css" type="text/css" media="screen" charset="utf-8" />
+
+<style>
+
+#resultschap, #resultschap tr {
+  width:100%;
+  display:block;
+}
+#resultschap tr td {
+  display:block;
+}
+#resultschap tr.chapLine.odd {
+  background-color:#CCCCFF;
+}
+
+#resultschap tr.chapLine.even {
+  background-color:#DDDDFF;
+}
+#resultschap tr.chapLine.lastLine {
+  border-bottom-left-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px; 
+}
+#resultschap tr.chapLine.firstLine {
+  border-top-left-radius: 4px 4px;
+  border-top-right-radius: 4px 4px; 
+}
+#resultschap td.chapName {
+  width:25%;
+}
+#resultschap td.chapName a {
+  text-decoration:none;
+  color:#00A;
+  font-weight:bold;
+  cursor:pointer;
+  font-family:Verdana;
+}
+#resultschap td.chapNote {
+  width:800px;
+  text-align:left;
+}
+
+#results * img {
+  vertical-align: middle;
+  margin-right:5px;
+}
+
+.imgSearch {
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	margin-left:10px;
+	margin-top:8px; 
+	padding-left:20px;
+	background-image: url(img/find.png);
+}
+
+#coverLoadServer {
+	display: none;
+	z-index: 200;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	opacity: 0.5;
+	filter: alpha(opacity = 50);
+	background-image: none;
+	background-color: white;
+	cursor: not-allowed, pointer;
+	padding-top:200px;
+}
+
+#nbRes, #noreschap, #noresscans {
+  font-weight:bold;
+  width:100%;
+  text-align:left;
+}
+#nores {
+  /*width:100%;*/
+  text-align:center;
+  font-weight:bold;
+  font-size:12pt;
+  /*width:802px;*/
+}
+#nores td {
+  text-align:center;
+}
+div.mangaChapsDiv {
+  margin-left:auto;
+  margin-right:auto;
+}
+
+div.mangaScansDiv, #resultsscans {
+  margin-left:auto;
+  margin-right:auto;
+  text-align:left;
+}
+ 
+#searchZone {
+  text-align:center!important;
+}
+
+.scanDiv {
+  max-width:229px;
+  display:inline-block;
+  border-bottom-left-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px; 
+  border-top-left-radius: 6px 6px;
+  border-top-right-radius: 6px 6px; 
+  border: 1px solid #CCC;
+  background-color:white;
+  padding:5px;
+  margin:5px;
+}
+.scanImg {
+  display: table-cell;
+  width:229px;
+  height:229px;
+  text-align:center;
+  vertical-align:middle;
+}
+.scanImg img {
+  max-width:229px;
+  max-height:229px;
+  margin:0!important;
+  padding:0!important;
+}
+.scanChap {
+  text-align:center;
+  font-size:10pt;
+  background-color:#CCD;
+  border-bottom-left-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px; 
+  border-top-left-radius: 6px 6px;
+  border-top-right-radius: 6px 6px;
+  max-width:229px;
+  white-space:normal;
+}
+.scanChap a {
+  text-decoration:none;
+  color:#00A;
+  font-weight:bold;
+  cursor:pointer;
+  font-family:Verdana;
+}
+.scanChap a span {
+  white-space:normal;
+}
+.scanNote {
+  text-align:center;
+}
+.scanNote span {
+  white-space: normal;
+}
+.scanIconsCont {
+  position:relative;
+  display:none;
+}
+.scanIconsContTd {
+  float:right;
+}
+.scanIcons {
+  position:absolute;
+  top:5px;
+  left:5px;
+}
+.scanIconsContTd .scanIcons {
+  position:static;
+  top:5px;
+}
+.scanMirror {
+  margin-right:2px;
+  display:inline-block;
+}
+.scanMirror.horiz {
+  margin-right:0px;
+  margin-bottom:2px;
+  display:block;
+}
+
+a.buttonAMR {
+	font-size:10pt!important;
+	color:#000!important;
+	text-decoration:none!important;
+	display:inline-block;
+	min-width:100px;
+	padding:2px;
+	border:1px solid #DDD;
+	text-align:center;
+  background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
+	-webkit-border-radius:5px;
+	-webkit-transition: all .4s ease-in-out;
+	margin:5px;
+	cursor:pointer;
+}
+
+a.buttonAMR:hover {
+	color:#003C82!important;
+	border-color:#3278BE; 
+	text-decoration:none!important;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#EEE), to(#FFFFFF));
+}
+
+a.buttonAMR:active {
+  background:#4195DD;
+  background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#003C82), to(#4195DD));
+  background:-moz-linear-gradient(0% 90% 90deg, #4195DD, #003C82);
+}
+
+#bookmarkPop {
+  display:none;
+}
+
+#simplemodal-overlay {
+  background-color:#000; 
+  cursor:wait;
+}
+
+#simplemodal-container {
+  color:#bbb!important; 
+  background-color:#333!important; 
+  border:4px solid #444!important;
+  padding:10px!important;
+  height:auto!important;
+  min-height:220px!important;
+  width:474px!important;
+  font-family:Verdana!important;
+  font-size: 13px!important;
+  color: #BBB!important;
+}
+#simplemodal-container a.buttonAMR {
+  padding-bottom:0!important;
+  margin-bottom:5px!important;
+}
+#simplemodal-container .simplemodal-wrap {
+  overflow:hidden!important;
+}
+#simplemodal-container a.modalCloseImg {
+  background-repeat: no-repeat;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAdCAYAAABfeMd1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA8xJREFUeNqclktIVFEYx+fO+GjUGqw0S/IRGtTKENtkqJTkooUwC0EQNNpEEiJYoISbKAhcCYogagvBlbRQW/kAIdAkbRGIi3RiNIfJR+qk4zxO/2/4zu3cOw+tA7+5c8/j+5/vfN8592hCCMspSy4o4acXLIHVU40kkQTkglfgm4hd3KAb3PxfESf4KU5XAuBRPA0tznINgCa1Yn193bK0tBR5ZmVlWUpKSiyFhYXmcfPgiaZpn0/yZEKd4vLysqioqKCZRAEhMTc3Z/bqy0nL9Uzt3dXVJex2e0wBic1mEx0dHcLv96tDX8cTyVN7tbW1JTRupr6+3uzR7Vgib2Tr5ORklJHa2lrDe0FBgVhcXDTUDw8PqyIfY4m4ZGt5ebnB4OrqaqS+srJSj8XOzk6kbnBwUO9XVFQkgsGgKmTTRQ4PD/NlrcvlivKis7Mz0kZiJBRLQDI7O/s3rwOBu7oI1B/KhrGxsaiBtDTSsCyxBIj+/n69D+w+Jg0r/YTD4Wy5fF6vNyoD19bWLENDQ4b3pqammBtPHQ+diF0rNo4GxT3Z4HA4ogbSxmtsbNTf4ZnhXS1Ief1/KBQ6og0f2fXIkuJ4MVGDLBOACtVRW6KYuN3ue7oISIc3btmoDp6enjYYbWlp0Y3Qf1UAx40hu0pLSx0yJPRz1uPxvJONo6OjhswiAZm+BBlX3yU9PT26gM/no/PrHLDpIr29vQ/U7GloaDBk10k7vrq62uDF+Pg4ZYbDIAKuzc/PD8hOdBbRUXGaI6Wmpkbs7+/rAltbW19RX2wWSQd54A6WzaV6REcFjvSYxikGtESqBwcHB7vt7e30bSngyVtl4M+AHHCrubn5+cbGxqb5tFtYWBB9fX2iu7s78pyZmYn6ciF2e62trS9hpwxcAWlqdqWA8+A6uA+ejoyMfBL/UFZWVjbr6ureYmwNuAEugtSIff4y0rpl8CWhFDjBC6fT+R4BdB8dHYXiGZ+amvJgY35A/3ZQB+iIv8pLlaR/frHpad2S2b1McJk75vPzUlVVVV5ZWdmF5ORkGw6+EL6YvyYmJlyIxyba3eA7swG2gQ8E6NSSIhoHKIWTgISyWSyH/2fyJMjrMPgNdvl6REI/gAfsgANwTCcLJYh+kWAhGwulcfplcqwyeWPZuQ8NpnNpn41uM3vsAQkEOQuNtxWTUCp7lcHPNK6zsifH7I2PZ+5j4QBPIhz3SqQsXRLHKZVFU/hd4xkGWcjPT7k8IelBwnsXC0kxK3tn4/9SJKwYDTPCLJDocmcWlPtJUy86isGERv4IMACaz3RmXeGcqwAAAABJRU5ErkJggg==);
+  width:25px; 
+  height:29px; 
+  display:inline; 
+  z-index:3200; 
+  position:absolute; 
+  top:-15px; 
+  right:-16px; 
+  cursor:pointer;
+}
+#simplemodal-container span, #simplemodal-container #descEltAMR, #simplemodal-container td b {
+  color: #BBB!important;
+  font-family:Verdana!important;
+  font-size: 13px!important;
+}
+#simplemodal-container td {
+  padding:2px!important;
+}
+#simplemodal-container textarea {
+  -webkit-appearance: textarea!important;
+  -webkit-border-horizontal-spacing: 2px!important;
+  -webkit-border-vertical-spacing: 2px!important;
+  -webkit-box-orient: vertical!important;
+  -webkit-rtl-ordering: logical!important;
+  -webkit-user-select: text!important;
+  font-family: monospace!important;
+  font-size: 13px!important;
+  font-style: normal!important;
+  font-variant: normal!important;
+  font-weight: normal!important;
+  margin-bottom: 2px!important;
+  margin-left: 2px!important;
+  margin-right: 2px!important;
+  margin-top: 2px!important;
+  padding-bottom: 2px!important;
+  padding-left: 2px!important;
+  padding-right: 2px!important;
+  padding-top: 2px!important;
+  resize: both!important;
+}
+#simplemodal-container h3 {
+  padding:10px!important;
+  padding-left:0px!important;
+  margin:0!important;
+  color:#84b8d9!important;
+  text-align:left!important;
+  font-size:16pt!important;
+  font-family:Verdana!important;
+  font-weight:bold!important;
+}
+
+#saveBtnAMR {
+  float:right!important;
+  padding-right:10px!important;
+}
+
+.bookAMR {
+  cursor: pointer!important;
+  vertical-align: middle!important;
+}
+
+#bookmarkPop #descEltAMR {
+  font-size:10pt!important;
+  margin-bottom:10px!important;
+  text-align:left!important;
+}
+#bookmarkPop #tipBMAMR {
+  font-size:10pt!important;
+  clear:both!important;
+  text-align:center!important;
+}
+#bookmarkPop #tipBMAMR a {
+  color:#84b8d9!important;
+  text-decoration:none!important;
+  font-weight:bold!important;
+  cursor:pointer!important;
+  font-family:Verdana!important;
+  font-size: 13px!important;
+}
+
+.mirrorIcon {
+  display: inline-block;
+  margin:4px;
+  opacity:0.2;
+}
+.mirrorIcon.checked {
+  opacity:1;
+}
+
+.article * {
+  color:black;
+}
+
+.article .article .article.ongletCont {
+  border:1px solid #DDDDFF;
+  margin-top:-5px;
+}
+</style>
+<script type="text/javascript">
+
+  var mirrors;
+  var bmsAll;
+  
+  function getMangaMirror(mirror) {
+    for (var i = 0; i < mirrors.length; i++) {
+      if (mirrors[i].mirrorName == mirror) {
+        return mirrors[i];
+      }
+    }
+    return null;
+  }
+  
+  function switchOnglet(ong, tab) {
+    $(".tab").removeClass("checked");
+    $(ong).addClass("checked");
+    $(".ongletCont").each(function(index) {
+      if ($(this).attr("id") == tab) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+    localStorage["bookmarkTab"] = tab;
+  }
+  function getElementsByClass(searchClass, obj) {
+  	if (!obj) {
+  		obj = document;
+  	}
+  	
+  	var classElements = new Array();
+  	var els = document.getElementsByTagName('*');
+  	var elsLen = els.length
+  	for (i = 0, j = 0; i < elsLen; i++)
+  	{
+  		var classes = els[i].className.split(' ');
+  		for (k = 0; k < classes.length; k++)
+  			if ( classes[k] == searchClass )
+  				classElements[j++] = els[i];
+  	}
+  	return classElements;
+  }
+  
+  function isMirrorEnable(mirrorName) {
+    if (localStorage["bookmarkMirrorsState"] != undefined) {
+      var obj = JSON.parse(localStorage["bookmarkMirrorsState"]);
+      for (var i = 0; i < obj.length; i++) {
+        if (obj[i].mirror == mirrorName) {
+          return obj[i].state;
+        }
+      }
+    }
+    return true;
+  }
+  
+  function setMirrorState(mirrorName, state) {
+    if (localStorage["bookmarkMirrorsState"] != undefined) {
+      var obj = JSON.parse(localStorage["bookmarkMirrorsState"]);
+      var isFound = false;
+      for (var i = 0; i < obj.length; i++) {
+        if (obj[i].mirror == mirrorName) {
+          obj[i] = {'mirror': mirrorName, 'state': state};
+          localStorage["bookmarkMirrorsState"] = JSON.stringify(obj);
+          isFound = true;
+          break;
+        }
+      }
+      if (!isFound) {
+        obj[obj.length] = {'mirror': mirrorName, 'state': state};
+        localStorage["bookmarkMirrorsState"] = JSON.stringify(obj); 
+      }
+    } else {
+      localStorage["bookmarkMirrorsState"] = JSON.stringify([{'mirror': mirrorName, 'state': state}]);
+    }
+  }
+  
+  function load() {
+    loadMenu("bookmarks");
+    $(".showInit").show();
+    if (localStorage["bookmarkTab"] != undefined) {
+      if (localStorage["bookmarkTab"] == "ongC") {
+        switchOnglet($("#chapOng")[0], 'ongC');
+      } else {
+        switchOnglet($("#scanOng")[0], 'ongS');
+      }
+    }
+
+    wssql.init();
+    mirrors = chrome.extension.getBackgroundPage().actMirrors;
+    //mirrors = mirrorsT;
+    for (var i = 0; i < mirrors.length; i++) {
+      var imga = $("<a href='#'><img src='"+ mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "'/></a>");
+      imga.click(function() {
+        $(this).parent().toggleClass("checked");
+        if ($(this).parent().hasClass("checked")) {
+          setMirrorState($("img", $(this)).attr("title"), true);
+        } else {
+          setMirrorState($("img", $(this)).attr("title"), false);
+        }
+        filter();
+        return false;
+      });
+      var div;
+      if (!isMirrorEnable(mirrors[i].mirrorName)) {
+        div = $("<div class='mirrorIcon'></div>");
+      } else {
+        div = $("<div class='mirrorIcon checked'></div>");
+      }
+      imga.appendTo(div);
+      div.appendTo($("#mirrorsCheck"));
+    }
+    
+    var valSlide = localStorage["bookmarkSlideValue"];
+    if (valSlide == undefined) {
+      valSlide = 229;
+    }
+    $("#slider").slider({min: 80, max: 750, value: valSlide, change: function(event, ui) 
+    {
+      slideChange();
+    }});
+    
+    $("#mangas").change(function() {
+      localStorage["bookmarkMangasSelect"] = $("#mangas option:selected").val();
+    });
+    
+    createPopupBM();
+    loadBookmarks();
+  }
+  function slideChange() {
+    $(".scanDiv").css("max-width", $("#slider").slider("option", "value") + "px");
+    $(".scanChap").css("max-width", $("#slider").slider("option", "value") + "px");
+    $(".scanImg").css("width", $("#slider").slider("option", "value") + "px");
+    $(".scanImg").css("height", $("#slider").slider("option", "value") + "px");
+    $(".scanImg img").css("max-width", $("#slider").slider("option", "value") + "px");
+    $(".scanImg img").css("max-height", $("#slider").slider("option", "value") + "px");
+    localStorage["bookmarkSlideValue"] = $("#slider").slider("option", "value");
+  }
+  function filter() {
+    var tmpLst = [];
+    for (var i = 0; i < bmsAll.length; i++) {
+      var isOk = true;
+      if ($("#mangas option:selected").val() != "") {
+        if (!isSame($("#mangas option:selected").val(), bmsAll[i].name)) {
+          isOk = false;
+        }
+      }
+      if ($("#searchBoxInput").val() != "") {
+        var found = false;
+        var valS = $("#searchBoxInput").val().trim();
+        if (bmsAll[i].name.indexOf(valS) != -1) {found = true;}
+        if (bmsAll[i].chapName.indexOf(valS) != -1) {found = true;}
+        if (bmsAll[i].note.indexOf(valS) != -1) {found = true;}
+        if (!found) {
+          isOk = false;
+        }
+      }
+      if (!$("#mirrorsCheck img[title='" + bmsAll[i].mirror + "']").parent().parent().hasClass("checked")) {
+        isOk = false;
+      }
+      if (isOk) {
+        tmpLst[tmpLst.length] = bmsAll[i];
+      }
+    }
+    if (tmpLst.length > 0) {
+      $("#results").css("display", "block");
+      $("#nores").css("display", "none");
+      renderManga(tmpLst);
+      slideChange();
+    } else {
+      $("#results").css("display", "none");
+      $("#nores").css("display", "block");
+    }
+  }
+  
+  function loadBookmarks() {
+    if (localStorage["bookmarkMangasSearch"] != undefined) {
+      $("#searchBoxInput").val(localStorage["bookmarkMangasSearch"]);
+    }
+    var bms = localStorage["bookmarks"];
+    var lstTmp = JSON.parse(bms);//$A(eval('(' + bms + ')'));
+    bmsAll = removeUnknown(lstTmp);
+    
+    if (bmsAll.length > 0) {
+      sortBms(bmsAll);
+      var valMg = null;
+      /*if ($("#mangas option").size() > 0) {
+        valMg = $("#mangas option:selected").val();
+      } else {*/
+        valMg = localStorage["bookmarkMangasSelect"];
+      //}
+      $("#mangas").empty();
+      $("<option value='' " + ((valMg == "") ? "selected='selected'" : "") + ">All mangas</option>").appendTo($("#mangas"));
+      var curMg;
+      for (var i = 0; i < bmsAll.length; i++) {
+        if (curMg != undefined && !isSame(curMg, bmsAll[i].name)) {
+          var opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
+          if (valMg != null && valMg != "" && isSame(valMg, curMg)) {
+            opt.attr("selected", true);
+          }
+          opt.appendTo($("#mangas"));
+        }
+        curMg = bmsAll[i].name;
+      }
+      if (curMg != undefined) {
+        var opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
+        if (valMg != null && valMg != "" && isSame(valMg, curMg)) {
+          opt.attr("selected", true);
+        }
+        opt.appendTo($("#mangas"));
+      }
+      filter();
+    } else {
+      $("#mangas").empty();
+      $("<option value=''>No bookmarks found</option>").appendTo($("#mangas"));
+      $("#mangas").attr("disabled", "true");
+      $("#results").css("display", "none");
+      $("#nores").css("display", "block");
+    }
+  }
+  
+  function removeUnknown(lst) {
+    var lstRes = [];
+    for (var i = 0; i < lst.length; i++) {
+      if (getMangaMirror(lst[i].mirror) != null) {
+        lstRes[lstRes.length] = lst[i];
+      }
+    }
+    return lstRes;
+  }
+
+  function renderManga(lstBms) {
+    var divChaps;
+    var divScans;
+    var parity = 0;
+    for (var i = 0; i < lstBms.length; i++) {
+      if (lstBms[i].type == "chapter") {
+        if (divChaps == undefined) {
+          $("#noreschap").css("display", "none");
+          divChaps = $("<div class='mangaChapsDiv'></div>");
+          $("#resultschap").empty();
+          divChaps.appendTo($("#resultschap"));
+          $("<table></table>").appendTo(divChaps);
+        }
+        var tr = $("<tr class='chapLine'></tr>");
+
+        tr.data("mirror", lstBms[i].mirror);
+        tr.data("url", lstBms[i].url);
+        tr.data("chapUrl", lstBms[i].chapUrl);
+        tr.data("type", lstBms[i].type);
+        tr.data("name", lstBms[i].name);
+        tr.data("chapName", lstBms[i].chapName);
+        tr.data("note", lstBms[i].note);
+        
+        if (parity % 2 == 0) {
+          tr.addClass("even");
+        } else {
+          tr.addClass("odd");
+        }
+        tr.appendTo($("table", divChaps));
+        var tdChap = $("<td class='chapName'><img src='"+ getMangaMirror(lstBms[i].mirror).mirrorIcon + "' title='" + getMangaMirror(lstBms[i].mirror).mirrorName + "'/><a href='#' onclick=\"chrome.extension.sendRequest({action: 'opentab', url: '" + lstBms[i].chapUrl + "'}, function(){});\">" + lstBms[i].chapName + "</a>" + (($("#mangas option:selected").val() == "") ? "&nbsp;(" + lstBms[i].name + ")" : "") + "</td>");
+        tdChap.appendTo(tr);
+        var tdNote = $("<td class='chapNote'>" + lstBms[i].note + "</td>");
+        tdNote.appendTo(tr);
+        
+        var divIconsCont = $("<div class='scanIconsContTd'></div>");
+        var divIcons = $("<div class='scanIcons'></div>");
+        divIcons.appendTo(divIconsCont);
+        divIconsCont.appendTo(tdNote);
+        
+        var imgModify = $("<div class='scanMirror'></div>");
+        var aMod = $("<a href='#'><img src='img/edit.png' title='Modify'/></a>");
+        aMod.click(function() {
+          modifyBM($(this).parent().parent().parent().parent().parent());
+          return false;
+        });
+        aMod.appendTo(imgModify);
+        imgModify.appendTo(divIcons);
+        
+        var imgDelete = $("<div class='scanMirror'></div>");
+        var aDel = $("<a href='#'><img src='img/cancel.png' title='Delete Bookmark'/></a>");
+        aDel.click(function() {
+          deleteBM($(this).parent().parent().parent().parent().parent());
+          return false;
+        });
+        aDel.appendTo(imgDelete);
+        imgDelete.appendTo(divIcons);
+        
+        parity++;
+      } else {
+        if (divScans == undefined) {
+          $("#noresscans").css("display", "none");
+          divScans = $("<div class='mangaScansDiv'></div>");
+          $("#resultsscans").empty();
+          divScans.appendTo($("#resultsscans"));
+        }
+        createScan(lstBms[i], divScans);
+      }
+    }
+    $("#resultschap .mangaChapsDiv .chapLine:first").addClass("firstLine");
+    $("#resultschap .mangaChapsDiv .chapLine:last").addClass("lastLine");
+    
+    if (divChaps == undefined) {
+      $("#resultschap").empty();
+      $("#noreschap").css("display", "block");
+    }
+    if (divScans == undefined) {
+      $("#resultsscans").empty();
+      $("#noresscans").css("display", "block");
+    }
+    $("a[rel^='prettyPhoto']").prettyPhoto({animation_speed: 'fast', theme: 'light_rounded', overlay_gallery: false, keyboard_shortcuts: true});
+  }
+
+  function createScan(obj, where) {
+    var divImg = $("<div class='scanDiv'></div>");
+    divImg.data("mirror", obj.mirror);
+    divImg.data("url", obj.url);
+    divImg.data("chapUrl", obj.chapUrl);
+    divImg.data("type", obj.type);
+    divImg.data("name", obj.name);
+    divImg.data("chapName", obj.chapName);
+    divImg.data("scanUrl", obj.scanUrl);
+    divImg.data("scanName", obj.scanName);
+    divImg.data("note", obj.note);
+    
+    var divIconsCont = $("<div class='scanIconsCont'></div>");
+    var divIcons = $("<div class='scanIcons'></div>");
+    divIcons.appendTo(divIconsCont);
+    divIconsCont.appendTo(divImg);
+    var imgMirror = $("<div class='scanMirror'><img src='"+ getMangaMirror(obj.mirror).mirrorIcon + "' title='" + getMangaMirror(obj.mirror).mirrorName + "'/></div>");
+    imgMirror.appendTo(divIcons);
+    
+    var imgModify = $("<div class='scanMirror'></div>");
+    var aMod = $("<a href='#'><img src='img/edit.png' title='Modify'/></a>");
+    aMod.click(function() {
+      modifyBM($(this).parent().parent().parent().parent());
+      return false;
+    });
+    aMod.appendTo(imgModify);
+    imgModify.appendTo(divIcons);
+    
+    var imgDelete = $("<div class='scanMirror'></div>");
+    var aDel = $("<a href='#'><img src='img/cancel.png' title='Delete Bookmark'/></a>");
+    aDel.click(function() {
+      deleteBM($(this).parent().parent().parent().parent());
+      return false;
+    });
+    aDel.appendTo(imgDelete);
+    imgDelete.appendTo(divIcons);
+    
+    var divImgImg = $("<div class='scanImg'></div>");
+    var img = $("<a href='" + obj.scanUrl + "' rel='prettyPhoto[gal]' title='" + obj.note + "'></a>");
+    var imgimg = $("<img src='" + obj.scanUrl + "' alt='" + obj.chapName + "' />");
+    imgimg.appendTo(img);
+    imgimg.load(function() {
+      if (this.width < this.height) {
+        $(".scanMirror", $(this).parent().parent().parent()).addClass("horiz");
+      }
+    });
+    img.appendTo(divImgImg);
+    divImgImg.appendTo(divImg);
+    var chap = $("<div class='scanChap'><a href='#' onclick=\"chrome.extension.sendRequest({action: 'opentab', url: '" + obj.chapUrl + "'}, function(){});\"><span>" + obj.chapName + "</span></a>" + (($("#mangas option:selected").val() == "") ? "&nbsp;(" + obj.name + ")" : "") + "</div>");
+    chap.appendTo(divImg);
+    var note = $("<div class='scanNote'><span>" + obj.note + "</span></div>");
+    note.appendTo(divImg);
+    divImg.appendTo(where);
+    divImg.hover(function(){
+      $(".scanIconsCont", $(this)).fadeIn(200);
+    }, function(){
+      $(".scanIconsCont", $(this)).fadeOut(200);
+    });
+  }
+  
+  function createPopupBM() {
+    var divData = $("<div id='bookmarkData' style='display:none'></div>");
+    $("<span>This div is used to store data for AMR</span>").appendTo(divData);
+    divData.appendTo($(document.body));
+    
+    var div = $("<div id='bookmarkPop' style='display:none'></div>");
+    $("<h3>Bookmark</h3>").appendTo(div);
+    $("<div id='descEltAMR'></div>").appendTo(div);
+    $("<table><tr><td style='vertical-align:top'><b>Note:</b></td><td><textarea id='noteAMR' cols='50' rows='5' /></td></tr></table>").appendTo(div);
+    var btn = $("<a id='saveBtnAMR' class='buttonAMR'>Save</a>")
+    btn.click(function() {
+      var obj = {
+        action: "addUpdateBookmark",
+        mirror: $("#bookmarkData").data("mirror"), 
+        url: $("#bookmarkData").data("url"), 
+        chapUrl: $("#bookmarkData").data("chapUrl"), 
+        type: $("#bookmarkData").data("type"), 
+        name: $("#bookmarkData").data("name"), 
+        chapName: $("#bookmarkData").data("chapName") 
+      };
+      if ($("#bookmarkData").data("type") != "chapter") {
+        obj.scanUrl = $("#bookmarkData").data("scanUrl");
+        obj.scanName = $("#bookmarkData").data("scanName");
+      }
+      obj.note = $("#noteAMR").val();
+  
+      chrome.extension.sendRequest(obj, function(resp) {
+        loadBookmarks();
+      });
+      $.modal.close();
+      return false;
+    });
+    btn.appendTo(div);
+    div.appendTo($(document.body));
+  }
+
+
+  function modifyBM(dataElt) {
+    $("#bookmarkData").data("mirror", dataElt.data("mirror"));
+    $("#bookmarkData").data("url", dataElt.data("url"));
+    $("#bookmarkData").data("chapUrl", dataElt.data("chapUrl"));
+    $("#bookmarkData").data("type", dataElt.data("type"));
+    $("#bookmarkData").data("name", dataElt.data("name"));
+    $("#bookmarkData").data("chapName", dataElt.data("chapName"));
+    $("#bookmarkData").data("scanUrl", dataElt.data("scanUrl"));
+    $("#bookmarkData").data("scanName", dataElt.data("scanName"));
+    $("#bookmarkData").data("note", dataElt.data("note"));
+    $("#noteAMR").val($("#bookmarkData").data("note"));
+    
+    var textDesc;
+    if ($("#bookmarkData").data("type") == "chapter") {
+      textDesc = "Bookmark chapter '" + $("#bookmarkData").data("chapName") + "' of '" + $("#bookmarkData").data("name") + "' on '" + $("#bookmarkData").data("mirror");
+      textDesc += "'. You can add notes below which will be associated with this bookmark.";
+    } else {
+      textDesc = "Bookmark scan '" + $("#bookmarkData").data("scanName") + "' of chapter '" + $("#bookmarkData").data("chapName") + "' of '" + $("#bookmarkData").data("name") + "' on '" + $("#bookmarkData").data("mirror");
+      textDesc += "'. You can add notes below which will be associated with this bookmark.";
+    }
+    $("#bookmarkPop #descEltAMR").text(textDesc);
+    
+    $("#bookmarkPop").modal({focus:false});
+  }
+  
+  function deleteBM(dataElt) {
+    var textDesc;
+    if (dataElt.data("type") == "chapter") {
+      textDesc = "Are you sure to delete the bookmarked chapter '" + $("#bookmarkData").data("chapName") + "' of '" + $("#bookmarkData").data("name") + "' on '" + $("#bookmarkData").data("mirror");
+      textDesc += "' ?";
+    } else {
+      textDesc = "Are you sure to delete the bookmarked scan '" + $("#bookmarkData").data("scanName") + "' of chapter '" + $("#bookmarkData").data("chapName") + "' of '" + $("#bookmarkData").data("name") + "' on '" + $("#bookmarkData").data("mirror");
+      textDesc += "' ?";
+    }
+    var res = confirm(textDesc);
+    
+    if (res) {
+      var obj = {
+        action: "deleteBookmark",
+        mirror: dataElt.data("mirror"), 
+        url: dataElt.data("url"), 
+        chapUrl: dataElt.data("chapUrl"), 
+        type: dataElt.data("type"), 
+      };
+      if (dataElt.data("type") != "chapter") {
+        obj.scanUrl = dataElt.data("scanUrl");
+        obj.scanName = dataElt.data("scanName");
+      }
+      chrome.extension.sendRequest(obj, function(resp) {
+        loadBookmarks();
+      });
+    }
+  }
+  
+  function sortBms(bms) {
+    bms.sort(function(a, b) {
+      if (isSame(a.name, b.name)) {
+        if (a.chapterUrl == b.chapterUrl) {
+          if (a.type == b.type) {
+            if (a.type == "chapter") {
+              return 0;
+            } else {
+              return compareTo(a.scanName, b.scanName);
+            }
+          } else {
+            if (a.type == "chapter") {
+              return -1;
+            } else {
+              return 1;
+            }
+          }
+        } else {
+          return compareTo(a.chapterUrl, b.chapterUrl);
+        }
+      } else {
+        return compareTo(a.name, b.name);
+      }
+    });
+  }
+  
+  function compareTo(a, b) {
+    if (a < b) {
+      return -1;
+    } else if (a == b) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+  
+  function isSame(a, b) {
+    var at = a.trim().replace(/^\s*|\s*$/g,'').toUpperCase();
+    var bt = b.trim().replace(/^\s*|\s*$/g,'').toUpperCase();
+    return (at == bt);
+  }
+</script>
+
+
+<body onload="load();">
+  <div id="coverLoadServer" style="display:none"><img src="img/lab_load.gif"/></div>
+  <div id="header">
+    <div id="subheader">
+      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <h1>All Mangas Reader Bookmarks</h1>
+    </div>
+  </div>
+  <div id="menunav">
+    <div id="menuitems">
+      <ul>
+        <li>&nbsp;</li>
+      </ul>
+    </div>
+  </div>
+  <div id="corpseone">
+    <div id="subcorpseone">
+      <div class="article parent showInit">
+      <div class="article showInit">
+        <h2>
+            Bookmarks
+        </h2>
+        <div class="article falseOngletCont showInit" id="optionsBM">
+          <h3>
+            Filters
+          </h3>
+          <table style="width:100%;">
+            <tr id="searchBox">
+              <td style="width:50%;">
+                <span>Mangas : </span>
+                <select id="mangas" onchange="filter();"></select>
+              </td>
+              <td colspan="2">
+                <span>Search text : 
+                  <input id="searchBoxInput" type="text" />
+                  <script>
+                  document.getElementById("searchBoxInput").onkeypress = function(e) {
+                    var key=e.keyCode || e.which;
+                    if (key==13){
+                      localStorage["bookmarkMangasSearch"] = $("#searchBoxInput").val();
+                      filter();
+                    }
+                  };
+                  </script>
+                  <a id="butFind" href="#" class="imgSearch"></a>
+                 <script>
+                  document.getElementById("butFind").onclick = function(e) {
+                    localStorage["bookmarkMangasSearch"] = $("#searchBoxInput").val();
+                    filter();
+                  };
+                  </script>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td id='mirrorsCheck' style="width:50%;">
+                <span>Sites : </span>
+              </td>
+              <td width="90px">
+                <span>Scans size : </span>
+              </td>
+              <td>
+                <div id="slider"></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="article showInit" id="resTr">
+          <div id="results">
+          <ul class="tabs">
+            <li id="chapOng" class="tab checked" onclick="switchOnglet(this, 'ongC');">Bookmarked Chapters</li>
+            <li id="scanOng" class="tab" onclick="switchOnglet(this, 'ongS');">Bookmarked Scans</li>
+          </ul>
+          <div class="article parent ongletCont showInit" id="ongC" style="width:100%;">
+          <div class="article main showInit">
+            <div id="resultschap">
+              
+            </div>
+            <div id="noreschap" style="display:none">
+              <p>No bookmarks chapters found ! </p>
+              <p>To bookmark a chapter, just click on the <img src="img/bookmark.png"/> in a manga web page.</p>
+            </div>
+          </div>
+          </div>
+          <div class="article parent ongletCont" id="ongS" style="width:100%;display:none">
+          <div class="article main showInit">
+            <div id="resultsscans">
+              
+            </div>
+            <div id="noresscans" style="display:none">
+              <p>No bookmarks scans found ! </p>
+              <p>To bookmark a scan, right click on the scan and choose 'Bookmark in AMR'</p>
+            </div>
+          </div>
+          </div>
+          </div>
+          <div id="nores" class="article main" style="display:none">
+            No bookmarks found ! Check the filters ! 
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+    All Mangas Reader 2012.
+  </div>
+</body>
+</html>

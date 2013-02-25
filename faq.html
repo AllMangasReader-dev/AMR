@@ -1,0 +1,962 @@
+<!--///////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
+//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
+//                                                                           //
+////////////////////////////////////////////////////////////////////////////-->
+
+<html>
+<head>
+<title>All Mangas Reader Help & FAQ</title>
+<link href="css/jquery.treeview.css" rel="stylesheet" type="text/css" />
+<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/jquery.treeview.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<script src="js/analytics.js" type="text/javascript"></script>
+<script src="js/innermenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$(function() {
+  loadMenu("faq");
+  $("#nav").treeview({
+				collapsed: false,
+				animated: "fast"
+			});
+  
+  $(".menu").click(function() {
+    //$(".article").toggle("blind", {}, 250);
+    var pathstr = $(this).attr("rel")
+    viewArticle(pathstr);
+  });
+  
+  viewArticle("overview");
+  //createTree();
+});
+
+function viewArticle(pathstr) {
+  var elt = $(".menu[rel='" + pathstr + "']");
+  $(".menu").removeClass("selected");
+  $(elt).addClass("selected");
+  $(".menu:first", $(elt).parents("li")).addClass("selected");
+  
+  $(".article").each(function(index) {
+    var pathtmp = $(this).attr("id");
+    $(this).parents(".article").each(function (index) {
+      pathtmp = $(this).attr("id") + " " + pathtmp;
+    });
+    //console.log(pathstr + " --> " + pathtmp);
+    if (pathstr.indexOf(pathtmp) == -1) {
+      $(this).hide();
+      //console.log("hidden");
+    }
+  });
+  
+  var path = pathstr.split(" ");
+  for (var i = 0; i < path.length; i++) {
+    if (!$("#" + path[i]).is(":visible")) {
+      $("#" + path[i]).toggle("blind", {}, 250);
+    }
+    if (i == path.length -1) {
+      if (!$(".article", $("#" + path[i])).is(":visible")) {
+        $(".article", $("#" + path[i])).toggle("blind", {}, 250);
+      }
+    }
+  }
+}
+
+function createTree() {
+  var main = $("<div id=\"maincorpse\"></div>");
+  main.css("display", "none");
+  $("#nav a.menu").each(function(index) {
+    var pathstr = $(this).attr("rel");
+    var path = pathstr.split(" ");
+    if (path.length == 1) {
+      $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
+      //TODO add content
+    } else {
+      var curdiv = $("#" + path[path.length - 2], main);
+      $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
+      //TODO add content
+    }
+  });
+  main.appendTo($(document.body));
+  
+  //console.log(main);
+  show(main[0]);
+}
+function nodeToXML(node, indentation, out) {
+  if (node.nodeName.toLowerCase() == "#text") {
+    out += node.nodeValue;
+  } else {
+   out += indentation+"<"+node.nodeName.toLowerCase();
+   
+   if (node.attributes!=null) {
+      for (var i=0; i<node.attributes.length; i++) {
+         var item = node.attributes.item(i);
+         var value = item.nodeValue;
+         if (value==null) value = "";
+         out += " "+item.nodeName+"=\""+value+"\"";
+      }
+   }
+   if (node.nodeName.toLowerCase() == "div") {
+      out += ">\n";
+   } else {
+      out += ">";
+   }
+   for (var i=0; i<node.childNodes.length; i++) {
+      var item = node.childNodes.item(i);
+      out = nodeToXML(item, indentation+"   ", out);
+   }
+   if (node.nodeValue!=null) 
+      out += indentation+"   "+node.nodeValue+"\n";
+      if (node.nodeName.toLowerCase() == "div") {
+        out += indentation+"</"+node.nodeName.toLowerCase()+">\n";
+      } else {
+        out += "</"+node.nodeName.toLowerCase()+">\n";
+      }
+  }
+  return out;
+}
+function show(doc) {
+   var w = window.open('', 'Popup', '');
+   w.document.write('<html><head><title>Document Dump</title>');
+   w.document.write('</head><body><pre>');
+
+   var s = nodeToXML(doc, '', '');
+   s = s.replace(new RegExp('&','g'),'&amp;');
+   s = s.replace(new RegExp('<','g'),'&lt;');
+   s = s.replace(new RegExp('>','g'),'&gt;');
+   w.document.write(s);
+   w.document.write('</pre></body></html>');
+   w.document.close();
+}
+</script>
+
+</head>
+
+<body>
+
+  <div id="header">
+    <div id="subheader">
+      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <h1>All Mangas Reader Help & FAQ</h1>
+    </div>
+  </div>
+  <div id="menunav">
+    <div id="menuitems">
+      <ul>
+        <li class="selected">Help</li>
+        <li><a href="release.html">Release note</a></li>
+        <li class="last"><a href="dev.html">Development</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="corpse">
+    <div id="navigation">
+      <ul id="nav">
+        <li><a class="menu main" rel="overview">Overview</a>
+          <ul>
+            <li><a class="menu" rel="overview purpose">For what purpose ?</a></li>
+            <li><a class="menu" rel="overview mainelements">What are AMR's main elements ?</a>
+              <ul>
+                <li><a class="menu" rel="overview mainelements popup">AMR's popup</a></li>
+                <li><a class="menu" rel="overview mainelements bar">AMR's manga bar</a></li>
+                <li><a class="menu" rel="overview mainelements option">AMR's option page</a></li>
+                <li><a class="menu" rel="overview mainelements search">AMR's search tool</a></li>
+                <li><a class="menu" rel="overview mainelements bookmark">AMR's bookmarks</a></li>
+                <li><a class="menu" rel="overview mainelements impexp">AMR's import / export tool</a></li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="overview websites">What manga web sites are currently supported ?</a></li>
+            <li><a class="menu" rel="overview install">What must I do after installing ?</a></li>
+          </ul>
+        </li>
+        <li><a class="menu main" rel="read">Reading mangas</a>
+          <ul>
+            <li><a class="menu" rel="read addmanga">How to add a manga in AMR ?</a></li>
+            <li><a class="menu" rel="read readchap">How to notify AMR that I have read a chapter ?</a></li>
+            <li><a class="menu" rel="read newchap">How can I know that new chapters are avalaible ?</a></li>
+            <li><a class="menu" rel="read specificchap">How can I go to a specific chapter of a manga ?</a></li>
+            <li><a class="menu" rel="read updatetime">When does AMR updates manga list ?</a></li>
+            <li><a class="menu" rel="read fullchap">How to display full chapter scans ?</a></li>
+            <li><a class="menu" rel="read resize">How to prevent scans from being resized ?</a></li>
+            <li><a class="menu" rel="read missscan">Some scans are missing in my chapter and have been replaced by a red cross, what happened ?</a></li>
+            <li><a class="menu" rel="read loadtime">Chapters take a long time to load, how can I know when loading is finished ?</a></li>
+            <li><a class="menu" rel="read display">Can I change the display mode of a specific manga ?</a></li>
+            <li><a class="menu" rel="read latestread">Can I change the latest chapter read manually ?</a></li>
+          </ul>
+        </li>
+        <li><a class="menu main" rel="manage">Managing mangas</a>
+          <ul>
+            <li><a class="menu" rel="manage readmg">I start reading a new manga and I don't need update notification, what can I do ?</a></li>
+            <li><a class="menu" rel="manage reset">I want to read back a manga, do I need to delete it ?</a></li>
+            <li><a class="menu" rel="manage listbig">My list of manga is too big, what can I do ?</a></li>
+            <li><a class="menu" rel="manage group">How can I follow the same manga on multiple web sites ?</a></li>
+            <li><a class="menu" rel="manage category">How can I organise my mangas ?</a>
+              <ul>
+                <li><a class="menu" rel="manage category native">What are native categories ?</a></li>
+                <li><a class="menu" rel="manage category newcat">How can I create a new category ?</a></li>
+                <li><a class="menu" rel="manage category addcat">How can I add mangas in a category ?</a></li>
+                <li><a class="menu" rel="manage category updcat">How can I modify a category's name ?</a></li>
+                <li><a class="menu" rel="manage category delcat">How can I delete a category ?</a></li>
+                <li><a class="menu" rel="manage category viewcat">How can I see mangas from a specific category ?</a></li>
+                <li><a class="menu" rel="manage category managecat">How to use categories ?</a></li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="manage progress">How can I know my reading progression of a manga ?</a></li>
+            <li><a class="menu" rel="manage bookmg">How can I bookmark my mangas ?</a>
+              <ul>
+                <li><a class="menu" rel="manage bookmg bmchap">How can I bookmark a chapter ?</a></li>
+                <li><a class="menu" rel="manage bookmg bmscan">How can I bookmark a scan ?</a></li>
+                <li><a class="menu" rel="manage bookmg bmview">Where can I see my bookmarks ?</a></li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="manage delmul">How can I delete multiple mangas ?</a></li>
+            <li><a class="menu" rel="manage sync">Can I have my manga list synchronized over my computers ?</a></li>
+            <li><a class="menu" rel="manage share">Can I export my manga list to share it with a friend ?</a></li>
+          </ul>
+        </li>
+        <li><a class="menu main" rel="tips">Tips</a>
+          <ul>
+            <li><a class="menu" rel="tips autoadd">How can I prevent AMR from adding manga I read automatically ?</a></li>
+            <li><a class="menu" rel="tips similar">How can I search mangas similar to one in my list ?</a></li>
+            <li><a class="menu" rel="tips desactiv">How can I desactivate a web site ?</a></li>
+            <li><a class="menu" rel="tips whenupd">How can I know when AMR has updated chapters ?</a></li>
+            <li><a class="menu" rel="tips updfreq">How can I change the update frequency ?</a></li>
+            <li><a class="menu" rel="tips oldbar">How can view AMR's bar in the old way ?</a></li>
+            <li><a class="menu" rel="tips keyb">I want to navigate through chapters with my keyboard, is it possible ?</a></li>
+          </ul>
+        </li>
+        <li><a class="menu main" rel="evo">Evolution</a>
+          <ul>
+            <li><a class="menu" rel="evo addsite">My favorite web site is not supported by AMR, what can I do ?</a></li>
+            <li><a class="menu" rel="evo bugreport">How can I report a bug ?</a></li>
+            <li><a class="menu" rel="evo helpme">How can I help the author ?</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div id="subcorpse">
+      <div id="maincorpse">
+         <div id="overview" class="article">
+            <h2>Overview</h2>
+            <div id="purpose" class="article">
+              <h3>For what purpose ?</h3>
+              <p>If you are a manga reader, this extension is made for you, it helps you reading mangas on your favorite web site by 
+              displaying full chapter scans instead of single pages and warns you when a new chapter of your favorite manga has been published.</p>
+              <p>If you are not a manga reader, i hope this extension will help you to become one !</p>
+              <p>All Manga Reader is a Google Chrome extension. You need to have Google Chrome to enjoy its functionnalities</p>
+            </div>
+            <div id="mainelements" class="article">
+               <h3>What are AMR's main elements ?</h3>
+               <p>AMR contains a lot of features. As a google chrome extension, the first thing to notice is the <img src="img/icon-32.png" width="24"/> in you google chrome extension bar.
+               When you click this icon, AMR's popup appears and let you access all functionalities.
+               </p>
+               <div id="popup" class="article">
+                  <h3>AMR's popup</h3>
+                  <center><img src="img/help/AMRListMode.PNG" /></center>
+                  <p>The popup contains your manga list and allows you to access all AMR's functionnalities.</p>
+                  <ul>
+                    <li>Main buttons
+                      <ul>
+                        <li>Manga List : displays your manga reading list</li>
+                        <li>Search Manga : displays the manga search tool</li>
+                      </ul>
+                    </li>
+                    <li>Access buttons
+                      <ul class="icons">
+                        <li><img src="img/dev.png" />Developpers lab : this icon is displayed if you have checked the option "I am a developper"</li>
+                        <li><img src="img/find.png" />Search all manga web sites : opens the search tool in a new tab</li>
+                        <li><img src="img/bookmark.png" />Search, view and manage bookmarks : opens the bookmarks page in a new tab</li>
+                        <li><img src="img/infos.png" />Information and help : view the help page</li>
+                        <li><img src="img/home.png" />All Mangas Reader web site : go to <a href="http://www.allmangasreader.com/">allmangasreader.com</a></li>
+                        <li><img src="img/options.png" />All Mangas Reader Options : view option page</li>
+                        <li><img src="img/release.png" />This icon appears when AMR has been updated. Click here to see the release note.</li>
+                      </ul>
+                    </li>
+                    <li>Reading list : the reading list contains two elements : 
+                      <ul>
+                        <li>Categories : The categories allows you to organize your mangas and to quickly view only mangas you need. View <a href="#" onclick="viewArticle('manage category');">category help page</a> for more information.
+                        <li>List of mangas : The list contains information about each manga and access button to view and manage mangas
+                          <ul>
+                            <li>Colors :
+                              <ul>
+                                <li>Blue : The manga has no new chapter, you have already read the whole manga</li>
+                                <li>Red : A new chapter has been published !</li>
+                                <li>Grey : You don't want to follow update for this manga, you are actually reading it. View <a href="#" onclick="viewArticle('manage readmg');">read help page</a> to put manga in this state</li>
+                              </ul>
+                            </li>
+                            <li>Informations :
+                              <ul>
+                                <li>The icon of the mirror where the manga is read : you can view the name of the mirror when your mouse cursor is over this icon</li>
+                                <li>The name of the manga : click to acces the chapters list page of this manga on the concerned web site</li>
+                                <li>The latest chapter you have read</li>
+                                <li><img src="img/plus.png"/><img src="img/minus.png"/> icons if the manga is grouped : display all occurrences of the manga or just one. It happens when you have checked the option "Group mangas" and you read a same manga on differnet web sites</li>
+                              </ul>
+                            </li>
+                            <li>Actions on each manga :
+                              <ul class="icons">
+                                <li><img src="img/backward.png"/>Go to previous chapter</li>
+                                <li><img src="img/play.png"/>View latest chapter read</li>
+                                <li><img src="img/foward.png"/>Go to next chapter</li>
+                                <li><img src="img/toend.png"/>Go to latest published chapter</li>
+                                <li><img src="img/eye.png"/>Mark the latest chapter of this manga has read</li>
+                                <li><img src="img/cancel.png"/>Delete this manga</li>
+                                <li><img src="img/down_der.png"/>View more actions for this manga :
+                                  <ul>
+                                    <li>Progression : this indicates your reading progression for the concerned manga</li>
+                                    <li>Categories : indicates in which categories this manga appears. View <a href="#" onclick="viewArticle('manage category');">category help page</a> for more information.</li>
+                                    <li>Bookmarks : display the list of bookmarked chapters and scans for this manga. The list is a direct access to the bookmarked item. View <a href="#" onclick="viewArticle('manage bookmg');">bookmarks help page</a> for more information.</li>
+                                    <li>Search this manga elsewhere : open the Search Tool in the popup with the search field filled with the manga name.</li>
+                                    <li>Reset manga reading : Mark the first chapter of this manga as the latest chapter read. You can then read it from start</li>
+                                    <li>Stop following update / Follow updates : Mark a manga as "currently reading". The updates of this manga won't be notified. View <a href="#" onclick="viewArticle('manage readmg');">read help page</a> for more information.</li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </li>
+                            <li>Actions on grouped manga (when the option "Group manga" is checked, manga with the same name (but on different web sites) will be grouped in the list. The following actions are applied to all mangas in the group :
+                              <ul class="icons">
+                                <li><img src="img/eyes.png"/>(near the manga name) : Mark the latest chapter of these mangas has read</li>
+                                <li><img src="img/cancel.png"/>(near the manga name) : Delete these mangas</li>
+                              </ul>
+                            </li>                     
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>Management buttons
+                      <ul class="icons">
+                        <li><img src="img/history.png" />View timers (when AMR is updated) : display last time that AMR has updated chapters lists and mangas lists. Click on the "Update now" button to update mangas chapters lists. You must refresh the popup manually after this action.</li>
+                        <li><img src="img/importexport.png" />Import / Export AMR manga list and preferences : opens the import export tool</li>
+                        <li><img src="img/eyeblue.png" />Mark all currently viewable mangas as read : Click here when you have read all currently displayed mangas. When mangas are organized into categories, you can display only a part of your list and mark all of them as read in one click.</li>
+                        <li><img src="img/cancel.png" />Delete all currently viewable mangas from list : Click here to delete all currently displayed mangas. When mangas are organized into categories, you can display only a part of your list and delete all of them in one click.</li>
+                        <li><img src="img/forum.png" />All Mangas Reader's forum : discuss the extension, report bugs and request new features.</li>
+                        <li><img src="img/external.png" />Open All Mangas Reader's popup in a new tab</li>
+                        <li><img src="img/facebook.png" />All Mangas Reader on Facebook : go to AMR's Facebook page</li>
+                      </ul>
+                    </li>
+                  </ul>
+               </div>
+               <div id="bar" class="article">
+                  <h3>AMR's manga bar</h3>
+                  <center><img src="img/help/amrbar.PNG" /></center>
+                  <p>This bar is displayed on each web site supported in AMR when you read a chapter.</p>
+                  <p>This bar can be always visible on top of the page or there can be two bars inside the page, one on the top of the chapter's scans and one below. You can choose this in the option page, "Display navigation features in one always visible bar."</p>
+                  <ul>
+                    <li>Access
+                      <ul>
+                        <li>Previous : go to previous chapter</li>
+                        <li>List of chapter : click on a chapter to go to this chapter</li>
+                        <li>Next : go to next chapter</li>
+                      </ul>
+                    </li>
+                    <li>Actions
+                      <ul class="icons">
+                        <li><img src="img/bookmark.png"/>Click on this button to bookmark the current chapter. If the chapter is already bookmarked, the icon is <img src="img/bookmarkred.png"/>. Click on it to change the associated note. View <a href="#" onclick="viewArticle('manage bookmg');">bookmarks help page</a> for more information.</li>
+                        <li><img src="img/read_play.png"/> or <img src="img/read_stop.png"/>This action allows you to stop following updates for this manga or to restart following updates.</li>
+                        <li><img src="img/lefttoright.png"/><img src="img/righttoleft.png"/><img src="img/ontop.png"/>Click to switch the manga display mode (book from left to right, book from right to left, scans on top of each other) for this particular manga. Clicking here overrides your display mode preference (from the option page) for this manga only.</li>
+                        <li><img src="img/stop.gif"/>This action marks the current chapter as the latest chapter read.</li>
+                        <li><img src="img/add.png"/>This button is displayed if the option "Automatically add manga in my reading list when I read it." is unchecked and the current manga is not in your list. Click on the button to add the manga in the list.</li>
+                        <li><img src="img/down.png"/>Hides AMR's toolbar. This button is displayed only with the option "Display navigation features in one always visible bar." and hides the bar, the AMR logo appears in the top left hand corner, clicking on it shows the bar.</li>
+                      </ul>
+                    </li>            
+                  </ul>   
+                  <p>Example of AMR's bar for a manga which is not in the list with the automatic option disabled :
+                  <center><img src="img/help/amrbaradd.PNG" /></center>
+                  </p>
+               </div>
+               <div id="option" class="article">
+                  <h3>AMR's option page</h3>
+                  <p>The option page allows you to choose which behaviour you need for AMR. You can access this page by clicking <img src="img/options.png"/> in AMR's popup.</p>
+                  <p>The options are organized in four categories : 
+                    <ul>
+                      <li>Mangas Web Sites : options which be applied when you read a manga :
+                        <ul>
+                          <li>Remove ads in mangas web sites : no more ads when you read a manga !</li>
+                          <li>While reading a manga, display the whole chapter instead of the current page : no more click click click on the next page (you can change this option for a specific manga throw <a href="#" onclick="viewArticle('overview bar');">AMR's bar</a>) :
+                            <ul>
+                              <li>Display chapters in normal mode (pages of the chapter will be displayed on top of one another)</li>
+                              <li>I have a wide screen !! I can display two pages in width so i want my chapter be displayed as a book !
+                                <ul>
+                                  <li>Display the book in Occidental mode (reading left to right)</li>
+                                  <li>Display the book in Japanese mode (reading right to left)</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>See loading progression in the title bar : the title bar will be "34% - One Piece...."</li>
+                          <li>Display a link to AMR main page in manga web sites in order for you to give me feedback (I need your opinion to improve AMR, thanks !).</li>
+                          <li>Resize scans images to fit screen if they are to wide : scans won't be larger as the page so you can read it without horizontal scrolling.</li>
+                          <li>Load scans in the order of the chapter (This option involve that the chapter's loading will be slower but guarantees that the first scan which will be loaded is the first of the chapter and so on...)</li>
+                          <li>Display navigation features in one always visible bar. (If you uncheck it, two navigation panels are included in each page, one on top of the scans and one at the bottom)</li>
+                          <li>Automatically add manga in my reading list when I read it. If you uncheck this option, you will have a button in the navigation bar <img src="img/add.png"/> to add the current manga in the list.</li>
+                        </ul>
+                      </li>
+                      <li>All Mangas Reader : options for AMR's popup :
+                        <ul>
+                          <li>Open my manga reading list in a new tab when i click on the All Mangas Reader's icon</li>
+                          <li>All Mangas Reader Display Mode :
+                            <ul>
+                              <li>Display blocks for each manga with detailed information</li>
+                              <li>Display mangas in a list so i can see many of them</li>
+                            </ul>
+                          </li>
+                          <li>Group mangas which have the same name on one line. When mangas are grouped, you can see all occurrences of the manga by clicking on the + icon next to the manga's name.</li>
+                          <li>Update chapters list frequency : if you don't need to know that a new chapter has been published five minutes after it's publication, increase this frequency. Click on "Refresh chapters lists now" to process updates manually.</li>
+                          <li>Update list of manga for each web site frequency. Click on "Refresh manga lists now" to process manga lists updates manually.</li>
+                          <li>Display a grey "0" on AMR's icon when there is no new manga.</li>
+                          <li>I am a developper (displays a direct link to the lab in the popup). : Displays the <img src="img/dev.png"/> in the popup to access the lab directly.</li>
+                          <li>When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)</li>
+                          <li>All Mangas Reader Popup Color</li>
+                        </ul>                  
+                      </li>
+                      <li>Synchronization : You can choose to synchronize your reading list over your computers. See <a href="#" onclick="viewArticle('manage sync');">synchronization help page</a> for more information</li>
+                      <li>Supported Web Sites : This tab contains the list of all web sites supported in AMR. You can desactivate some of these web sites to free some RAM</li>
+                    </ul>
+                  </p>
+               </div>
+               <div id="search" class="article">
+                  <h3>AMR's search tool</h3>
+                  <center><img src="img/help/AMRPopupSearch.PNG" /></center>
+                  <p>The search tool allows you to find a manga by searching it on all web sites supported in AMR.</p>
+                  <p>This tool can be accessed in the popup by clicking on the "Search Manga" button or in a new tab by clicking on the <img src="img/find.png"/> button.
+                  <p>Filters : </p>
+                  <ul>
+                    <li>Text to search : the part of the manga's name to search</li>
+                    <li>Web sites : list of supported web sites (click on an icon to include / exclude the web site from the search)</li>
+                    <li>Web sites tool box
+                      <ul class="icons">
+                        <li><img src="img/select_all.png"/>Include all web sites in the search</li>
+                        <li><img src="img/select_none.png"/>Exclude all web sites in the search</li>
+                        <li><img src="img/bookmark.png"/>Include all web sites for which I have at least a manga in my list in the search</li>
+                        <li>Language filter : select only web sites on which scans are translated in this language</li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <p>Results : By clicking on the <img src="img/find.png"/> button or seizing [Enter] in the textbox, the search will begin. The list below contains all manga found for your search.</p>
+                  <p>Actions : 
+                  <ul>
+                    <li>Click on the web site icon to start reading the concerned manga on it's web site.</li>
+                    <li>Click on the + icon next to the web site icon to add the concerned manga in your manga reading list.</li>
+                    <li>Click on the <img src="img/external.png"/> icon next to the manga name to open the concerned manga on all found web sites.</li>
+                    <li>Click on the <img src="img/add.png"/> icon next to the manga name to add all occurrences of the concerned manga in your list.</li>
+                  </ul>
+                  </p>
+               </div>
+               <div id="bookmark" class="article">
+                  <h3>AMR's bookmarks</h3>
+                  <table style="margin-left:auto;margin-right:auto;"><tr><td><center><img src="img/help/bmchap.PNG"/></center></td><td><center><img src="img/help/bmscan.PNG" /></center></td></tr></table>
+                  <p>This tool can be accessed by clicking on the <img src="img/bookmark.png"/> button in the popup.</p>
+                  <p>In this page, you can see all chapters and scans you have previously bookmarked. View <a href="#" onclick="viewArticle('manage bookmg');">bookmarks help page</a> for more information.</p>
+                  <ul>
+                    <li>Filters : 
+                      <ul>
+                        <li>Mangas : select the manga for which you want to see the bookmarked scans and chapters.</li>
+                        <li>Text to search : seize here a text to search in the notes associated with the bookmarks.</li>
+                        <li>Web sites : list of supported web sites (click on an icon to include / exclude the web site from the search)</li>
+                        <li>Scans size : not a filter but allows you to change the size of the bookmarked scans.</li>
+                      </ul>
+                    </li>
+                    <li>Bookmarked Chapters tab : displays all the bookmarked chapters that match the filters. In this tab you can :
+                      <ul>
+                        <li>Click on the name of the chapter to go to this chapter</li>
+                        <li>Click on the <img src="img/edit.png"/> button to edit the note associated with the bookmark</li>
+                        <li>Click on the <img src="img/cancel.png"/> button to delete this bookmark</li>
+                      </ul>
+                    </li>
+                    <li>Bookmarked Scans : displays all the bookmarked chapters that match the filters In this tab you can :
+                      <ul>
+                        <li>Click on the name of the chapter to go to this chapter</li>
+                        <li>Click on the <img src="img/edit.png"/> button to edit the note associated with the bookmark</li>
+                        <li>Click on the <img src="img/cancel.png"/> button to delete this bookmark</li>
+                        <li>Click on the scan to view it full size</li>
+                      </ul>
+                    </li>
+                  </ul>
+               </div>
+               <div id="impexp" class="article">
+                  <h3>AMR's import / export tool</h3>
+                  <p>You can access this tool by clicking on the <img src="img/importexport.png"/> button in the popup</p>
+                  <p>This tool contains two tabs : 
+                    <ul>
+                      <li>Import : Paste data to import in the box and click "Let AMR Read it !" You can then click on : 
+                        <ul>
+                          <li>Import manga list (merge) : import all mangas contained in the data in your reading list. If a manga already exist, it updates the latest chapter read only if needed.</li>
+                          <li>Import manga list (erase) : delete your whole manga list and replace it by all mangas contained in the data</li>
+                          <li>Import bookmark list (merge) : import all bookmark contained in the data in your reading list. If a bookmark already exist, it updates the associated note.</li>
+                          <li>Import bookmark list (erase) : delete your whole bookmark list and replace it by all bookmark contained in the data</li>
+                        </ul>
+                      </li>
+                      <li>Export : Select data to export and click on "Export File". The exported content appears in the box below. Click on "Copy content to clipboard" to save it in a file of your choice.</li>
+                    </ul>
+                  </p>
+               </div>
+            </div>
+            <div id="websites" class="article">
+              <h3>What manga web sites are currently supported ?</h3>
+              <p>Actually, AMR supports 50 manga Web sites : </p>
+              <ul class="icons">
+                <li><img src="img/arabic.png"/>Scans in Arabic : 
+                  <ul class="icons">
+                    <li><img src="img/mangaar.png">Manga-Ar</li>
+                  </ul>
+                </li>
+                <li><img src="img/chinese.png"/>Scans in Chinese : 
+                  <ul class="icons">
+                    <li><img src="img/tenmanga.png">TenManga</li>
+                  </ul>
+                </li>
+                <li><img src="img/english.png"/>Scans in English : 
+                  <ul class="icons">
+                    <li><img src="img/animea.png">AnimeA</li>
+                    <li><img src="img/Batoto.png"/>Batoto (implementation based on Jamie Schembri's script)</li>
+                    <li><img src="img/citymanga.png">CityManga</li>
+                    <li><img src="img/clockworklies.png"/>Clockwork Lies (implementation developped by QaZZy)</li>
+                    <li><img src="img/cxcscans.png"/>CXCScans (implementation developped by Mexicano21)</li>
+                    <li><img src="img/easygoing.png"/>Easy Going (implementation developped by Mexicano21)</li>
+                    <li><img src="img/eatmanga.png">EatManga</li>
+                    <li><img src="img/evilflowers.png"/>Evil Flowers (implementation developped by Mexicano21)</li>
+                    <li><img src="img/foolrulez.png"/>FoOlRulez (implementation developped by Mexicano21)</li>
+                    <li><img src="img/fthscans.png"/>For The Halibut (implementation developped by Mexicano21)</li>
+                    <li><img src="img/goodmanga.png">GoodManga</li>
+                    <li><img src="img/imangascans.png"/>Imangascans (implementation developped by Mexicano21)</li>
+                    <li><img src="img/japanzai.png"/>Japanzai & XscansX (implementation developped by Mexicano21)</li>
+                    <li><img src="img/manga2u.png">Manga2U</li>
+                    <li><img src="img/mangaaccess.png">Manga-Access</li>
+                    <li><img src="img/mangable.png">Mangable</li>
+                    <li><img src="img/mangachapter.png"/>Mangachapter (implementation developped by QaZZy)</li>
+                    <li><img src="img/mangacurse.png"/>Mangacurse (implementation developped by Mexicano21)</li>
+                    <li><img src="img/mangafox.png">MangaFox</li>
+                    <li><img src="img/mangahead.png"/>MangaHead (implementation developped by Mexicano21)</li>
+                    <li><img src="img/mangahere.png">Manga Here</li>
+                    <li><img src="img/mangakong.png">Manga Kong</li>
+                    <li><img src="img/mangareader.png">Manga Reader</li>
+                    <li><img src="img/mangastream.png">MangaStream : few mangas but first to publish new chapters !</li>
+                    <li><img src="img/mangatoshokan.png">MangaToshokan</li>
+                    <li><img src="img/ourmanga.png">Our Manga</li>
+                    <li><img src="img/redhawkscans.png">Redhawkscans</li>
+                    <li><img src="img/simplescans.png"/>Simple Scans (implementation developped by Mexicano21)</li>
+                    <li><img src="img/stoptazmo.png">StopTazmo</li>
+                    <li><img src="img/tenmanga.png">TenManga</li>
+                    <li><img src="img/thespectrum.png">The Spectrum</li>
+                    <li><img src="img/trinitybakuma.png"/>Trinity BAKumA (implementation developped by Mexicano21)</li>
+                    <li><img src="img/unixmanga.png"/>UnixManga (implementation developped by TeoMan)</li>
+                  </ul>
+                </li>
+                <li><img src="img/french.png"/>Scans in French :
+                  <ul class="icons">
+                    <li><img src="img/animestory.png">Anime Story</li>
+                  </ul>
+                </li>
+                <li><img src="img/indonesian.png"/>Scans in Indonesian :
+                  <ul class="icons">
+                    <li><img src="img/bacamanga.png">BacaManga</li>
+                  </ul>
+                </li>
+                <li><img src="img/italian.png"/>Scans in Italian : 
+                  <ul class="icons">
+                    <li><img src="img/itascan.png">ItaScan</li>
+                  </ul>
+                </li>
+                <li><img src="img/japanese.png"/>Scans in Japanese : 
+                  <ul class="icons">
+                    <li><img src="img/mangahead.png"/>MangaHead (implementation developped by Mexicano21)</li>
+                  </ul>
+                </li>
+                <li><img src="img/persian.png"/>Scans in Persian :
+                  <ul class="icons">
+                    <li><img src="img/mangafarsi.PNG">Manga IR</li>
+                  </ul>
+                </li>
+                <li><img src="img/polish.png"/>Scans in Polish :
+                  <ul class="icons">
+                    <li><img src="img/mangalib.png">Manga Library</li>
+                  </ul>
+                </li>
+                <li><img src="img/portuguese.png"/>Scans in Portuguese :
+                  <ul class="icons">
+                    <li><img src="img/centraldemangas.png">Central de Mangas</li>
+                    <li><img src="img/mangasproject.png">MangasProject</li>
+                    <li><img src="img/punchmangas.png">Punch Mangas</li>
+                  </ul>
+                </li>
+                <li><img src="img/russian.png"/>Scans in Russian : 
+                  <ul class="icons">
+                    <li><img src="img/Manga24.png">Manga24</li>
+                    <li><img src="img/readmanga.png">ReadManga</li>
+                  </ul>
+                </li>
+                <li><img src="img/spanish.png"/>Scans in Spanish :
+                  <ul class="icons">
+                    <li><img src="img/animextremist.png">Animextremist (implementation developped by jknito)</li>
+                    <li><img src="img/mangasama.png">MangaSama</li>
+                    <li><img src="img/submanga.png">Sub Manga</li>
+                  </ul>
+                </li>
+                <li><img src="img/turkish.png"/>Scans in Turkish : 
+                  <ul class="icons">
+                    <li><img src="img/mangaturk.png">MangaTurk</li>
+                  </ul>
+                </li>
+                <li><img src="img/vietnamese.png"/>Scans in Vietnamese : 
+                  <ul class="icons">
+                    <li><img src="img/vnsharing.png">VNSharing</li>
+                  </ul>
+                </li>
+              </ul>
+              <p>If you do not use some of these web sites and want to save some memory, you can desactivate these web sites in the option page. Desactivated sites won't appear in AMR popup.</p>
+              <p>Note : 
+                <ul>
+                  <li>SomeManga has been removed from AMR's supported web sites because it is now private...</li>
+                  <li>Bleach Exile has been replaced by Manga Access</li>
+                </ul>
+              </p>
+            </div>
+            <div id="install" class="article">
+               <h3>What must I do after installing ?</h3>
+               <p>If it is your first install of AMR, (or not, it is never too late to do that), I advise you to go to the <a href="/options.html">option page</a>, choose the options you need and <b>Desactivate web sites you don't use !</b> It will free a part of the AMR's associated memory</p>
+               <p>Then, I can only advise you to read the help page and to enjoy the extension !</p>
+            </div>
+         </div>
+         <div id="read" class="article">
+            <h2>Reading mangas</h2>
+            <div id="addmanga" class="article">
+              <h3>How to add a manga in AMR ?</h3>
+              <p>Adding a manga in AMR is very easy. Just go read a manga on your favorite web site and this manga will appear in your mangas list !</p>
+              <p>If you don't know how to read a manga on a web site, AMR provides a search tool (View <a href="#" onclick="viewArticle('overview mainelements search');">search help page</a> for more information.)</p>
+            </div>
+            <div id="readchap" class="article">
+              <h3>How to notify AMR that I have read a chapter ?</h3>
+              <p>AMR automatically detects chapters you are reading. When the chapter that you are reading is newer than the previous latest chapter you have read in AMR, 
+              AMR updates your latest chapter by the chapter you are currently reading.</p>
+            </div>
+            <div id="newchap" class="article">
+              <h3>How can I know that new chapters are avalaible ?</h3>
+              <p>If a new chapter is avalaible for a manga in your reading list, AMR warns you by displaying a number in red on its icon 
+              (the number corresponds to the number of mangas which have chapters you have not read yet). Mangas which have chapters you have not read appear 
+              in red on the top of your list.</p>
+            </div>
+            <div id="specificchap" class="article">
+              <h3>How can I go to a specific chapter of a manga ?</h3>
+              <p>In your manga list, in AMR popup, and for each mangas, a list box provides the complete list of chapters avalaible for the web site on which the 
+              manga is followed. Selecting a chapter in this list is a direct access to this chapter.</p>
+            </div>
+            <div id="updatetime" class="article">
+              <h3>When does AMR updates manga list ?</h3>
+              <p>AMR's update frequency can be choose in the <a href="/options.html">option page</a>. AMR's check for each mangas in your list, if there is a new chapter.</p>
+            </div>
+            <div id="fullchap" class="article">
+              <h3>How to display full chapter scans ?</h3>
+              <p>AMR is configured by default to display entire chapters when you read a manga. If you want to change that, go to the <a href="/options.html"">options page</a>. In the "Manga Web Sites" section, you can choose to see full chapter scans or not.</p>
+              <p>If you have a wide screen, you can choose to see the chapter as a real book. You can choose to see the book from left to right or from right to left (Japanese mode)</p>
+            </div>
+            <div id="resize" class="article">
+               <h3>How to prevent scans from being resized ?</h3>
+               <p>AMR resizes the scans automatically to fit on your screen. If you don't want AMR to resize the scans. Uncheck the option 
+               "Resize scans images to fit screen if they are to wide" in the <a href="/options.html"">options page</a>.</p>
+            </div>
+            <div id="missscan" class="article">
+              <h3>Some scans are missing in my chapter and have been replaced by a red cross, what happened ?</h3>
+              <p>When a scan is missing on the web site or can not be accessed now, it is replaced by a red cross <img src="img/imgerror.png"/> by AMR.</p>
+              <p>AMR tries to load the image two times before displaying this red cross, if you want to retry to load the image, AMR displays a button "Try to reload" below the red cross, when you hit this button, AMR will try to reload the image.</p>
+              <p>If the image can not be loaded, it is probably due to the web site on which you are reading. If you want to be sure of that, you can desactivate the extension, go to the page which corresponds to the scan which is missing. If the scans appear, let me know about the problem.</p>
+            </div>
+            <div id="loadtime" class="article">
+              <h3>Chapters take a long time to load, how can I know when loading is finished ?</h3>
+              <p>In the <a href="/options.html"">options page</a>, you can choose to "See loading progression in the title bar". If you activate it, the loading progression of the chapter will be displayed in the title bar (example : "54% - One Piece 600" instead of "One Piece 600"). When loading is finished, the progression disappear from the title bar.</p>
+              <p>If you want to start reading your chapter as soon as possible and you have a slow connection, you can check the option "Load scans in the order of the chapter". Note that if you check that, the images are loaded one by one, the global time loading of your chapter will be longer.</p>
+            </div>
+            <div id="display" class="article">
+               <h3>Can I change the display mode of a specific manga ?</h3>
+               <p>If a manga must be displayed differently than the other one (for which display mode is defined in the <a href="/options.html"">options page</a>), you can
+               change the display mode for this particular manga. While reading this manga, in the AMR's bar, click on the <img src="img/lefttoright.png"/>
+               <img src="img/righttoleft.png"/><img src="img/ontop.png"/> to switch the manga display mode (book from left to right, book from right to left, scans on top of each other). 
+               Clicking here overrides your display mode preference (from the option page) for this manga only.</p>
+            </div>
+            <div id="latestread" class="article">
+               <h3>Can I change the latest chapter read manually ?</h3>
+               <p>To change the latest chapter read (If you accidentally clicked on <img src="img/toend.png"/> in the popup for example), go read the chapter you want to be the latest and click on <img src="img/stop.gif"/> in AMR's bar. This chapter will be considered as the latest read.</p>
+            </div>
+         </div>
+         <div id="manage" class="article">
+            <h2>Managing mangas</h2>
+            <div id="readmg" class="article">
+               <h3>I start reading a new manga and I don't need update notification, what can I do ?</h3>
+               <p>Yes, to prevent AMR from warning you that there exists updates for a specific manga, you can stop following updates for this manga.</p>
+               <p>There is two ways to do that : 
+                 <ul>
+                  <li>When reading a chapter of this manga, click on the button <img src="img/read_stop.png"/> in AMR's bar.</li>
+                  <li>In AMR's popup, click on the <img src="img/down_der.png"/> associated to the concerned manga and click on the "Stop following updates" button.</li>
+                 </ul>
+                 The manga appears in grey in your list and new chapters notification will no more take this manga into account.
+               </p>
+               <p>
+                When you have finished reading the manga and you want updates notification back : 
+                 <ul>
+                  <li>When reading a chapter of this manga, click on the button <img src="img/read_play.png"/> in AMR's bar.</li>
+                  <li>In AMR's popup, click on the <img src="img/down_der.png"/> associated to the concerned manga and click on the "Follow updates" button.</li>
+                 </ul>
+                 Updates will be notified back for this manga.
+               </p>
+            </div>
+            <div id="reset" class="article">
+               <h3>I want to read back a manga, do I need to delete it ?</h3>
+               <p>No, you can reset your reading state for a particular manga.To do that, in AMR's popup, click on the <img src="img/down_der.png"/> associated to the concerned manga and click on the "Reset reading" button.</p>
+               <p>The first chapter of this manga will be considered as the latest chapter read. Click on <img src="img/play.png"/> to start reading from the beginning.</p>
+            </div>
+            <div id="listbig" class="article">
+              <h3>My list of manga is too big, what can I do ?</h3>
+              <p>AMR provides three modes to view your manga list. If you have few manga in your list, you can use the "Block Mode". If you have a lot of manga in your list, you can use the "List Mode". If your list is huge, a scrollbar automatically appears in the popup. If you want to see your list in a dedicated tab, check the option "Open my manga reading list in a new tab when i click on the All Mangas Reader's icon".</p>
+              <p>These options can be changed in the <a href="/options.html"">options page</a> in the "All Mangas Reader" tab.</p>
+            </div>
+            <div id="group" class="article">
+               <h3>How can I follow the same manga on multiple web sites ?</h3>
+               <p>If you are not sure to read a manga on the web site which is the quicker to update, you can have the same manga in your list on different web sites. 
+               To find on which web sites your manga is, in AMR's popup, click on the <img src="img/down_der.png"/> associated to the concerned manga and click on the "Search similar manga" button.
+               This will open the search tool in the popup with the search box filled with your manga name, you will immediately see all the mirrors where your manga can be read. Click on the web sites you want and start reading your manga on these web sites.</p>
+               <p>If you don't want to have 12 "One Piece" in your manga list, you can check the "Group mangas" option in the <a href="/options.html"">options page</a>. One Piece will appear on only one line. You can see all web sites where you read it by clicking on the <img src="img/plus.png"/> button.</p>
+            </div>
+            <div id="category" class="article">
+               <h3>How can I organise my mangas ?</h3>
+               <p>To organize your mangas, you can use categories. The list of categories can be found above your manga list in the popup. 
+               Some categories are native and can not be modified. You can add as many categories as you want to organize your list.</p>
+               <p>Example of categories Bar : </p>
+                <ul id="cats">
+                  <li class="category native include" title="All mangas in category New are included in the list.">New<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li>
+                  <li class="category native include" title="All mangas in category Read are included in the list.">Read<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li>
+                  <li class="category native include" title="All mangas in category Unread are included in the list.">Unread<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li>
+                  <li class="category native exclude" title="All mangas in category One Shots are exluded from the list.">One Shots<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li>
+                  <li class="category user" title="Click here to exlude / include mangas from this category.">Best<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"><img src="img/edit10.png" class="actcatedit" title="Edit this category"><img src="img/delete10.png" class="actcatdelete" title="Delete this category"></li>
+                  <li class="category user" title="Click here to exlude / include mangas from this category.">Shonen<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"><img src="img/edit10.png" class="actcatedit" title="Edit this category"><img src="img/delete10.png" class="actcatdelete" title="Delete this category"></li>
+                  <li class="category native addcategory" title="Create a new category">+</li>
+                </ul>
+                <p>With this example, you will see all mangas except One Shots mangas (mangas with only one publiched chapter)</p>
+               <div id="native" class="article">
+                  <h3>What are native categories ?</h3>
+                  <p>Native categories can not be modified. There is four native categories : 
+                  <ul class="icons">
+                    <li>
+                      <ul id="catsli"><li class="category native include" title="All mangas in category New are included in the list.">New<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li></ul>
+                      This category contains all manga which have new chapters you haven't read yet.
+                    </li>
+                    <li>
+                      <ul id="catsli"><li class="category native include" title="All mangas in category New are included in the list.">Read<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li></ul>
+                      This category contains all manga which you have entirely read.
+                    </li>
+                    <li>
+                      <ul id="catsli"><li class="category native include" title="All mangas in category New are included in the list.">Unread<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li></ul>
+                      This category contains all manga which have new chapters you haven't read yet and mangas you for which you have stopped following updates.
+                    </li>
+                    <li>
+                      <ul id="catsli"><li class="category native include" title="All mangas in category New are included in the list.">One Shots<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"></li></ul>
+                      This category contains all manga which have only one published chapter.
+                    </li>
+                  </ul>
+                  </p>
+               </div>
+               <div id="newcat" class="article">
+                  <h3>How can I create a new category ?</h3>
+                  <p>In the category bar, click on the <span class="category native addcategory" title="Create a new category">+</span>, a new category appears, seize its name and press [Enter]. Your category is created.</p>
+               </div>
+               <div id="addcat" class="article">
+                  <h3>How can I add mangas in a category ?</h3>
+                  <p>To add a manga in a category, drag it to the willed category and drop it ! That's all. You must drag the mirror icon next to the manga name (or the <img src="img/plus.png"/> if it is a grouped manga.). You can also drag the category name to the manga you want to add in.
+               </div>
+               <div id="updcat" class="article">
+                  <h3>How can I modify a category's name ?</h3>
+                  <p>To update the name of a category, click on the <img src="img/edit10.png"/> button on the category, seize the new name and press [Enter]</p>
+               </div>
+               <div id="delcat" class="article">
+                  <h3>How can I delete a category ?</h3>
+                  <p>To delete a category, click on the <img src="img/delete10.png"/> button on the category. A confirmation message appears, click on "Yes".</p>
+               </div>
+               <div id="viewcat" class="article">
+                  <h3>How can I see mangas from a specific category ?</h3>
+                  <p>To see only mangas from a specific category, click on the <img src="img/list10.gif"/> button on the category.</p>
+               </div>
+               <div id="managecat" class="article">
+                  <h3>How to use categories ?</h3>
+                  <p>Categories can be in three different states : 
+                  <ul class="icons">
+                    <li>
+                      <ul id="catsli"><li class="category user include" title="Click here to exlude / include mangas from this category.">Shonen<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"><img src="img/edit10.png" class="actcatedit" title="Edit this category"><img src="img/delete10.png" class="actcatdelete" title="Delete this category"></li></ul>
+                      All mangas in this category are included in the list below.
+                    </li>
+                    <li>
+                      <ul id="catsli"><li class="category user exclude" title="Click here to exlude / include mangas from this category.">Shonen<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"><img src="img/edit10.png" class="actcatedit" title="Edit this category"><img src="img/delete10.png" class="actcatdelete" title="Delete this category"></li></ul>
+                      All mangas in this category are excluded from the list below.
+                    </li>
+                    <li>
+                      <ul id="catsli"><li class="category user" title="Click here to exlude / include mangas from this category.">Shonen<img src="img/list10.gif" class="actcatview" title="View only mangas from this category"><img src="img/edit10.png" class="actcatedit" title="Edit this category"><img src="img/delete10.png" class="actcatdelete" title="Delete this category"></li></ul>
+                      This category is not used to determine which manga are in the list.
+                    </li>
+                  </ul>
+                  To switch the category state, just click on the category name.
+                  </p>
+                  <p>Your categories states are saved before popup is closed.</p>
+               </div>
+            </div>
+            <div id="progress" class="article">
+               <h3>How can I know my reading progression of a manga ?</h3>
+               <p>In AMR's popup, click on the <img src="img/down_der.png"/> associated to the concerned manga. On the right, a progression bar indicates which percentage of this manga you have already read.</p>
+            </div>
+            <div id="bookmg" class="article">
+               <h3>How can I bookmark my mangas ?</h3>
+               <p>The bookmark functionnality allows you to save a link to chapters or scans you like. These bookmarks are saved while reading mangas and can be consulted at any time</p>
+               <p>There are two kind of bookmarks in AMR : 
+               <ul>
+                <li>Chapters : save a link a particular chapter of a manga</li>
+                <li>Scans : save a link to a particular scan of a chapter</li>
+               </ul>
+               </p>
+               <p>For each bookmark, the web site, manga and chapter concerned are saved. If the bookmark is a scan, the position of the scan in the chapter is saved too.</p>
+               <p>You can seize a personal note for each item you bookmark. This note can be updated at any time.</p>               
+               <div id="bmchap" class="article">
+                  <h3>How can I bookmark a chapter ?</h3>
+                  <p>To bookmark a chapter, go read this chapter. In AMR's bar, click on the <img src="img/bookmark.png"/> icon. The following popup appears : </p>
+                  <center><img src="img/help/chappopup.PNG"/></center>
+                  <p>The text in the popup recalls the manga and chapter name. You can seize a personal note in the textbox and click on save.</p>
+                  <p>If you are reading a chapter which has already been bookmarked, the icon in AMR's bar is <img src="img/bookmarkred.png"/>. When mouse cursor is hover, you can see the note you saved. You can update this note by clicking back on this icon.</p>
+               </div>
+               <div id="bmscan" class="article">
+                  <h3>How can I bookmark a scan ?</h3>
+                  <p>To bookmark a scan, go read the chapter where it is. Right click on the scan and click on "Bookmark in AMR".  The following popup appears : </p>
+                  <center><img src="img/help/scanpopup.PNG"/></center>
+                  <p>The text in the popup recalls the manga name, chapter name and scan position. You can seize a personal note in the textbox and click on save.</p>
+                  <p>If you are trying to bookmark an already bookmarked scan, the scan is bordered in red. When mouse cursor is hover, you can see the note you saved. You can update this note by clicking right back and select on "Bookmark in AMR" on this scan.</p>
+               </div>
+               <div id="bmview" class="article">
+                  <h3>Where can I see my bookmarks ?</h3>
+                  <p>To see your bookmarks, click on the <img src="img/bookmark.png"/> icon in AMR's popup. You can search bookmarks in this tool. View <a href="#" onclick="viewArticle('overview mainelements bookmark');">bookmark page</a> for more information.</p>
+               </div>
+            </div>
+            <div id="delmul" class="article">
+               <h3>How can I delete multiple mangas ?</h3>
+               <p>In AMR's popup, in the action icons at the bottom of the popup, you can click on the <img src="img/cancel.png"/> icon to delete all mangas currently displayed in the list. To delete only a part of your list, you can display a part of your manga list by using categories (View <a href="#" onclick="viewArticle('manage category');">category page</a> for more information) and then click on this button.</p>
+               <p>For exmaple, if you want to delete all mangas in your list that are One Shots (mangas with only one chapter), click on the <img src="img/list10.gif"/> in the "One Shots" category and then click on <img src="img/cancel.png"/> at the bottom of the popup.</p>
+               <p>In the same way, you can mark all currently displayed mangas as read by clicking on the <img src="img/eye.png"/> icon at the bottom of AMR's popup.</p>
+            </div>
+            <div id="sync" class="article">
+              <h3>Can I have my manga list synchronized over my computers ?</h3>
+              <p>YES ! It is possible to sync your manga list over your computers (and to synchronize chapters you read too)</p>
+              <p>To allow this functionnality, AMR uses your bookmarks. You must enable synchronization of your bookmarks in Google Chrome to make it work. (<a href="http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=165139">Help here</a>)
+              <br />To do this, you can use build in chrome synchronization with your google account (in chrome options > Personal Data, click on the synchronize button, log in your google account and choose to synchronize bookmarks)
+              If you prefer to use another bookmark sync (like with <a href="https://chrome.google.com/extensions/detail/ajpgkpeckebdhofmmjfgcjjiiejpodla">XMarks</a>), you can do it.</p>
+              <p>
+              As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate. 
+              Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately. 
+              You can force synchronization of your data in XMarks by clicking "Synchronize Now".
+              With chrome synchronization, you can't force sync. When you read a manga, the bookmark will be modified within five minutes but the incoming synchronization takes more time. To force it, the best way is to relaunch Google Chrome or to disable and reenable synchronization.
+              </p>
+              <p>
+              Please note that google chrome is limited in bookmarks synchronization. It authorizes until 100 updates of bookmarks. So, sometimes, your bookmark won't be sync...
+              </p>
+              <p>
+                To make this work, All Mangas Reader creates a folder in your "Other Bookmarks" section which is named "BSync". This functionnality has been implemented thanks to phaistonian very good code.
+              </p>
+              <p><b>To Read before syncing</b></p>
+              <p>
+              To enable synchronization in AMR, just go to the options page in the Synchronization tab. Check the sync option. 
+              </p>
+              <p>
+              When syncing is enabled, a text at the bottom of the extension popup indicate when the last synchronization has been done.
+              </p>
+              <p>
+              If AMR is already installed on multiple computers, when you activate synchronization, it is possible that you loose a few data.
+              The best way is to enable synchronisation on one computer only, to wait for the AMR bookmark to appear on the other computers (Other Bookmarks > BSync > All Mangas Reader.xxxxxxx) and then to activate synchronization on other computers
+              </p>
+            </div>
+            <div id="share" class="article">
+               <h3>Can I export my manga list to share it with a friend ?</h3>
+               <p>AMR include an import / export tool to allows you to share your manga lists. View <a href="#" onclick="viewArticle('overview mainelements impexp');">import /export page</a> for more information.</p>
+               <p>I advise you to save periodically your manga and bookmark list in a file of your choice periodically. This way, you will be able to recover your data in case of problem.</p>
+            </div>
+         </div>
+         <div id="tips" class="article">
+            <h2>Tips</h2>
+            <div id="autoadd" class="article">
+               <h3>How can I prevent AMR from adding manga I read automatically ?</h3>
+               <p>To prevent mangas you read to be automatically added to your list, uncheck the option "Automatically add manga in my reading list when I read it" in the <a href="/options.html"">options page</a>.</p>
+               <p>In this case, you will need to click on the <img src="img/add.png"/> in AMR's bar to add the currently read manga to your list.</p>
+            </div>
+            <div id="similar" class="article">
+               <h3>How can I search mangas similar to one in my list ?</h3>
+               <p>If you want to follow a specific manga on different web sites, click on the <img src="img/down_der.png"/> associated with the manga in AMR's popup and then click on "Search this manga elsewhere".</p>
+               <p>The search tool will appear in the popup with the text to search filled with the manga name. The search starts automatically and you will see all web sites where your manga can be read. Click on the web sites you want to add and start reading it there.</p>
+            </div>
+            <div id="desactiv" class="article">
+               <h3>How can I desactivate a web site ?</h3>
+               <p>To desactivate a web site, go to the <a href="/options.html"">options page</a> in the "Supported web sites" tab. The list of all supported web sites is displayed. You can uncheck the web sites you don't need. This will free some of the RAM allocated to AMR.</p>
+               <p>You can only desactivate web sites for which you don't have any mangas in your list.</p>
+            </div>
+            <div id="whenupd" class="article">
+               <h3>How can I know when AMR has updated chapters ?</h3>
+               <p>To know when AMR's latest update is, click on the <img src="img/history.png"/> in AMR's popup. This will display : 
+                <ul>
+                  <li>The last time AMR has updated chapters list (check for new chapters)</li>
+                  <li>The last time AMR has updated manga lists (to search mangas on web sites)</li>
+                  <li>The last time AMR has synchronized your list of mangas if you have choose to synchronize it</li>
+                </ul>
+               </p>
+            </div>
+            <div id="updfreq" class="article">
+               <h3>How can I change the update frequency ?</h3>
+               <p>If you want to change updates frquency, go to the <a href="/options.html"">options page</a> in "All Mangas Reader" tab. You can choose : 
+                <ul>
+                  <li>The update chapters list's frequency (frequency of check for new chapters)</li>
+                  <li>The update mangas list's frequency (frequency of check for new mangas on web sites)</li>
+                </ul>
+               </p>
+               <p>Increasing this frequency will allow you to save some bandwidth.</p>
+            </div>
+            <div id="oldbar" class="article">
+               <h3>How can view AMR's bar in the old way ?</h3>
+               <p>If you prefered the way AMR displayed its bar on web site until version 1.2.20, you can uncheck the option "Display navigation features in one always visible bar." in the <a href="/options.html"">options page</a>.</p>
+            </div>
+            <div id="keyb" class="article">
+              <h3>I want to navigate through chapters with my keyboard, is it possible ?</h3>
+              <p>Yes, you can use "b" to go to previous chapter and "n" to go to next chapter. You can also use left and right arrows to go previous and next pages.</p>
+              <p>You can also use "+" and "-" keys to zoom in and out in manga web sites.</p>
+            </div>
+         </div>
+         <div id="evo" class="article">
+            <h2>Evolution</h2>
+            <div id="addsite" class="article">
+              <h3>My favorite web site is not supported by AMR, what can I do ?</h3>
+              <p>If you are a developper, you can read the <a href="dev.html">tutorial to implement a web site</a> to add the web site you want.</p>
+              <p>If not, you can <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">request me</a> to add it. I read all your request and implement the most demanded. It will probably take some time...</p>
+            </div>
+            <div id="bugreport" class="article">
+               <h3>How can I report a bug ?</h3>
+               <p>To report a bug or to suggest a new feature, you can add a create a topic in AMR's forum which can be accessed through the <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">extension main page.</a> Please note that all your suggestions are noted and will hopefully be implemented in the future.</p>
+            </div>
+            <div id="helpme" class="article">
+              <h3>How can I help the author ?</h3>
+              <p>To help the author, you can leave a thankful comment in AMR's forum which can be accessed through the <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">extension main page.</a></p>
+              <p>AMR takes me a lot of my time. To help me continue supporting and improving it, you can donate : </p>
+              <center>
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                  <input type="hidden" name="cmd" value="_s-xclick">
+                  <input type="hidden" name="hosted_button_id" value="PTFDEMDFNKQAG">
+                  <input type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                  <img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+              </center>
+              <p>If you are a developper, you can help me by adding support for web sites. It is easy if you know a bit of jQuery.</p>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>  
+  <div id="footer">
+    <div id="subfooter">
+      <span>All Mangas Reader 2011.</span>
+    </div>
+  </div>
+</body>
+
+</html>

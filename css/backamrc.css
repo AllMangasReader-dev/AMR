@@ -1,0 +1,9 @@
+.importimplemamr, .labimplemamr {
+  cursor:pointer;
+  
+}
+.button.importamr img, .button.labamr img {
+  margin-left:5px;
+  vertical-align:middle;
+  margin-top:-3px;
+}

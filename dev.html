@@ -1,0 +1,421 @@
+<!--///////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
+//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
+//                                                                           //
+////////////////////////////////////////////////////////////////////////////-->
+
+<html>
+<head>
+<title>All Mangas Reader Developper Tutorial</title>
+<link href="css/jquery.treeview.css" rel="stylesheet" type="text/css" />
+<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/jquery.treeview.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<script src="js/analytics.js" type="text/javascript"></script>
+<script src="js/innermenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$(function() {
+  loadMenu("dev");
+  $("#nav").treeview({
+				collapsed: false,
+				animated: "fast"
+			});
+  
+  $(".menu").click(function() {
+    //$(".article").toggle("blind", {}, 250);
+    var pathstr = $(this).attr("rel")
+    viewArticle(pathstr);
+  });
+  
+  viewArticle("dev");
+  
+  //createTree();
+});
+
+function viewArticle(pathstr) {
+  var elt = $(".menu[rel='" + pathstr + "']");
+  $(".menu").removeClass("selected");
+  $(elt).addClass("selected");
+  $(".menu:first", $(elt).parents("li")).addClass("selected");
+  
+  $(".article").each(function(index) {
+    var pathtmp = $(this).attr("id");
+    $(this).parents(".article").each(function (index) {
+      pathtmp = $(this).attr("id") + " " + pathtmp;
+    });
+    //console.log(pathstr + " --> " + pathtmp);
+    if (pathstr.indexOf(pathtmp) == -1) {
+      $(this).hide();
+      //console.log("hidden");
+    }
+  });
+  
+  var path = pathstr.split(" ");
+  for (var i = 0; i < path.length; i++) {
+    if (!$("#" + path[i]).is(":visible")) {
+      $("#" + path[i]).toggle("blind", {}, 250);
+    }
+    if (i == path.length -1) {
+      if (!$(".article", $("#" + path[i])).is(":visible")) {
+        $(".article", $("#" + path[i])).toggle("blind", {}, 250);
+      }
+    }
+  }
+}
+
+function createTree() {
+  var main = $("<div id=\"maincorpse\"></div>");
+  main.css("display", "none");
+  $("#nav a.menu").each(function(index) {
+    var pathstr = $(this).attr("rel");
+    var path = pathstr.split(" ");
+    if (path.length == 1) {
+      $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
+      //TODO add content
+    } else {
+      var curdiv = $("#" + path[path.length - 2], main);
+      $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
+      //TODO add content
+    }
+  });
+  main.appendTo($(document.body));
+  
+  //console.log(main);
+  show(main[0]);
+}
+function nodeToXML(node, indentation, out) {
+  if (node.nodeName.toLowerCase() == "#text") {
+    out += node.nodeValue;
+  } else {
+   out += indentation+"<"+node.nodeName.toLowerCase();
+   
+   if (node.attributes!=null) {
+      for (var i=0; i<node.attributes.length; i++) {
+         var item = node.attributes.item(i);
+         var value = item.nodeValue;
+         if (value==null) value = "";
+         out += " "+item.nodeName+"=\""+value+"\"";
+      }
+   }
+   if (node.nodeName.toLowerCase() == "div") {
+      out += ">\n";
+   } else {
+      out += ">";
+   }
+   for (var i=0; i<node.childNodes.length; i++) {
+      var item = node.childNodes.item(i);
+      out = nodeToXML(item, indentation+"   ", out);
+   }
+   if (node.nodeValue!=null) 
+      out += indentation+"   "+node.nodeValue+"\n";
+      if (node.nodeName.toLowerCase() == "div") {
+        out += indentation+"</"+node.nodeName.toLowerCase()+">\n";
+      } else {
+        out += "</"+node.nodeName.toLowerCase()+">\n";
+      }
+  }
+  return out;
+}
+function show(doc) {
+   var w = window.open('', 'Popup', '');
+   w.document.write('<html><head><title>Document Dump</title>');
+   w.document.write('</head><body><pre>');
+
+   var s = nodeToXML(doc, '', '');
+   s = s.replace(new RegExp('&','g'),'&amp;');
+   s = s.replace(new RegExp('<','g'),'&lt;');
+   s = s.replace(new RegExp('>','g'),'&gt;');
+   w.document.write(s);
+   w.document.write('</pre></body></html>');
+   w.document.close();
+}
+</script>
+
+</head>
+
+<body>
+  <div id="header">
+    <div id="subheader">
+      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <h1>All Mangas Reader Developper Tutorial</h1>
+    </div>
+  </div>
+  
+  <div id="menunav">
+    <div id="menuitems">
+      <ul>
+        <li>&nbsp;</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="corpse">
+    <div id="navigation">
+      <ul id="nav">
+        <li><a class="menu main" rel="dev">Developper Tutorial</a>
+          <ul>
+            <li><a class="menu" rel="dev about">About</a></li>
+            <li><a class="menu" rel="dev test">How to test your mirror ?</a></li>
+            <li><a class="menu" rel="dev know">What must you know to add support for a web site ?</a></li>
+            <li><a class="menu" rel="dev init">Initiate your new mirror</a></li>
+          </ul>
+        </li>
+        <li><a class="menu main" rel="imp">Implementing support for a web site</a>
+          <ul>
+            <li><a class="menu" rel="imp js">The js file</a>
+              <ul>
+                <li><a class="menu" rel="imp js attr">Attributes of the class</a></li>
+                <li><a class="menu" rel="imp js offdom">OffDOM Methods</a>
+                  <ul>
+                    <li><a class="menu" rel="imp js offdom getmglist">getMangaList</a></li>
+                    <li><a class="menu" rel="imp js offdom getlstchap">getListChaps</a></li>
+                  </ul>
+                </li>
+                <li><a class="menu" rel="imp js indom">InDOM Methods</a>
+                  <ul>
+                    <li><a class="menu" rel="imp js indom infos">getInformationsFromCurrentPage</a></li>
+                    <li><a class="menu" rel="imp js indom lstimgs">getListImages</a></li>
+                    <li><a class="menu" rel="imp js indom imgpagewr">getImageFromPageAndWrite</a></li>
+                    <li><a class="menu" rel="imp js indom ban">removeBanners</a></li>
+                    <li><a class="menu" rel="imp js indom wherescan">whereDoIWriteScans</a></li>
+                    <li><a class="menu" rel="imp js indom wherenav">whereDoIWriteNavigation</a></li>
+                    <li><a class="menu" rel="imp js indom iscur">isCurrentPageAChapterPage</a></li>
+                    <li><a class="menu" rel="imp js indom dosmthbef">doSomethingBeforeWritingScans</a></li>
+                    <li><a class="menu" rel="imp js indom getsel">getMangaSelectFromPage</a></li>
+                    <li><a class="menu" rel="imp js indom next">nextChapterUrl</a></li>
+                    <li><a class="menu" rel="imp js indom prev">previousChapterUrl</a></li>
+                    <li><a class="menu" rel="imp js indom isimg">isImageInOneCol</a></li>
+                    <li><a class="menu" rel="imp js indom doafter">doAfterMangaLoaded</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="imp send">How to send me your mirror ?</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div id="subcorpse">
+      <div id="maincorpse">
+         <div id="dev" class="article">
+            <h2>Developper Tutorial</h2>
+            <div id="about" class="article">
+              <h3>About</h3>
+              <p>AMR has been designed to be easily extended to any web site containing mangas.</p>
+              <p>To add a web site, you only have to create a js file describing the behaviour of the web site through pre defined methods. You can use jQuery to retrieve informations from the web site inside your js code.</p>
+              <p>This section describes which methods you must develop and how to integrate your js file in AMR</p>
+            </div>
+            <div id="test" class="article">
+              <h3>How to test your mirror ?</h3>
+              <p>To test that your implementation of your mirror works, you can try the <a href="/lab.html">AMR lab</a>. This lab automatically tests a lot of aspects which are required from your code to make your site work with AMR. Just select your mirror in the list of mirrors in the lab and click on the test button. You can test it on the existing mirrors.</p>
+              <p>If you are a developper, you can check the option "I am a developper" in the options page, it will display an icon in the popup to have a direct access to the lab.</p>
+            </div>
+            <div id="know" class="article">
+                <h3>What must you know to add support for a web site ?</h3>
+                <p>To add support for a web site, you must provide me two files : </p>
+                <ul>
+                  <li>A javascript file which implement all the required methods described below and which will be called when a user navigates on the web site you want to be supported.</li>
+                  <li>A png file (16x16 with transparency) : the icon of the web site.</li>
+                </ul>
+                <p>When you choose to add support for a web site, I recommend you to know a bit of javascript and jQuery. If it is your case, you will add support for your web site within two days of work.</p>
+            </div>
+            <div id="init" class="article">
+                <h3>Initiate your new mirror</h3>
+                <p>To start developping a mirror, I recommend to work in "local", i mean to copy the extension code on your computer and to modify it there. It will prevent the extension to be updated and you to loose your code.</p>
+                <p>To do this, go in the extensions directory of Google chrome : </p>
+                <ul>
+                  <li>For linux users (Ubuntu) : ~/.config/google-chrome/Default/Extensions/</li>
+                  <li>For Windows users (Seven) : C:\Users\[username]\AppData\Local\Google\Chrome\User Data\Default\Extensions\</li>
+                  <li>For Windows users (XP) : C:\Documents and Settings\[username]\Local Settings\Application Data\Google\Chrome\User Data\Default\Extensions\</li>
+                </ul>
+                Then find the directory corresponding to AMR's extension id and copy it where you want on your computer.</p>
+                <p>To start implementing your mirror, download the <a href="#" onclick="chrome.extension.sendRequest({action: 'opentab', url: 'js/MirrorModel.js'}, function(response) {});">mirror model</a>, change the name of the file and save it in your local extension directory in the js directory. Open the file and change the name of the object in this file (MirrorClassName by default) by the name you will use.</p>
+                <p>Then you must modify the extension so it will recognize your mirror as one of its mirrors. To do that, open the "js/mgEntry.js" file. The first object in this file is a json array describing all existing mirrors in the extension. Add yours : </p>
+                <p>
+                {objectName: "The name of the object that correspond to your mirror (in your js file : var XXX = {..., it is the XXX)", 
+                 <br />jsFile: "Name of the js file to load", 
+                 <br />webSites: [List of urls in which your mirror will be loaded],
+                <br />}
+                </p>
+                <p>Then you must configure Chrome to load your local extension instead of the real one. In the <a href="#" onclick="chrome.extension.sendRequest({action: 'opentab', url: 'chrome://extensions/'}, function(response) {});">extensions tab</a>, desactivate AMR. Then, click on the "Load unpacked extension" button and select the directory where your local extension is.</p>
+                <p>That's all !!</p>
+            </div>
+         </div>
+         <div id="imp" class="article">
+            <h2>Implementing support for a web site</h2>
+            <div id="js" class="article">
+               <h3>The js file</h3>
+               <p>This section describes all different methods and attributes you must implement in your code. The model downloaded before contains many comments on what you must modify and parts of code you musn't need to change.</p>
+               <div id="attr" class="article">
+                  <h3>Attributes of the class</h3>
+                  <p>There are three attributes to fill : </p>
+                  <ul>
+                    <li>mirrorName : contains the name of the mirror which will be displayed</li>
+                    <li>canListFullMangas : true if the implementation can return a list of all the existing mangas on the web site. If false, a search string will b e passed to search the list of mangas (see MangaFox implementation.)</li>
+                    <li>mirrorIcon : path of the icon for your mirror, must be a png, 16px x 16px with transparency, put it in the img folder. The value of the attribute is "img/myicon.png"</li>
+                  </ul>
+               </div>
+               <div id="offdom" class="article">
+                  <h3>OffDOM Methods</h3>
+                  <p>These methods are called out of the web site page : </p>
+                  <div id="getmglist" class="article">
+                    <h3>getMangaList</h3>
+                    <p>This method must return the list of all or part of all mangas from the mirror</p>
+                    <p><b>Arguments</b></p>
+                    <ul>
+                      <li>search : a search string which is used if canListFullMangas attribute is false</li>
+                      <li>callback : a function to call when the list has been built</li>
+                    </ul>
+                    <p><b>Description</b></p>
+                    <p>The method must create a list Array containing : [["manga name 1", "url"], ["manga name 2", "url"]...]. When the list is built, you must call the callback function with the arguments : ("Mirror name", list). In the model, the implementation has been filled with an ajax request (with headers to prevent cache to be loaded), you just have to fill the res array with informations retrieved from the page on which the request is made.</p>
+                  </div>
+                  <div id="getlstchap" class="article">
+                    <h3>getListChaps</h3>
+                    <p>This method must return the list of all chapters for a given manga.</p>
+                    <p><b>Arguments</b></p>
+                    <ul>
+                      <li>urlManga : the url of the manga. This url is one of the urls returned by getMangaList</li>
+                      <li>mangaName : The name of the manga. (also returned by getMangaList)</li>
+                      <li>obj : Do not use this object (its for internal purpose), just send it back to the extension with the callback function</li>
+                      <li>callback : a function to call when the list has been built</li>
+                    </ul>
+                    <p><b>Description</b></p>
+                    <p>The method must create a list Array containing : [["chapter name 100", "url"], "chapter name 99", "url"]...]. This list must be sorted in descending order. The first element must be the most recent. When the list is built, you must call the callback function with the arguments : (list, obj). In the model, the implementation has been filled with an ajax request (with headers to prevent cache to be loaded), you just have to fill the res array with informations retrieved from the page on which the request is made.</p>
+                  </div>
+               </div>
+               <div id="indom" class="article">
+                  <h3>InDOM Methods</h3>
+                  <p>These methods are called when the user is on the web site your implementation is made for. </p>
+                  <p>Methods which are running in the DOM of the page could directly use this DOM.
+                  However, if you want to test the mirror with the lab, you must use the two arguments (doc and curUrl)
+                  of these methods to avoid using window.location.href (replaced by curUrl) and manipulate the DOM within
+                  the object doc (example, replace $("select") by $("select", doc) in jQuery). These two arguments are not described below but should be used.</p>
+                  <div id="infos" class="article">
+                    <h3>getInformationsFromCurrentPage</h3>
+                    <p>This method must return (through the callback method) an object describing the current page</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <ul>
+                      <li>callback : the function to call with the returned object</li>
+                    </ul>
+                    <p><b>Description</b></p>
+                    <p>The object returned by this method is a json object containing the following fields : </p>
+                    <ul>
+                      <li>name : Name of current manga</li>
+                      <li>currentChapter : Name of thee current chapter</li>
+                      <li>currentMangaURL : Url to access current manga (must be one of the url returned by getMangaList)</li>
+                      <li>currentChapterURL : Url to access current chapter (must be one of the url returned by getListChaps)</li>
+                    </ul>
+                    <p>In the implementation, the model has been filled with four variables to fill, the json object is already made.</p>
+                  </div>
+                  <div id="lstimgs" class="article">
+                    <h3>getListImages</h3>
+                    <p>This method must return the list of the urls of the images of the full chapter. </p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <p><b>Description</b></p>
+                    <p>The method must create a list Array containing : ["url image 1", "url image 2", ...]</p>
+                    <p>This function can return urls which are not the url of the images but urls of pages which contains the url of the images. The src of the image is set by the getImageFromPageAndWrite() function</p>
+                  </div>
+                  <div id="imgpagewr" class="article">
+                    <h3>getImageFromPageAndWrite</h3>
+                    <p>Write the image from the the url returned by the getListImages() function.</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <ul>
+                      <li>urlImg : url returned by getListImages</li>
+                      <li>image : image object where the image must be displayed (you must changed the src attribute of this object)</li>
+                    </ul>
+                    <p><b>Description</b></p>
+                    <p>The function getListImages can return an url which is not the source of the image. The src of the image is set by this function. If getListImages function returns the src of the image, just do $( image ).attr( "src", urlImg );</p>
+                  </div>
+                  <div id="ban" class="article">
+                    <h3>removeBanners</h3>
+                    <p>This method must remove all ads and banners from the page</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+                  <div id="wherescan" class="article">
+                    <h3>whereDoIWriteScans</h3>
+                    <p>This method returns the place to write the full chapter in the document. The returned element will be totally emptied by the extension. You must return only one place to write scans.</p>
+                    <p>You can change the DOM of the page before this method is called in the method doSomethingBeforeWritingScans</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+                  <div id="wherenav" class="article">
+                    <h3>whereDoIWriteNavigation</h3>
+                    <p>This method returns the place to write the navigation bars in the document. The returned elements won't be emptied by the extension. You must return two place to write navigation. One above the chapter and one below.</p>
+                    <p>You can change the DOM of the page before this method is called in the method doSomethingBeforeWritingScans</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+                  <div id="iscur" class="article">
+                    <h3>isCurrentPageAChapterPage</h3>
+                    <p>This method must return true if the current page is a page containing scan. (Test if the current page contains a scan.)</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+                  <div id="dosmthbef" class="article">
+                    <h3>doSomethingBeforeWritingScans</h3>
+                    <p>This method is called before displaying full chapters in the page</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <p><b>Description</b></p>
+                    <p>Prepare the page to host navigation and the full chapter, you may need to change elements in the page, add elements, remove others and change css</p>
+                  </div>
+                  <div id="getsel" class="article">
+                    <h3>getMangaSelectFromPage</h3>
+                    <p>This function can return a preexisting select from the page to fill the chapter select of the navigation bar. It avoids to load the chapters. If it's not possible, return null</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+                  <div id="next" class="article">
+                    <h3>nextChapterUrl</h3>
+                    <p>This method is called to fill the next button's url in the manga site navigation bar. The select containing the mangas list next to the button is passed in argument</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <ul>
+                      <li>select : the select object returned by getMangaSelectFromPage. If the returned select is null, the extension pass the chapter select returned by getListChaps</li>
+                    </ul>
+                  </div>
+                  <div id="prev" class="article">
+                    <h3>previousChapterUrl</h3>
+                    <p>This method is called to fill the previous button's url in the manga site navigation bar. The select containing the mangas list next to the button is passed in argument</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <ul>
+                      <li>select : the select object returned by getMangaSelectFromPage. If the returned select is null, the extension pass the chapter select returned by getListChaps</li>
+                    </ul>
+                  </div>
+                  <div id="isimg" class="article">
+                    <h3>isImageInOneCol</h3>
+                    <p>If it is possible to know if an image is a credit page or something which must not be displayed as a book, just return true and the image will stand alone img is the DOM object of the image</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                    <ul>
+                      <li>img : image object to test</li>
+                    </ul>
+                  </div>
+                  <div id="doafter" class="article">
+                    <h3>doAfterMangaLoaded</h3>
+                    <p>This function is called when the manga is full loaded. Just do what you want here...</p>
+                    <p><b>Arguments</b> : doc and curUrl</p>
+                  </div>
+               </div>
+            </div>
+            <div id="send" class="article">
+              <h3>How to send me your mirror ?</h3>
+              <p>To send me your mirror, just mail me (my mail address is in all files of the extension, if you develop your mirror, you must find it...). In the mail, put the following informations : </p>
+              <ul>
+                <li>The js file of your mirror</li>
+                <li>The icon of your mirror (png 16x16 with transparency)</li>
+                <li>The json description of your mirror from the "js/mgEntry.js" file</li>
+              </ul>
+              <p>I will test your mirror before publishing it so please test it before so there won't be bugs. (use the <a href="/lab.html">lab</a> !)</p>
+              <p>You must know that you are responsible of the code of your mirror, if there are bugs (due to web sites changes or other), please fix the bugs and send me the new versions. I don't want to maintain all your mirrors... THANKS !</p>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>  
+  <div id="footer">
+    <div id="subfooter">
+      <span>All Mangas Reader 2011.</span>
+    </div>
+  </div>
+</body>
+
+</html>

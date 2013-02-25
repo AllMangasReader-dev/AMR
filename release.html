@@ -1,0 +1,832 @@
+<!--///////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
+//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
+//                                                                           //
+////////////////////////////////////////////////////////////////////////////-->
+
+<html>
+<head>
+<title>All Mangas Reader Release Note</title>
+<link href="css/jquery.treeview.css" rel="stylesheet" type="text/css" />
+<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/jquery.treeview.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<script src="js/analytics.js" type="text/javascript"></script>
+<script src="js/innermenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$(function() {
+  loadMenu("release");
+  $("#nav").treeview({
+				collapsed: false,
+				animated: "fast"
+			});
+  
+  $(".menu").click(function() {
+    //$(".article").toggle("blind", {}, 250);
+    var pathstr = $(this).attr("rel")
+    viewArticle(pathstr);
+  });
+  
+  viewArticle("release v4");
+  
+  //createTree();
+});
+
+function viewArticle(pathstr) {
+  var elt = $(".menu[rel='" + pathstr + "']");
+  $(".menu").removeClass("selected");
+  $(elt).addClass("selected");
+  $(".menu:first", $(elt).parents("li")).addClass("selected");
+  
+  $(".article").each(function(index) {
+    var pathtmp = $(this).attr("id");
+    $(this).parents(".article").each(function (index) {
+      pathtmp = $(this).attr("id") + " " + pathtmp;
+    });
+    //console.log(pathstr + " --> " + pathtmp);
+    if (pathstr.indexOf(pathtmp) == -1) {
+      $(this).hide();
+      //console.log("hidden");
+    }
+  });
+  
+  var path = pathstr.split(" ");
+  for (var i = 0; i < path.length; i++) {
+    if (!$("#" + path[i]).is(":visible")) {
+      $("#" + path[i]).toggle("blind", {}, 250);
+    }
+    if (i == path.length -1) {
+      if (!$(".article", $("#" + path[i])).is(":visible")) {
+        $(".article", $("#" + path[i])).toggle("blind", {}, 250);
+      }
+    }
+  }
+}
+
+function createTree() {
+  var main = $("<div id=\"maincorpse\"></div>");
+  main.css("display", "none");
+  $("#nav a.menu").each(function(index) {
+    var pathstr = $(this).attr("rel");
+    var path = pathstr.split(" ");
+    if (path.length == 1) {
+      $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
+      //TODO add content
+    } else {
+      var curdiv = $("#" + path[path.length - 2], main);
+      $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
+      //TODO add content
+    }
+  });
+  main.appendTo($(document.body));
+  
+  //console.log(main);
+  show(main[0]);
+}
+function nodeToXML(node, indentation, out) {
+  if (node.nodeName.toLowerCase() == "#text") {
+    out += node.nodeValue;
+  } else {
+   out += indentation+"<"+node.nodeName.toLowerCase();
+   
+   if (node.attributes!=null) {
+      for (var i=0; i<node.attributes.length; i++) {
+         var item = node.attributes.item(i);
+         var value = item.nodeValue;
+         if (value==null) value = "";
+         out += " "+item.nodeName+"=\""+value+"\"";
+      }
+   }
+   if (node.nodeName.toLowerCase() == "div") {
+      out += ">\n";
+   } else {
+      out += ">";
+   }
+   for (var i=0; i<node.childNodes.length; i++) {
+      var item = node.childNodes.item(i);
+      out = nodeToXML(item, indentation+"   ", out);
+   }
+   if (node.nodeValue!=null) 
+      out += indentation+"   "+node.nodeValue+"\n";
+      if (node.nodeName.toLowerCase() == "div") {
+        out += indentation+"</"+node.nodeName.toLowerCase()+">\n";
+      } else {
+        out += "</"+node.nodeName.toLowerCase()+">\n";
+      }
+  }
+  return out;
+}
+function show(doc) {
+   var w = window.open('', 'Popup', '');
+   w.document.write('<html><head><title>Document Dump</title>');
+   w.document.write('</head><body><pre>');
+
+   var s = nodeToXML(doc, '', '');
+   s = s.replace(new RegExp('&','g'),'&amp;');
+   s = s.replace(new RegExp('<','g'),'&lt;');
+   s = s.replace(new RegExp('>','g'),'&gt;');
+   w.document.write(s);
+   w.document.write('</pre></body></html>');
+   w.document.close();
+}
+</script>
+
+</head>
+
+<body>
+  <div id="header">
+    <div id="subheader">
+      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <h1>All Mangas Reader Release Note</h1>
+    </div>
+  </div>
+  
+  <div id="menunav">
+    <div id="menuitems">
+      <ul>
+        <li><a href="faq.html">Help</a></li>
+        <li class="selected">Release note</li>
+        <li class="last"><a href="dev.html">Development</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="corpse">
+    <div id="navigation">
+      <ul id="nav">
+        <li><a class="menu main" rel="release">Release</a>
+          <ul>
+            <li><a class="menu" rel="release v4">Version 1.4</a>
+              <ul>
+                <li><a class="menu" rel="release v4 r40">Version 1.4.0</a></li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="release v3">Version 1.3</a>
+              <ul>
+                <li><a class="menu" rel="release v3 r314">Version 1.3.14</a></li>
+                <li><a class="menu" rel="release v3 r313">Version 1.3.13</a></li>
+                <li><a class="menu" rel="release v3 r312">Version 1.3.12</a></li>
+                <li><a class="menu" rel="release v3 r311">Version 1.3.11</a></li>
+                <li><a class="menu" rel="release v3 r310">Version 1.3.10</a></li>
+                <li><a class="menu" rel="release v3 r39">Version 1.3.9</a></li>
+                <li><a class="menu" rel="release v3 r38">Version 1.3.8</a></li>
+                <li><a class="menu" rel="release v3 r37">Version 1.3.7</a></li>
+                <li><a class="menu" rel="release v3 r36">Version 1.3.6</a></li>
+                <li><a class="menu" rel="release v3 r34">Version 1.3.4</a></li>
+                <li><a class="menu" rel="release v3 r33">Version 1.3.3</a></li>
+                <li><a class="menu" rel="release v3 r32">Version 1.3.2</a></li>
+                <li><a class="menu" rel="release v3 r31">Version 1.3.1</a></li>
+                <li><a class="menu" rel="release v3 r30">Version 1.3.0</a></li>
+              </ul>
+            </li>
+            <li><a class="menu" rel="release v2">Version 1.2</a>
+              <ul>
+                <li><a class="menu" rel="release v2 r299">Version 1.2.99</a></li>
+                <li><a class="menu" rel="release v2 r220">Version 1.2.20</a></li>
+                <li><a class="menu" rel="release v2 r219">Version 1.2.19</a></li>
+                <li><a class="menu" rel="release v2 r218">Version 1.2.18</a></li>
+                <li><a class="menu" rel="release v2 r217">Version 1.2.17</a></li>
+                <li><a class="menu" rel="release v2 r216">Version 1.2.16</a></li>
+                <li><a class="menu" rel="release v2 r215">Version 1.2.15</a></li>
+                <li><a class="menu" rel="release v2 r214">Version 1.2.14</a></li>
+                <li><a class="menu" rel="release v2 r213">Version 1.2.13</a></li>
+                <li><a class="menu" rel="release v2 r212">Version 1.2.12</a></li>
+                <li><a class="menu" rel="release v2 r211">Version 1.2.11</a></li>
+                <li><a class="menu" rel="release v2 r210">Version 1.2.10</a></li>
+                <li><a class="menu" rel="release v2 r29">Version 1.2.9</a></li>
+                <li><a class="menu" rel="release v2 r28">Version 1.2.8</a></li>
+                <li><a class="menu" rel="release v2 r27">Version 1.2.7</a></li>
+                <li><a class="menu" rel="release v2 r26">Version 1.2.6</a></li>
+                <li><a class="menu" rel="release v2 r23">Version 1.2.3</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div id="subcorpse">
+      <div id="maincorpse">
+         <div id="release" class="article">
+            <h2>Release</h2>
+            <div id="v4" class="article">
+               <h3>Version 1.4</h3>
+               <p>From this version, All Mangas Reader does not include any websites implementations. They are all hosted at <a href="http://community.allmangasreader.com/">All Mangas Reader Community</a></p>
+               <p>This will make AMR evolve faster ! On this community, developers can update websites implementations as soon as bugs appear. Validators validate implementations if they work and release it so any AMR user will have it in his AMR without any new release of the extension !</p>
+               <p>Every user can report issues or website requests on this new website to help the community</p>
+               <p>I hope you will enjoy these new features !</p>
+               <div id="r40" class="article">
+                  <h3>Version 1.4.0</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Websites implementations are hosted on <a href="http://community.allmangasreader.com/">All Mangas Reader Community</a></li>
+                      <li>Option to have notifications when websites are updated or when new websites are released.</li>
+                      <li>Supported websites tab in the option page now contains : 
+                        <ul>
+                          <li>Developer name : I published all previous websites on AMR Community even if i didn't develop all these implementations.</li>
+                          <li>Revision : latest version number of the implementation. If you are a developer or a validator, when you test a non released version of a website, this revision number turns as temporary and is replaced by a button "Release" which allows you to replace your temporary version by the latest released and continue receiving updates for this website.</li>
+                          <li>Discuss : View the discussion thread on AMR Community for this implementation revision</li>
+                        </ul>
+                        I encourage you to participate on AMR Community, the more we are, the faster AMR will grow !
+                      </li>
+                    </ul>
+                  </p>
+                  <p>New Websites : This section won't exist anymore in the release note as websites implementations does not rely on the extension code anymore !<br />
+                  Note : just before releasing this version, some developers already tried it in beta and already added a few websites and fix bugs so new websites : <b>Manga Panda, 13Th Hour Scanlations, amanteanime, Extras Scans, Kirei Cake and Twin Dragons no Fansub</b>... Enjoy !
+                  </p>
+                  <p><b>Note</b> : If The extension does not seems to work properly at once... wait a little, all implementations must be retrieved from All Mangas Reader Community, so the first load could be a bit long...</p>
+               </div>
+            </div>
+            <div id="v3" class="article">
+               <h3>Version 1.3</h3>
+               <p>From this version, All Mangas Reader is no more hosted on Google Chrome Extension Gallery. Indeed, Google has removed AMR from its gallery.</p>
+               <p>If you still have a v1.2.xx version installed, you need to unistall it before using v1.3.xx.</p>
+               <div id="r314" class="article">
+                  <h3>Version 1.3.14</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Store websites manga lists in local webdatabase. As local webdatabase can have unlimited storage, it is more suitable to have manga lists there. Manga lists where stored in localStorage which is limited to 5Mb. That was creating a lot of bugs when more than 25 websites were activated.<br /><b>There is no more limitations on the number of activated websites !</b> All websites manga lists took about 4Mo space in webdatabase.</li>
+                      <li>Option to disable personal statistics tracking</li>
+                      <li>Add a "Stop updating" button on each manga. <br /> There was a "Stop Follow updates" button which allows you to prevent AMR from notifying you about updates on a manga. Stop updating prevent AMR from checking latest published chapters for a manga. Mangas on which "Stop updating" is on appeared darkened in the popup</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Fix websites bugs on : <ul>
+                        <li>MangaFox (antimo fix) : I hope they won't update their website just after AMR release as usual...</li>
+                        <li>Batoto</li>
+                        <li>MangasProject (nwT fix)</li>
+                        <li>UnixManga</li>
+                        <li>ReadManga.ru / AdultManga.ru (Mynglam fix)</li>
+                        <li>CXCScans (braiam fix)</li>
+                        <li>Anime story</li>
+                        <li>Vortex scans (braiam fix)</li>
+                        <li>TheSpectrum</li>
+                        <li>EatManga</li>
+                        <li>Manga-Ar</li>
+                        <li>Animeextremist</li>
+                        <li>Manga2u (which is now Mangatoyou)</li>
+                      </ul></li>
+                      <li>Fix synchronization bug (Nifiloa fix)</li>
+                      <li>Fix notification popup height</li>
+                      <li>Remove a console.log which was logging a line on every webpage...</li>
+                    </ul>
+                  </p>
+                  <p>New Websites (implementations by braiam):
+                    <ul class="icons">
+                      <li><img src="img/japanzai.png"/>Ecchi Japanzai</li>
+                      <li><img src="img/imperial.png"/>Imperial scans</li>
+                    </ul> 
+                  </p>
+                  <br />
+                  <p><b>What's next :</b><br />
+                  I took time to make this release because I have less free time than I used to have... 
+                  <br />Next release (unless big issues appears) will be 1.4 ! <br /> In 1.4, all websites implementations will be removed from AMR. They will be hosted on a new website : <b>All Mangas Reader Community</b>.
+                  <br />This collaborative website will allow you to have websites implementations up-to-date even if I don't release a new AMR version : 
+                  <ul>
+                    <li>developers will be able to post their updates which will be released automatically (without a new AMR release) after being validated. They will be able to add new implementations too</li>
+                    <li>validators will have in charge to test developers implementation and to release them</li>
+                    <li>users will be able to post issues concerning websites implementations.</li>
+                  </ul>
+                  This website will use your login password on the forum. As more and more developers are publishing fix for websites on the forum, I think they deserve a proper way to update website and release it as soon as possible. Hope you will enjoy it !
+                  </p>                  
+               </div>
+               <div id="r313" class="article">
+                  <h3>Version 1.3.13</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Personal statistics : the <img src="img/pstat.png" /> button access your personal statistics. Included : 
+                        <ul>
+                          <li>History of manga read (date + time spent reading)</li>
+                          <li>Stats by manga (time spent reading)</li>
+                          <li>Global stats (average chapters read per day / month, average time spent reading per day / month, most read manga, favorite website, ...)</li>
+                          <li>Graphs to represent your reading</li>
+                        </ul>
+                        <b>Note : </b> Your statistics can't be synchronized over your computers. You will have to wait for the new website on which you will be able a synchronize and share your manga list and reading history in your account.
+                        <br /><br />
+                      </li>
+                      <li>New option to not display a badge with the number of unread manga but display AMR's icon in color if there are new mangas and in grey if not.</li>
+                      <li>Each manga stores the last time a new chapter has been published. An option allows you to display a calendar icon representing the last time a new chapter has been published (<img src="img/day.png" title="Last time new chapter : 2 days ago" />, <img src="img/week.png" title="Last time new chapter : 3 weeks ago" /> or <img src="img/month.png" title="Last time new chapter : 4 months ago" />). If not used, a tooltip will appear on the manga name telling : "Last time new chapter : 2 weeks ago" for example
+                      <br /><b>Note : </b>This functionnality will be effective when the next chapter of your mangas will arrive.
+                      <br /><br />
+                      </li>
+                      <li>Change all skins ! (option page has been rethinked). You can now access all AMR functionalities through a menu bar in all AMR's pages !</li>
+                      <li>Option to mark a chapter as read once it has been fully downloaded</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Fix websites bugs on : <ul>
+                        <li>MangaFox (Xibiter fix)</li>
+                        <li>Batoto : you will have to readd all your batoto mangas.<br /><b>Note : </b>To keep good relations with batoto admins, ads are not removed from chapters page even if the option is checked. While updating chapters, batoto chapters are updated one by one. I recommend you to set the chapters update frequency at least to 6 hours to not flood Batoto.<br /><br /></li>
+                        <li>MangasProject</li>
+                        <li>MangaTraders</li>
+                        <li>CityManga</li>
+                        <li>UnixManga</li>
+                        <li>Bacamanga.web.id moved to Komikid.com</li>
+                        <li>MangaHere</li>
+                        <li>MangaHead</li>
+                        <li>PunchManga</li>
+                        <li>Mangable</li>
+                        <li>ReadManga.ru / AdultManga.ru</li>
+                        <li>MangaExceed</li>
+                      </ul></li>
+                      <li>Popup in a new tab : fix overflow on bottom panel</li>
+                      <li>Take special chars into account to group mangas</li>
+                      <li>Prevent AMR from freezing while updating chapters.</li>
+                    </ul>
+                  </p>
+                  <p>New Websites (implementations by jaydee864):
+                    <ul class="icons">
+                      <li><img src="img/animexis.png"/>Animexis</li>
+                      <li><img src="img/mcreborn.png"/>MC Reborn</li>
+                      <li><img src="img/vortex.png"/>Vortex Scans</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r312" class="article">
+                  <h3>Version 1.3.12</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Notify user when he reaches the bottom of the latest published chapter.</li>
+                      <li>Spin the sharingan while loading chapters list (with an option to desactivate)</li>
+                      <li>Save bandwidth by loading updates one by one (with an option to activate it)</li>
+                      <li>Check manga on browser startup (with an option to activate it)</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Fix TheSpectrum</li>
+                      <li>Fix ClockWorkLies</li>
+                      <li>Fix Batoto</li>
+                      <li>Fix MangaFox</li>
+                    </ul>
+                  </p>
+                  <p>New Websites (implementations by mexicano21):
+                    <ul class="icons">
+                      <li><img src="img/mangaeden.png"/>MangaEden</li>
+                      <li><img src="img/titania.png"/>Titania Scanlations</li>
+                      <li><img src="img/mangatraders.png"/>Manga Traders</li>
+                      <li><img src="img/mangaexceed.png"/>Manga Exceed</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r311" class="article">
+                  <h3>Version 1.3.11</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Better zooming functionnality.</li>
+                      <li>Can choose 5 and 10 seconds before closing notification</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Fix MangaStream</li>
+                    </ul>
+                  </p>
+                  <p>New Websites :
+                    <ul class="icons">
+                      <li><img src="img/readmanga.png"/>AdultManga (in russian) (implementation developped by Mynglam).</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r310" class="article">
+                  <h3>Version 1.3.10</h3>
+                  <p>New features :
+                    <ul>
+                      <li>If at the bottom of the page, right key go to next chapter. You can desactivate this feature in the option page.</li>
+                      <li>Notifications system : when a new chapter is published, a notification appears. You can desactivate this feature in the option page. (implementation by mexicano21)</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Better zoom feature (while pressing + or - keys). Keep current scan centered while zooming.</li>
+                      <li>Fix RedHawkScans</li>
+                      <li>Fix EatManga</li>
+                      <li>Fix Animea</li>
+                    </ul>
+                  </p>
+                  <p>New Websites :
+                    <ul class="icons">
+                      <li><img src="img/mangahead.png"/>MangaHead (implementation developped by Mexicano21). There are two websites for this one (one for english scans and one for raw ones.)</li>
+                      <li><img src="img/Batoto.png"/>Batoto (implementation based on Jamie Schembri's script)</li>
+                      <li><img src="img/cxcscans.png"/>CXCScans (implementation developped by Mexicano21)</li>
+                      <li><img src="img/simplescans.png"/>Simple Scans (implementation developped by Mexicano21)</li>
+                      <li><img src="img/imangascans.png"/>Imangascans (implementation developped by Mexicano21)</li>
+                      <li><img src="img/fthscans.png"/>For The Halibut (implementation developped by Mexicano21)</li>
+                      <li><img src="img/evilflowers.png"/>Evil Flowers (implementation developped by Mexicano21)</li>
+                      <li><img src="img/easygoing.png"/>Easy Going (implementation developped by Mexicano21)</li>
+                      <li><img src="img/foolrulez.png"/>FoOlRulez (implementation developped by Mexicano21)</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r39" class="article">
+                  <h3>Version 1.3.9</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Change bookmarked scans' border color : grey...</li>
+                      <li>WASD support (use these keys to scroll)</li>
+                      <li>View AMR's version when mouse is hover AMR's icon in google chrome extension bar</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Manga Here fix</li>
+                    </ul>
+                  </p>
+                  <p>New Websites :
+                    <ul class="icons">
+                      <li><img src="img/clockworklies.png"/>Clockwork Lies (implementation developped by QaZZy)</li>
+                      <li><img src="img/japanzai.png"/>Japanzai & XscansX (implementation developped by Mexicano21)</li>
+                      <li><img src="img/mangacurse.png"/>Mangacurse (implementation developped by Mexicano21)</li>
+                      <li><img src="img/trinitybakuma.png"/>Trinity BAKumA (implementation developped by Mexicano21)</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r38" class="article">
+                  <h3>Version 1.3.8</h3>
+                  <p>New features :
+                    <ul>
+                      <li>When AMR's toolbar is hidden (after clicking on the hide button) it will auto show for 2 seconds when the mouse move in the top of the page.</li>
+                      <li>Add a "unbookmark button" in the "bookmark" popup</li>
+                      <li>Thinner border for scans</li>
+                      <li>Change the bookmarked scans border color.</li>
+                      <li>Do not show tooltip "Note : " if there is no note for a bookmark.</li>
+                      <li>No more than 25 active websites allowed (warning message in the popup if there are more). This will free some RAM for AMR, I hope there will be less bug due to RAM consumption...</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Submanga fix : submanga changed their domain (now submanga.me). Usually, such a fix would have forced you to delete and readd all of your submanga entries. I added and auto update tool (no button... it's automatic) to auto change your existing entries to submanga.me... hope it will work fine (I can assure you i tested it...)</li>
+                      <li>Synchronization does not update the "grey status" (Stop following updates) and the reading mode preferences (right to left, left to right, ...)</li>
+                      <li>Some text on on other web sites were impacted by the new page number on each scans (same style)</li>
+                      <li>MangaStream fix</li>
+                      <li>Save AMR's bar mode (hidden / visible) does not work on MangaReader and some other websites</li>
+                    </ul>
+                  </p>
+                  <p>New Websites :
+                    <ul class="icons">
+                      <li><img src="img/mangafarsi.PNG"/>MangaIR in persian (implementation developped by Sepehr)</li>
+                    </ul> 
+                  </p>
+               </div>
+               <div id="r37" class="article">
+                  <h3>Version 1.3.7</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Add "Activate all" and "Deactivate all" buttons in the "Supported websites" panel in the options page. You can filter websites by language and deactivate multiple websites at once.</li>
+                      <li>Prefetching : next chapter is prefetched in background while reading a manga chapter (a progress bar on the "Next" button indicates the loading level of the next chapter). An option allows you to deactivate this feature.</li>
+                      <li>Double click on a scan bookmarks it automatically with no note. If the scan is already bookmarked, it removes the bookmark. An option allows you to deactivate this feature.</li>
+                      <li>The loading image (before a scan is loaded) has been changed. When the scan starts loading, the loading image disappear.</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Animea fix</li>
+                      <li>Submanga fix</li>
+                    </ul>
+                  </p>
+                  <p>New Websites :
+                    <ul class="icons">
+                      <li><img src="img/mangachapter.png"/>Mangachapter (implementation developped by QaZZy)</li>
+                      <li><img src="img/unixmanga.png"/>UnixManga (implementation developped by TeoMan)</li>
+                    </ul>
+                  </p>
+               </div>
+               <div id="r36" class="article">
+                  <h3>Version 1.3.6 (There is no 1.3.5 cause I let a minor bug in 1.3.5 which is fixed in 1.3.6)</h3>
+                  <p>New features :
+                    <ul>
+                      <li>Global statistics tool : click on the <img src="img/stats.png"/> in the popup. All Mangas Reader statistics page opens. A <img src="img/find.png"> appears near each manga name in the statistics page. This button allows you to directly search this manga on all web sites within AMR's statistics page ! The search function uses your search preferences. Go to search page (or "Search manga" in the popup) to change these preferences (check / uncheck websites to search on)</li>
+                      <li>Option to custom size of AMR's popup : you can choose small/medium/big to adjust popup size. This option is usefull if you have many manga with a long name in your list.</li>
+                      <li>Page number when your mouse is over a scan</li>
+                      <li>Double tap on left/right key go to previous/next page (but no half page)</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>Left / right keys problem when only one AMR always visible bar</li>
+                      <li>Eatmanga fix</li>
+                      <li>MangaHere fix</li>
+                      <li>Submanga fix by jknito</li>
+                    </ul>
+                  </p>
+                  <p>New Website :
+                    <ul class="icons">
+                      <li><img src="img/redhawkscans.png"/>Redhawkscans</li>
+                    </ul>
+                  </p>
+                  <p><b>I would like to know....</b>
+                    <ul>
+                      <li>What do you think about statistics page ? (please tell me your ideas to improve this statistics page on the forum... Thanks !)</li>
+                      <li>Have you seen the skin picker next to +1 one button on AMR's web site ? What skin suits you the best ? Personnaly, I prefer the dark-red / black one. And you (please answer on the forum...) ?</li>
+                  </p>
+               </div>
+               <div id="r34" class="article">
+                  <h3>Version 1.3.4</h3>
+                  <p>This version is a fix version : </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>MangaStream changed their layout for the new chapters they publish. AMR recognize both layouts. (As you are about 3000 to read new chapters for Naruto, Bleach and One Piece on MangaStream, I released this version for you)</li>
+                      <li>Improve and fix left / right keys functionnality as discussed on the forum (left key go to the bottom of previous page and then to the top...). Fix left / right key functionnality for MangaStream and for little scans.</li>
+                    </ul>
+                  </p>
+                  <p><b>Note : AMR's main page will change next week ! There will be a statistics page on which you will find everything you want about AMR's usage !</b></p>
+               </div>
+               <div id="r33" class="article">
+                  <h3>Version 1.3.3</h3>
+                  <p>This version is a fix version and does not contains many functionnal improvement : </p>
+                  <p>New functionnalities : 
+                    <ul>
+                      <li>Add an option to use / not use the left / right keys while reading a manga to go previous / next scan.</li>
+                      <li>Change the left / right key behaviour. Left key always goes to previous scan. If current scan is the first, it goes to the top of the page. Right key goes to top next scan, then to the bottom of the scan, then to the next scan... If you are at the bottom of the last scan, it goes to the bottom of the page. This way of reading has been discussed on the forum.</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>AMR did not display correctly the manga list depending on categories states (include / exclude / none)</li>
+                      <li>Some mangas in MangaFox had no title and tied up with the first manga of the list</li>
+                      <li>On the pop-out page, the categories do not follow the page when it is scrolled down</li>
+                      <li>Mangafox pulls in the "." key to go to the next page in the chapter, so when you're typing in a bookmark comment and you add a period, it refreshes.</li>
+                      <li>Fix EatManga : you will have to refresh chapters list (click on <img src="img/history.png" /> and "refresh now" button) and visit latest chapter read for each manga using eatmanga in your list to make it work... sorry about that...</li>
+                      <li>Fix MangaAccess : they actually fixed this bug themselves... it was coming from the site url which was http://beta.manga-access.com/... for a week. This has been fixed in AMR too so it won't happen again.</li>
+                    </ul>
+                  </p>
+               </div>
+               <div id="r32" class="article">
+                  <h3>Version 1.3.2</h3>
+                  <p>I have let a big bug in V1.3.1 so I fixed it in 1.3.2 (This bug affected some popup action button which were not working)</p>
+               </div>
+               <div id="r31" class="article">
+                  <h3>Version 1.3.1</h3>
+                  <p>New functionnalities :
+                    <ul>
+                      <li>To add a manga in a category, you can now drag the category into the manga, you still can drag the manga icon (next to the title of the manga) into the category.</li>
+                      <li>New shortcut's buttons in the popup to access AMR's forum directly and to open the popup in a tab</li>
+                      <li>New "Update now" button in the timers panel to refresh manga's chapters lists.</li>
+                      <li>You can now use left and right arrows to switch pages while reading a manga</li>
+                      <li>If you have checked the "group mangas with the same name" option, new chapters on multiple websites for one manga group is count as 1 on AMR's icon</li>
+                      <li>In bookmarks tool, you can choose to view "All manga" bookmarks.</li>
+                      <li>In the Search Tool :
+                        <ul>
+                          <li>A button to open all websites for a manga at once has been added</li>
+                          <li>A button to add a manga in your list without opening it has been added</li>
+                          <li>A button to add all websites for a manga at once in your list without opening it has been added</li>
+                        </ul>
+                      </li>
+                      <li>An overall text on the dropdown chapters lists informs about the latest publish chapter of this manga in list mode</li>
+                    </ul>
+                  </p>
+                  <p>Bug Fixes :
+                    <ul>
+                      <li>If popup has a black background and there is no manga displayed in the list, the text was unreadable</li>
+                      <li>In block mode, manga coming from unsupported websites (like SomeManga) caused the manga to not appear in the list</li>
+                      <li>The grey bar on top of supported websites has been replaced by a black one</li>
+                      <li>Improve popup loading time</li>
+                    </ul>
+                  </p>
+                  <p>Websites changes :
+                    <ul class="icons">
+                      <li><img src="img/mangastream.png"/>Some scans in mangastream were black on MangaStream, the problem was coming from AdBlock but is now solved !</li>
+                      <li><img src="img/mangaaccess.png"/>BleachExile has been removed and is now MangaAccess. Unfortunately, you must delete and readd your mangas manually on this new website. (but it must be fast with the new features in the search tool : on each BleachExile manga, click on the <img src="img/down_der.png"/> button and click on "Search this manga elsewhere", Click on the + button next to MangaAccess icon <img src="img/mangaaccess.png"/>, that's done !)</li>
+                      <li><img src="img/mangaar.png"/>Manga-Ar is back !</li>
+                      <li><img src="img/submanga.png"/>Fixed bugs due to changes on SubManga</li>
+                      <li><img src="img/centraldemangas.png"/>Fixed bugs due to changes on CentralDeMangas</li>
+                      <li><img src="img/animea.png"/>Fixed bugs due to changes on AnimeA</li>
+                    </ul>
+                  </p>
+               </div>
+               <div id="r30" class="article">
+                  <h3>Version 1.3.0</h3>
+                  <p><b>This version represents the New AMR !</b> The whole code has been rewritted to be more efficient.</p>
+                  <p>Here is an overview of new functionnalities :
+                    <ul>
+                      <li>Global :
+                        <ul>
+                          <li>Parameterize the update frequency</li>
+                          <li>Prevent mangas from being automatically added in the list if needed</li>
+                          <li>Bookmark manga's chapter and / or scans</li>
+                          <li>Import / Export manga and bookmarks list</li>
+                          <li>New help page</li>
+                        </ul>
+                      </li>
+                      <li>New popup UI with new features : 
+                        <ul>
+                          <li>Group manga with the same name (on one line)</li>
+                          <li>Stop following updates for a manga</li>
+                          <li>Better search feature in the popup</li>
+                          <li>Read back a manga from start (or from where you want)</li>
+                          <li>Organize your mangas into categories</li>
+                          <li>View your reading progression for a manga</li>
+                          <li>Global actions to delete or mark as read mangas</li>
+                        </ul>
+                      </li>
+                      <li>Improvements of manga reading : 
+                        <ul>
+                          <li>Have one always visible (and hideable) bar while reading a manga</li>
+                          <li>Change display mode (book left to right, right to left or on top of each others) for a specific manga</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </p>
+                  <p>To know in detail how new AMR works, read the <a href="/faq.html">help page</a></p>
+                  <p>Here are changes about supported web sites :
+                    <ul>
+                      <li>New supported web sites : 
+                        <ul class="icons">
+                          <li><img src="img/english.png"/>Scans in English : 
+                            <ul class="icons">
+                              <li><img src="img/eatmanga.png">EatManga</li>
+                              <li><img src="img/goodmanga.png">GoodManga</li>
+                            </ul>
+                          </li>
+                          <li><img src="img/indonesian.png"/>Scans in Indonesian :
+                            <ul class="icons">
+                              <li><img src="img/bacamanga.png">BacaManga</li>
+                            </ul>
+                          </li>
+                          <li><img src="img/russian.png"/>Scans in Russian : 
+                            <ul class="icons">
+                              <li><img src="img/Manga24.png">Manga24</li>
+                              <li><img src="img/readmanga.png">ReadManga</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li>Removed web sites : 
+                        <ul>
+                          <li>SomeManga has been removed from AMR's supported web sites because it is now private...</li>
+                          <li>Manga-Ar has been removed from AMR's supported web sites because it has been taken down...</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </p>
+                  <p>
+                    I still want to promote foreign language web sites ! If you know good manga web sites with scans in arabic (to replace manga-ar), chinese, japanese, korean or any new language you need, let me a note on the forum !</p>
+                  </p>
+               </div>
+            </div>
+            <div id="v2" class="article">
+               <h3>Version 1.2</h3>
+               <div id="r299" class="article">
+                  <h3>Version 1.2.99</h3>
+                  <p>This version has been created only to ensure the migration to 1.3.0. Indeed, as google chrome does not want to host AMR anymore, I need to host it myself. But I can not use the same extension ID as before because it is owned by google. So, the new version has a new ID and AMR 1.2.99 has been made to allow users to reuse their manga list in the new AMR.</p>
+              </div>
+               <div id="r220" class="article">
+                  <h3>Version 1.2.20</h3>
+                  <p>Fixed bug on MangaStream (some scans were distorted for some users : the culprit was the option "Load scans in the order of the chapter", I fixed it...)</p>
+                  <p><b>About malware warnings</b></p>
+                  <p>Some of you have reported Malware warnings from AMR. The problem is that AMR access the web site www.thespectrum.net which is detected as containing malware by Avast and other free antiviruses... On thespectrum web site, in the FAQ, you can read this : </p>
+                  <p><b>Why is my antivirus saying your site is bad ?</b>
+                  I've received this question a few times and the bottom line is my website does NOT have viruses. I've received these questions from people using Internet Explorer 6, easily one of the most virus-prone browsers out there. I've used countless virus-free computers to access this website and no antivirus program has ever told me my site was infected. I believe that those emailing my asking why my site says it's infected already have pre-existing viruses on their computer because they haven't taken the measures to protect their computer.
+                  Every computer needs to either have the updated Internet Explorer 7, or updated versions of other browsers such as Firefox and Opera. Users, especially those using Windows XP, should do some research and get good programs like ESET Smart Security, which is better than the numerous free antivirus programs out there.
+                  </p>
+                  <p><b>This alert is a false positive !</b>Ignore it since antiviruses fix their virus base... If you are not sure of this web site, desactivate TheSpectrum web site in the option page, AMR will then not access this web site anymore.</p>
+               </div>
+               <div id="r219" class="article">
+                  <h3>Version 1.2.19</h3>
+                  <p>Fixed bug on MangaReader (problem in selected chapter in list of chapters)</p>
+                  <p>Some of you have reported bugs on MangaStream (some scans are a little distorted). I can not reproduce this bug. If you still have it, can you let me know the manga and chapter on which it occurs, your screen resolution and the value of your AMR options "Resize scans images to fit screen if they are to wide" and if you display chapters as a book or not (and a link to a picture of the bug if you have one). Thanks !</p>
+               </div>
+               <div id="r218" class="article">
+                  <h3>Version 1.2.18</h3>
+                  <p>Fixed bug on MangaStream</p>
+               </div>
+               <div id="r217" class="article">
+                  <h3>Version 1.2.17</h3>
+                  <p>Fixed bug on MangaStream</p>
+                  <p>MangaStream's changes were more complex than expected... I finally fixed them and change the way I build scans images because it was consuming a lot (A LOT) of memory... It is now lighter and more efficient (you won't have some parts of the image on top of the scans anymore... until they rechange their web site...). (If you look close to MangaStream page code, you will see that scans are composed of multiple little parts images of the scan AND of images that are not related to the scan but which are displayed under the real scans part in order to disturb AMR... That won't disturb it anymore...)
+                  </p>
+                  <p>All Mangas Reader won't display the release note of new versions spontaneously but just warns you in the popup that it has been updated with a little icon that you have probably seen if you read this... Sorry for having disturb you with the frequent release notes...</p>
+               </div>
+               <div id="r216" class="article">
+                  <h3>Version 1.2.16</h3>
+                  <p>Fixed bug on MangaStream and StopTazmo</p>
+                  <p>The MangaStream bug was not due to AMR previous release but to a big, big change in MangaStream web site...
+                  <br />I suspect them to have waited for a new AMR release to publish their latest version...
+                  <br />For your information, MangaStream does not like AMR extension... I tried to negociate with them (force ads for MangaStream in the extension, ...) but they just want AMR to not work with MangaStream, ... according to their own words : "Let's the fight begin...". 
+                  <br />This time, they have splitted scans images in multiple little images (which position and size are randomized), so this will be very difficult for AMR to build back the images and insert it in the full chapter way...
+                  <br />Challenge accepted ! (And it works as you can see)
+                  </p>
+               </div>
+               <div id="r215" class="article">
+                  <h3>Version 1.2.15</h3>
+                  <p>Support for new web sites :</p>
+                  <ul style="list-style-type:none">
+                    <li><img src="img/mangaar.png">&nbsp;&nbsp;MangaAr : scans translated in arabic</li>
+                    <li><img src="img/animextremist.png">&nbsp;&nbsp;Animextremist : scans translated in spanish (implementation developped by jknito)</li>
+                    <li><img src="img/mangasama.png">&nbsp;&nbsp;MangaSama : scans translated in spanish</li>
+                    <li><img src="img/mangasproject.png">&nbsp;&nbsp;MangasProject : scans translated in portuguese</li>
+                    <li><img src="img/mangaturk.png">&nbsp;&nbsp;MangaTurk : scans translated in turkish</li>
+                    <li><img src="img/vnsharing.png">&nbsp;&nbsp;VNSharing : scans translated in vietnamese</li> 
+                    <li><img src="img/tenmanga.png">&nbsp;&nbsp;TenManga : scans in english AND scans translated in chinese</li>
+                    <li><img src="img/manga2u.png">&nbsp;&nbsp;Manga2U</li>
+                    <li><img src="img/stoptazmo.png">&nbsp;&nbsp;StopTazmo</li>
+                  </ul>
+                  <p>As you can see, the new web sites are mainly in foreign languages, I will continue to promote languages. If you know good web sites in Russian, Japanese, Chinese, ... please tell me</p>
+                  <p><b>Improving <a href="/search.html">Search Tool</a> : </b>The search tool is no more waiting for all results to be found, the results are displayed as they come. You can filter by web site and filter web sites by language !</p>
+                  <p>Fixed bug on SomeManga, Mangable and TheSpectrum</p>
+               </div>
+               <div id="r214" class="article">
+                  <h3>Version 1.2.14</h3>
+                  <p>Fixed bug on MangaFox and SomeManga. I hope there won't be more bugs...</p>
+               </div>
+               <div id="r213" class="article">
+                  <h3>Version 1.2.13</h3>
+                  <p>Fixed bug on MangaFox. Don't worry, your latest chapter read has been saved and will reappear in AMR's popup soon...</p>
+               </div>
+               <div id="r212" class="article">
+                  <h3>Version 1.2.12</h3>
+                  <p>Fixed bugs on SomeManga</p>
+                  <p>AMR was querying pages that does not suit Some Manga admin, I changed it so it won't bother him. He must put back the missing pages soon...</p>
+               </div>
+               <div id="r211" class="article">
+                  <h3>Version 1.2.11</h3>
+                  <p>Fixed bugs on SomeManga and MangaFox</p>
+                  <p>Support for new web sites :</p>
+                  <ul style="list-style-type:none">
+                    <li><img src="img/ourmanga.png">&nbsp;&nbsp;Our Manga</li>
+                    <li><img src="img/mangahere.png">&nbsp;&nbsp;Manga Here</li>
+                    <li><img src="img/centraldemangas.png">&nbsp;&nbsp;Central de Mangas : scans translated in portuguese</li>
+                    <li><img src="img/punchmangas.png">&nbsp;&nbsp;Punch Mangas : scans translated in portuguese</li>
+                    <li><img src="img/mangalib.png">&nbsp;&nbsp;Manga Library : scans translated in polish</li>
+                    <li><img src="img/itascan.png">&nbsp;&nbsp;ItaScan : scans translated in italian (note that there could be multiple translations for a same chapter, so the chapter list contains all translations. Next and Previous chapter buttons could access the same chapter from a different team. Use the list to navigate)</li>
+                  </ul>
+                  <p>I am trying to promote web sites in different languages. Web sites in languages which are not currently supported will be prioritary. To add support for a new language, leave me a comment with the name of the web site in your language, and not only the language itself. Thanks ! (And I will continue to add support for english web sites, of course)</p>
+               </div>
+               <div id="r210" class="article">
+                  <h3>Version 1.2.10</h3>
+                  <p>Fixed bugs on <b>Manga Reader</b> : I forget to include it in the previous release... (You must delete manually all the "fake" entries corresponding to the chapters instead of the manga in your list... sorry about that)</p>
+               </div>
+               <div id="r29" class="article">
+                  <h3>Version 1.2.9</h3>
+                  <p>Fixed bugs on SubManga (thanks to Adrián García), Manga Stream and AnimeStory.</p>
+                  <p>Sorry for not having fix it earlier but my daughter was born on January, the 12th... as a new dad, i was a little busy...</p>
+                  <p>New features will come when i can sleep at night :)</p>
+               </div>
+               <div id="r28" class="article">
+                  <h3>Version 1.2.8</h3>
+                  <p>Fixed bug on SomeManga and SomeMango : SomeManga changed the way their web site works. The full list of manga can now not be retrieved. AMR will ask you to key search words to find mangas for this web site. The list of chapters problem has been fixed.</p>
+               </div>
+               <div id="r27" class="article">
+                  <h3>Version 1.2.7</h3>
+                  <p>Support for new web sites :</p>
+                  <ul style="list-style-type:none">
+                    <li><img src="img/somemanga.png">&nbsp;&nbsp;SomeMango : manga hosted on SomeMango (sister site of SomeManga) now works in AMR</li>
+                    <li><img src="img/thespectrum.png">&nbsp;&nbsp;The Spectrum</li>
+                    <li><img src="img/mangakong.png">&nbsp;&nbsp;Manga Kong (KivManga and MrsManga are not included, ask me if you need it)</li>
+                  </ul>
+                  <p>New features : </p>
+                  <ul>
+                    <li><b>AMR Search Tool</b> : <a href="/search.html">this page</a> allows you to search manga on all web sites supported by AMR !</li>
+                    <li>In AMR's popup, you can now search manga on every web site !</li>
+                    <li>You can desactivate web sites you don't use in the <a href="/options.html">option page</a>. When you desactivate a web site, AMR free the memory associated to this web site, this web site won't appear in the popup any more.</li>
+                  </ul>
+                  <p>Bug fixed :</p>
+                  <ul>
+                  <li>Fixed navigation bug (access chapters through list of chapters) on BleachExile, Animea, CityManga, Manga-Fox, Mangable.</li>
+                  <li>Fixed displaying bug in the popup which prevent the delete button to be displayed</li>
+                  <li>I fixed the bug on Canary (and chrome 9 dev) which displays a zero-width popup. But this bug could reappear, it is a chrome side bug and many extensions have the same issue...</li>
+                  <ul>
+               </div>
+               <div id="r26" class="article">
+                  <h3>Version 1.2.6</h3>
+                  <p>Support for new web sites :</p>
+                  <ul style="list-style-type:none">
+                    <li><img src="img/animea.png">&nbsp;&nbsp;AnimeA</li>
+                    <li><img src="img/mangable.png">&nbsp;&nbsp;Mangable</li>
+                    <li><img src="img/citymanga.png">&nbsp;&nbsp;CityManga</li>
+                    <li><img src="img/animestory.png">&nbsp;&nbsp;Anime Story (french scans)</li>
+                    <li><img src="img/submanga.png">&nbsp;&nbsp;Sub Manga (spanish scans)</li>
+                  </ul>
+                  <p>New feature : the list of supported web sites is now sorted depending on your favorite sites. (Sites for which you have the most manga in your list will be on top)</p>
+                  <p>Fixed a few bug on MangaStream, MangaReader and BleachExile.</p>
+               </div>
+               <div id="r23" class="article">
+                  <h3>Version 1.2.3</h3>
+                  <p>As I received many requests, I added the following features :</p>
+                  <ul>
+                    <li>Added an option to prevent images from being resized to fit the page. If you have a small resolution, uncheck this option so the scans won't be resized</li>
+                    <li>Added an option to change the background color of the popup. As some of you prefered the black background, they can choose to come back to it.</li>
+                    <li>Added an option to load scans in the order of the chapter. If you check it, the first scan will be loaded first then the second and so on. Checking this option will slow down the chapter loading but it is indicated if your connection is slow. In this case you don't have to wait too much time to start reading your chapter.</li>
+                    <li>Added a delete button on the "rate the extension" panel in mangas web site. Clicking on this button will automatically uncheck the associated option so you won't have this panel anymore.</li>
+                    <li>Fixed the problem with SomeManga</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>  
+  <div id="footer">
+    <div id="subfooter">
+      <span>All Mangas Reader 2011.</span>
+    </div>
+  </div>
+</body>
+
+</html>
