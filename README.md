@@ -11,10 +11,10 @@ click "Load unpacked extension...", look for the folder where you cloned the rep
 More info:
 
   1) Plugins used:
-    * jQuery UI
-    * jQuery
-    * prettyPhoto
-    * SimpleModal
-    * Treeview
-    * Prototype
+  * jQuery UI
+  * jQuery
+  * prettyPhoto
+  * SimpleModal
+  * Treeview
+  * Prototype
 
