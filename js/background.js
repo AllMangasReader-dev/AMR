@@ -182,9 +182,9 @@ function init() {
             //This test is done to remove inconsistent entries
           //} else {
           //if (lstTmp[i].mirror) {
-            // ########### CONVERSION submanga.com en submanga.me
-            lstTmp[i].url = replaceInUrls(lstTmp[i].url, "submanga.com", "submanga.me");
-            lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "submanga.com", "submanga.me");
+            // ########### CONVERSION submanga.me en submanga.com
+            lstTmp[i].url = replaceInUrls(lstTmp[i].url, "submanga.me", "submanga.com");
+            lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "submanga.me", "submanga.com");
             
             lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.mangafox.com", "mangafox.me");
             lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.mangafox.com", "mangafox.me");
