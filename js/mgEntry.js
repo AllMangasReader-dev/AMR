@@ -9,8 +9,13 @@
   His goal is to load all different mangas mirror specifics js and to create 
   the manga array.
 */
+//For local tests
 //var amrc_repository = "http://amrroot/community/latest/";
-var amrc_repository = "http://community.allmangasreader.com/latest/";
+//For remote tests in http (manifest 1.0)
+//var amrc_repository = "http://community.allmangasreader.com/latest/";
+//To be compatible with manifest 2.0 CSPs : 
+var amrc_repository = "https://ssl10.ovh.net/~allmanga/community/latest/";
+
 //var amrc_root = "http://amrroot/community/";
 var amrc_root = "http://community.allmangasreader.com/";
 
