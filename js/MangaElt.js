@@ -42,7 +42,8 @@ function MangaElt(obj) {
   this.listChaps = new Array();
   if (obj.listChaps != undefined && obj.listChaps != null && obj.listChaps != "null") {
     if (!isArray(obj.cats)) {
-      this.listChaps = $A(eval('(' + obj.listChaps + ')'));
+      // this.listChaps = $A(eval('(' + obj.listChaps + ')')); --> remove eval function
+      this.listChaps = JSON.parse(obj.listChaps);
     }
   }
   this.read = 0;
@@ -62,7 +63,8 @@ function MangaElt(obj) {
     if (isArray(obj.cats)) {
       this.cats = obj.cats;
     } else {
-      this.cats = $A(eval('(' + obj.cats + ')'));
+      // this.cats = $A(eval('(' + obj.cats + ')')); --> remove eval function
+      this.cats = JSON.parse(obj.cats);
     }
   }
   this.ts = Math.round((new Date()).getTime() / 1000);
@@ -142,7 +144,8 @@ function MangaElt(obj) {
       if (isArray(obj.cats)) {
         this.cats = obj.cats;
       } else {
-        this.cats = $A(eval('(' + obj.cats + ')'));
+        // this.cats = $A(eval('(' + obj.cats + ')')); --> remove eval function
+        this.cats = JSON.parse(obj.cats);
       }
     }
     

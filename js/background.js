@@ -1,4 +1,4 @@
-﻿// The eval functions are market with (***), if you like to hunt them donw, just find those.
+// The eval functions are market with (***), if you like to hunt them donw, just find those.
 //jQuery.noConflict();
 var mangaList;
 var mirrors;
@@ -174,7 +174,8 @@ function init() {
       if (!(list == undefined || list == null || list == "null")) {
         //console.log("Liste de mangas : " + list);
 		// Here we are using eval (***)
-        var lstTmp = $A(eval('(' + list + ')'));
+        // var lstTmp = $A(eval('(' + list + ')')); --> remove eval function
+		    var lstTmp = JSON.parse(list);
         //console.log("Taille de la liste de mangas : " + lstTmp.length);
         for (var i = 0; i < lstTmp.length; i++) {
           //if (lstTmp[i].urlListChaps == undefined || lstTmp[i].urlListChaps == null || lstTmp[i].urlListChaps == "null" || lstTmp[i].urlListChaps == "") {
@@ -198,7 +199,8 @@ function init() {
       //Load bookmarks
       var bms = localStorage["bookmarks"];
 	  // Here we are using eval (***)
-      bookmarks = $A(eval('(' + bms + ')'));
+      //bookmarks = $A(eval('(' + bms + ')')); --> remove eval function
+      bookmarks = JSON.parse(bms);
       
       var pars = getParameters();
       
@@ -1269,7 +1271,8 @@ function deleteBookmark(obj) {
 function activateMirror(mirrorName) {
   var states = localStorage["mirrorStates"];
   // Here we are using eval (***)
-  var lstTmp = $A(eval('(' + states + ')'));
+  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
+  var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
       if (lstTmp[j].mirror == mirrorName) {
@@ -1305,7 +1308,8 @@ function desactivateMirror(mirrorName) {
   if (nb == 0) {
     var states = localStorage["mirrorStates"];
 	// Here we are using eval (***)
-    var lstTmp = $A(eval('(' + states + ')'));
+    //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
+    var lstTmp = JSON.parse(states);
     if (lstTmp.length > 0) {
       for (var j = 0; j < lstTmp.length; j++) {
         if (lstTmp[j].mirror == mirrorName) {
@@ -1336,7 +1340,8 @@ function initMirrorState() {
     instantiateMirrors();
   } else {
   // Here we are using eval (***)
-    var lstTmp = $A(eval('(' + states + ')'));
+    //var lstTmp = $A(eval('(' + states + ')')); --> Remove eval function 
+    var lstTmp = JSON.parse(states);
     if (lstTmp.length > 0) {
       var toUpdate = false;
       for (var i = 0; i < mirrors.length; i++) {
@@ -1375,7 +1380,8 @@ function instantiateMirrors() {
 function isMirrorActivated(mirrorName) {
   var states = localStorage["mirrorStates"];
   // Here we are using eval (***)
-  var lstTmp = $A(eval('(' + states + ')'));
+  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
+  var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
       if (lstTmp[j].mirror == mirrorName) {
@@ -1389,7 +1395,8 @@ function isMirrorActivated(mirrorName) {
 function hasDesactivatedOnce() {
   var states = localStorage["mirrorStates"];
   // Here we are using eval (***)
-  var lstTmp = $A(eval('(' + states + ')'));
+  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
+  var lstTmp = JSON.parse(states);
   var nbActi = 0;
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
@@ -1405,7 +1412,8 @@ function activatedMirrors() {
   var list = new Array();
   var states = localStorage["mirrorStates"];
   // Here we are using eval (***)
-  var lstTmp = $A(eval('(' + states + ')'));
+  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
+  var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
       if (lstTmp[j].activated == true) {
@@ -1430,7 +1438,8 @@ function getParameters() {
     localStorage["parameters"] = $H(res).toJSON();
   } else {
   // Here we are using eval (***)
-    res = eval('(' + params + ')');
+    // res = eval('(' + params + ')'); --> remove eval function
+    res = JSON.parse(params);
     initParam(res, "omSite", 0);
     initParam(res, "newTab", 0);
     initParam(res, "sync", 0);

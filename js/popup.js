@@ -1,4 +1,4 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
@@ -1128,6 +1128,15 @@ $(function () {
          openTab("/popup.html?mode=normal");
       }
    }
+    $("#searchBoxInput").keypress(function (e) {
+       var key = e.keyCode || e.which;
+       if (key == 13) {
+          search();
+       }
+    });
+    $("#butFind").click(function (e) {
+       search();
+    });
 });
 function init() {
    setTimeout(function () {
@@ -2426,12 +2435,4 @@ function getTimeSince(timeDif) {
    }
    return txt;
 }
-document.getElementById("searchBoxInput").onkeypress = function (e) {
-   var key = e.keyCode || e.which;
-   if (key == 13) {
-      search();
-   }
-};
-document.getElementById("butFind").onclick = function (e) {
-   search();
-};
+
