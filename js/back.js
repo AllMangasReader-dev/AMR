@@ -91,7 +91,7 @@ function initPage() {
                 }
                 var where = getMangaMirror().whereDoIWriteScans(document, window.location.href);
                 amrWhereScans = where;
-                $.data("amrparameters", response);
+                $(document.body).data("amrparameters", response);
                 //Get specific mode for currentManga
                 var curmode = -1;
                 if (resp != null && resp.display) {
@@ -541,7 +541,7 @@ function writeNavigation(where, select, res, params) {
         var _butMode = this;
         sendExtRequest(obj, $(this), function() {
           $(_butMode).data("curmode", mdnext);
-          transformImagesInBook(amrWhereScans, mdnext, $.data("amrparameters"));
+          transformImagesInBook(amrWhereScans, mdnext, $(document.body).data("amrparameters"));
           if (mdnext == 1) {
             $(_butMode).attr("src", chrome.extension.getURL("img/ontop.png"));
             $(_butMode).attr("title", "Scans displayed on top of each other (click to switch display mode for this manga only)");
@@ -1748,34 +1748,27 @@ function topVisible(el) {
   );
 }
 
-//Function called by the "callback" from the remote implementation
+/*
+  How does this works.... and this is the only way to load a remote script and
+  use it in a page like that...
+   - Call background page with current url to see if it matches
+   - if url matches, bakground page loads the script from remote server and call
+   chrome.tabs.executeScript(current tab) to execute it in this context...
+   - the script contains a call to registerMangaObject
+   - the content script stores the object
+   
+   --> NO CALL TO EVAL and get the remote object...
+*/
 function registerMangaObject(mirrorName, object) {
   currentMirror = object;
-  console.log("Implementation found and loaded successfully...");
 }
 
-chrome.extension.sendRequest({action: "pagematchurls", url: window.location.href}, function(response) {
+chrome.extension.sendRequest({action: "pagematchurls", url: window.location.href }, function(response) {
   if (response.isOk) {
-    /*chrome.extension.sendRequest({action: "mirrors"}, function(resp) {
-      for (var i = 0; i < resp.length; i++) {
-        //Load only the good implementation... cheaper in RAM...
-        if (response.mirrorName == resp[i].mirrorName) {
-          break;
-        }
-      }
-      removeBanner();
-      initPage();
-    });*/
-    // response.implURL is the url of mirror implementation on https !
-    //load it...
-    $.getScript(response.implURL, function() {
-      console.log("Script has been loaded...");
-      removeBanner();
-      initPage();
-    });
+    removeBanner();
+    initPage();
   }
 });
-
 
 /**
  * jQuery.ScrollTo - Easy element scrolling using jQuery.
