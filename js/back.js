@@ -5,7 +5,7 @@
 //                                                                           //
 /////////////////////////////////////////////////////////////////////////////*/
 
-var mirrors = [];
+var currentMirror = null;
 var amrWhereScans;
 var useLeftRightKeys = false;
 var autoBookmarkScans = false;
@@ -19,12 +19,13 @@ var isActive = true;
 var sendStats = false;
 
 function getMangaMirror() {
-  for (var i = 0; i < mirrors.length; i++) {
+  /*for (var i = 0; i < mirrors.length; i++) {
     if (mirrors[i].isMe(window.location.href)) {
       return mirrors[i];
     }
   }
-  return null;
+  return null;*/
+  return currentMirror;
 }
 
 function removeBanner() {
@@ -1747,18 +1748,28 @@ function topVisible(el) {
   );
 }
 
+//Function called by the "callback" from the remote implementation
+function registerMangaObject(mirrorName, object) {
+  currentMirror = object;
+  console.log("Implementation found and loaded successfully...");
+}
+
 chrome.extension.sendRequest({action: "pagematchurls", url: window.location.href}, function(response) {
-  //console.log("current url match : " + response);
   if (response.isOk) {
-    chrome.extension.sendRequest({action: "mirrors"}, function(resp) {
+    /*chrome.extension.sendRequest({action: "mirrors"}, function(resp) {
       for (var i = 0; i < resp.length; i++) {
         //Load only the good implementation... cheaper in RAM...
         if (response.mirrorName == resp[i].mirrorName) {
-          eval(resp[i].jsCode);
-          mirrors[mirrors.length] = eval(resp[i].objectName);
           break;
         }
       }
+      removeBanner();
+      initPage();
+    });*/
+    // response.implURL is the url of mirror implementation on https !
+    //load it...
+    $.getScript(response.implURL, function() {
+      console.log("Script has been loaded...");
       removeBanner();
       initPage();
     });

@@ -738,7 +738,8 @@ function createMangaEntryList(mangas, where) {
       addLastUpdate(mangas, $(".mgtitlehead", mg), $(".mgname", mg));
       fillOthers(mangas, mg);
       if (!isMangaDisplayable(mg)) {
-         mg.hide();
+        mg.addClass("hiddenMg");
+        mg.hide();
       }
       mg.appendTo(where);
    } else {
@@ -772,7 +773,8 @@ function createMangaEntryList(mangas, where) {
       fillActions(mangas, $(".mgactions", mg), true);
       fillOthers(mangas, mg);
       if (!isMangaDisplayable(mg)) {
-         mg.hide();
+        mg.addClass("hiddenMg");
+        mg.hide();
       }
       mg.appendTo(where);
    }
@@ -867,7 +869,8 @@ function createMangaEntryBlock(mangas, where) {
       addLastUpdate(mangas, $(".mgtitlehead", mg), $(".mgname", mg));
       fillOthers(mangas, mg);
       if (!isMangaDisplayable(mg)) {
-         mg.hide();
+        mg.addClass("hiddenMg");
+        mg.hide();
       }
       mg.appendTo(where);
    } else {
@@ -917,7 +920,8 @@ function createMangaEntryBlock(mangas, where) {
       fillActions(mangas, $(".mgactions", mg), true);
       fillOthers(mangas, mg);
       if (!isMangaDisplayable(mg)) {
-         mg.hide();
+        mg.addClass("hiddenMg");
+        mg.hide();
       }
       mg.appendTo(where);
    }
@@ -1063,11 +1067,11 @@ function loadMangas() {
    }
 }
 function firstLastMg() {
-   $(".manga:visible").removeClass("first");
-   $(".manga:visible").removeClass("last");
-   $(".manga:visible:first").addClass("first");
-   $(".manga:visible:last").addClass("last");
-   if ($(".manga:visible").size() == 0) {
+   $(".manga:not(.hiddenMg)").removeClass("first");
+   $(".manga:not(.hiddenMg)").removeClass("last");
+   $(".manga:not(.hiddenMg):first").addClass("first");
+   $(".manga:not(.hiddenMg):last").addClass("last");
+   if ($(".manga:not(.hiddenMg)").size() == 0) {
       $("#nomangas").show();
       return;
    } else {
@@ -1186,35 +1190,35 @@ function isMangaDisplayable(mg) {
       }
    });
    $(".category.native").each(function (index) {
-      if ($(this).text() == "New" && $(this).hasClass("include")) {
+      if ($(this).text().trim() == "New" && $(this).hasClass("include")) {
          if (isNew)
             isInclude = true;
       }
-      if ($(this).text() == "Read" && $(this).hasClass("include")) {
+      if ($(this).text().trim() == "Read" && $(this).hasClass("include")) {
          if (!isRead && !isNew)
             isInclude = true;
       }
-      if ($(this).text() == "Unread" && $(this).hasClass("include")) {
+      if ($(this).text().trim() == "Unread" && $(this).hasClass("include")) {
          if (isRead || isNew)
             isInclude = true;
       }
-      if ($(this).text() == "One Shots" && $(this).hasClass("include")) {
+      if ($(this).text().trim() == "One Shots" && $(this).hasClass("include")) {
          if (isOneShot)
             isInclude = true;
       }
-      if ($(this).text() == "New" && $(this).hasClass("exclude")) {
+      if ($(this).text().trim() == "New" && $(this).hasClass("exclude")) {
          if (isNew)
             isExclude = true;
       }
-      if ($(this).text() == "Read" && $(this).hasClass("exclude")) {
+      if ($(this).text().trim() == "Read" && $(this).hasClass("exclude")) {
          if (!isRead && !isNew)
             isExclude = true;
       }
-      if ($(this).text() == "Unread" && $(this).hasClass("exclude")) {
+      if ($(this).text().trim() == "Unread" && $(this).hasClass("exclude")) {
          if (isRead || isNew)
             isExclude = true;
       }
-      if ($(this).text() == "One Shots" && $(this).hasClass("exclude")) {
+      if ($(this).text().trim() == "One Shots" && $(this).hasClass("exclude")) {
          if (isOneShot)
             isExclude = true;
       }
@@ -1223,7 +1227,7 @@ function isMangaDisplayable(mg) {
       var _selfCat = this;
       var found = false;
       $(".mginfos .cats .mgcategory", $(mg)).each(function (index) {
-         if ($(this).text() == $(_selfCat).text()) {
+         if ($(this).text().trim() == $(_selfCat).text()) {
             found = true;
          }
       });
@@ -1246,22 +1250,24 @@ function displayMangasByCat() {
    $(".manga").each(function (index) {
       if (isMangaDisplayable($(this))) {
          if (!$(this).is(":visible")) {
+            mg.removeClass("hiddenMg");
             $(this).toggle("blind", {}, 250);
          }
       } else {
          if ($(this).is(":visible")) {
+            mg.addClass("hiddenMg");
             $(this).toggle("blind", {}, 250);
          }
       }
    });
-   if ($(".manga:visible").size() == 0) {
+   if ($(".manga:not(.hiddenMg)").size() == 0) {
       $("#nomangas").show();
       return;
    } else {
       $("#nomangas").hide();
    }
    setTimeout(function () {
-      if ($(".manga:visible").size() == 0) {
+      if ($(".manga:not(.hiddenMg)").size() == 0) {
          $("#nomangas").show();
          return;
       } else {
@@ -1306,11 +1312,13 @@ function dragCatManga(mg, _cat) {
          }
          if (isMangaDisplayable($(mg).closest(".manga"))) {
             if (!$(mg).closest(".manga").is(":visible")) {
+               mg.removeClass("hiddenMg");
                $(mg).closest(".manga").toggle("blind", {}, 250);
             }
          } else {
             if ($(mg).closest(".manga").is(":visible")) {
-               $(mg).closest(".manga").toggle("blind", {}, 250);
+              mg.addClass("hiddenMg");
+              $(mg).closest(".manga").toggle("blind", {}, 250);
             }
          }
       });
@@ -1336,11 +1344,13 @@ function dragCatManga(mg, _cat) {
          }
          if (isMangaDisplayable($(mg).closest(".manga"))) {
             if (!$(mg).closest(".manga").is(":visible")) {
-               $(mg).closest(".manga").toggle("blind", {}, 250);
+              mg.removeClass("hiddenMg");
+              $(mg).closest(".manga").toggle("blind", {}, 250);
             }
          } else {
             if ($(mg).closest(".manga").is(":visible")) {
-               $(mg).closest(".manga").toggle("blind", {}, 250);
+              mg.addClass("hiddenMg");
+              $(mg).closest(".manga").toggle("blind", {}, 250);
             }
          }
       });
@@ -1348,10 +1358,10 @@ function dragCatManga(mg, _cat) {
 }
 function bindCategories() {
    $(".category.include").each(function (ind) {
-      $(this).attr("title", "All mangas in category " + $(this).text() + " are included in the list.");
+      $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are included in the list.");
    });
    $(".category.exclude").each(function (ind) {
-      $(this).attr("title", "All mangas in category " + $(this).text() + " are excluded from the list.");
+      $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are excluded from the list.");
    });
    $(".category:not(.addcategory):not(.newcat):not(.include):not(.exclude)").each(function (ind) {
       $(this).attr("title", "Click here to exlude / include mangas from this category.");
@@ -1361,7 +1371,7 @@ function bindCategories() {
       if ($(this).hasClass("include")) {
          $(this).removeClass("include");
          $(this).addClass("exclude");
-         $(this).attr("title", "All mangas in category " + $(this).text() + " are excluded from the list.");
+         $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are excluded from the list.");
       } else if ($(this).hasClass("exclude")) {
          $(this).removeClass("include");
          $(this).removeClass("exclude");
@@ -1369,7 +1379,7 @@ function bindCategories() {
       } else {
          $(this).addClass("include");
          $(this).removeClass("exclude");
-         $(this).attr("title", "All mangas in category " + $(this).text() + " are included in the list.");
+         $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are included in the list.");
       }
       displayMangasByCat();
       saveCategories();
@@ -1990,7 +2000,7 @@ function loadCategories() {
                   };
                } else {
                   $(".category.native").each(function (index) {
-                     if ($(this).text() == catSt.name) {
+                     if ($(this).text().trim() == catSt.name) {
                         $(this).removeClass("include");
                         $(this).removeClass("exclude");
                         $(this).addClass(catSt.state);
@@ -2178,7 +2188,7 @@ function saveCategories() {
    var cats = [];
    $(".category:not(.addcategory):not(.newcat)").each(function (index) {
       var cat = {
-         name : $(this).text(),
+         name : $(this).text().trim(),
          state : "",
          type : ""
       };

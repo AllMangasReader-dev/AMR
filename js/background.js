@@ -176,7 +176,8 @@ function init() {
 		// Here we are using eval (***)
         // var lstTmp = $A(eval('(' + list + ')')); --> remove eval function
 		    var lstTmp = JSON.parse(list);
-        //console.log("Taille de la liste de mangas : " + lstTmp.length);
+		    console.log(lstTmp);
+        console.log("Taille de la liste de mangas : " + lstTmp.length);
         for (var i = 0; i < lstTmp.length; i++) {
           //if (lstTmp[i].urlListChaps == undefined || lstTmp[i].urlListChaps == null || lstTmp[i].urlListChaps == "null" || lstTmp[i].urlListChaps == "") {
             //This test is done to remove inconsistent entries
@@ -878,8 +879,8 @@ chrome.extension.onRequest.addListener(
       sendResponse({res: localStorage["searchMirrorsState"]});
     }
     if (request.action == "pagematchurls") {
-      doesCurrentPageMatchManga(request.url, activatedMirrors(), function(_isOk, _mirrorName) {
-        sendResponse({isOk: _isOk, mirrorName: _mirrorName});
+      doesCurrentPageMatchManga(request.url, activatedMirrors(), function(_isOk, _mirrorName, _implementationURL) {
+        sendResponse({isOk: _isOk, mirrorName: _mirrorName, implURL: _implementationURL});
       });
     }
     if (request.action == "deletepub") {
