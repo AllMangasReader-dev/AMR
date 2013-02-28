@@ -84,6 +84,8 @@
       "img/lefttoright.png",
       "img/stop.gif",
       "img/loading.gif",
+	  "img/cancel.png",
+	  "img/ontop.png",
       "img/warn.png"
    ]
 }
