@@ -28,7 +28,7 @@
          ],
          "js":[
             "js/jquery.js",
-            "js/jquery.simplemodal-1.4.1.js",
+            "js/jquery.simplemodal-1.4.4.js",
             "js/back.js"
          ]
       },
