@@ -66,7 +66,7 @@
    "permissions":[
       "tabs",
       "http://*/*",
-	  "https://ssl10.ovh.net/*",
+	    "https://ssl10.ovh.net/*",
       "unlimited_storage",
       "clipboardWrite",
       "contextMenus",
@@ -76,9 +76,14 @@
    ],
    "update_url":"http://allmangasreader.com/update/update.xml",
    "web_accessible_resources":[
-      "images/my-awesome-image1.png",
-      "images/my-amazing-icon1.png",
-      "style/double-rainbow.css",
-      "script/double-rainbow.js"
+      "img/icon-32.png",
+      "img/down.png",
+      "img/bookmark.png",
+      "img/down.png",
+      "img/read_stop.png",
+      "img/lefttoright.png",
+      "img/stop.gif",
+      "img/loading.gif",
+      "img/warn.png"
    ]
 }
