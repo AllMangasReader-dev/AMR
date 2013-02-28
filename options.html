@@ -1,12 +1,7 @@
-<!--///////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
-//                                                                           //
-////////////////////////////////////////////////////////////////////////////-->
-
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>All Mangas Reader Options</title></head>
 
 <link href="css/amr_style.css" rel="stylesheet" type="text/css">
@@ -191,449 +186,10 @@ td.mirrorOpt {
 <script src="js/analytics.js" type="text/javascript"></script>
 <script src="js/innermenu.js" type="text/javascript"></script>
 <script src="js/amrcsql.js" type="text/javascript"></script>
+<script src="js/options.js" type="text/javascript"></script>
     
-<script type="text/javascript">
 
-var mirrors;
-var mangas;
-var actmirrors;
-
-function getMangaMirror(mirror) {
-  for (var i = 0; i < mirrors.length; i++) {
-    if (mirrors[i].mirrorName == mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
-}
-
-//Opens an url in new tab
-function openTab(urlToOpen) {
-  chrome.extension.sendRequest({action: "opentab", url: urlToOpen}, function(response) {});
-}
-      
-// Saves options to localStorage.
-function save_options() {
-  //console.log("save options...");
-  var obj = {};
-  obj.action = "saveparameters";
-  obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
-  obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
-  if (document.getElementById("modeChap1").checked) {
-    obj.displayMode = 1;
-  } else {
-    if (document.getElementById("wideMode1").checked) {
-      obj.displayMode = 2;
-    } else {
-      obj.displayMode = 3;
-    }
-  }
-  obj.popupMode = (document.getElementById("popupMode1").checked ? 1 : 2);
-  obj.omSite = 0;
-  obj.newTab = (document.getElementById("newTab").checked ? 1 : 0);
-  obj.sync = (document.getElementById("syncMg").checked ? 1 : 0);
-  obj.displayzero = (document.getElementById("displayZero").checked ? 1 : 0);
-  obj.pub = (document.getElementById("pubAMR").checked ? 1 : 0);
-  obj.dev = (document.getElementById("devAMR").checked ? 1 : 0);
-  obj.load = (document.getElementById("loadCk").checked ? 1 : 0);
-  obj.resize = (document.getElementById("resizeCk").checked ? 1 : 0);
-  obj.imgorder = (document.getElementById("imgorderCk").checked ? 1 : 0);
-  
-  var colPicks = getElementsByClass("colorPicker", document);
-  for (var i = 0; i < colPicks.length; i++) {
-    if (colPicks[i].className.indexOf("active") != -1) {
-      obj.color = i;
-      break;
-    }
-  }
-  
-  //New options
-  obj.groupmgs = (document.getElementById("groupmgsCk").checked ? 1 : 0);
-  obj.openupdate = (document.getElementById("openupdateCk").checked ? 1 : 0);
-  obj.updatechap = parseInt(document.getElementById("updatechap").value, 10);
-  obj.updatemg = parseInt(document.getElementById("updatemg").value, 10);
-  obj.newbar = (document.getElementById("newbarCk").checked ? 1 : 0);
-  obj.addauto = (document.getElementById("addautoCk").checked ? 1 : 0);
-
-  obj.lrkeys = (document.getElementById("lrkeysCk").checked ? 1 : 0);
-  
-  obj.size = parseInt(document.getElementById("popupsize").value, 10);
-  
-  obj.autobm = (document.getElementById("autobmCk").checked ? 1 : 0);
-  obj.prefetch = (document.getElementById("prefetchCk").checked ? 1 : 0);
-  
-  obj.rightnext = (document.getElementById("rightnextCk").checked ? 1 : 0);
-  
-  //Notifications
-  obj.shownotifications = (document.getElementById("shownotificationsCk").checked ? 1 : 0);
-  obj.notificationtimer = parseInt(document.getElementById("notificationtimer").value, 10);
-  
-  obj.refreshspin = (document.getElementById("refreshspinCk").checked ? 1 : 0);
-  obj.savebandwidth = (document.getElementById("savebandwidthCk").checked ? 1 : 0);
-  obj.checkmgstart = (document.getElementById("checkmgstartCk").checked ? 1 : 0);
-  
-  obj.nocount = (document.getElementById("noCount").checked ? 1 : 0);
-  obj.displastup = (document.getElementById("displastup").checked ? 1 : 0);
-  obj.markwhendownload = (document.getElementById("markwhendownload").checked ? 1 : 0);
-  
-  obj.sendstats = (document.getElementById("sendstats").checked ? 1 : 0);
-  
-  obj.shownotifws = (document.getElementById("shownotifws").checked ? 1 : 0);
-  
-  if (isNaN(obj.notificationtimer))
-  {
-    obj.notificationtimer = 0;
-  }
-  
-  chrome.extension.sendRequest(obj, function(response) {});
-}
-
-function init() {
-  loadMenu("options");
-  $(".article").show();
-  $(".ongletCont[id!='ong1']").hide();
-  if (window.location.href.indexOf("tab=sites") != -1) {
-    switchOnglet($("#supportedWS")[0], 'ong4');
-  } 
-  restore_options();
-}
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  response = chrome.extension.getBackgroundPage().getParameters();
-
-  document.getElementById("adsCk").checked = (response.displayAdds != 1);
-  document.getElementById("chapsCk").checked = (response.displayChapters == 1);
-  document.getElementById("modeChap1").checked = (response.displayMode == 1);
-  document.getElementById("modeChap2").checked = (response.displayMode != 1);
-  document.getElementById("wideMode1").checked = (response.displayMode == 2);
-  document.getElementById("wideMode2").checked = (response.displayMode == 3);
-  document.getElementById("popupMode1").checked = (response.popupMode == 1);
-  document.getElementById("popupMode2").checked = (response.popupMode == 2);
-  document.getElementById("newTab").checked = (response.newTab != 0);
-  document.getElementById("syncMg").checked = (response.sync != 0);
-  document.getElementById("displayZero").checked = (response.displayzero != 0);
-  document.getElementById("pubAMR").checked = (response.pub != 0);
-  document.getElementById("devAMR").checked = (response.dev != 0);
-  document.getElementById("loadCk").checked = (response.load != 0);
-  document.getElementById("resizeCk").checked = (response.resize != 0);
-  document.getElementById("imgorderCk").checked = (response.imgorder != 0);
-  //COLOR
-  var colPicks = getElementsByClass("colorPicker", document);
-  colPicks[response.color].className = "colorPicker active";
-  
-  if (document.getElementById("chapsCk").checked) {
-    document.getElementById('chaptersOptions').style.display = 'table-row';
-  }
-  if (document.getElementById("modeChap2").checked) {
-    document.getElementById('wideScreenOpts').style.display = 'table-row';
-  }
-  if (!document.getElementById("wideMode1").checked && !document.getElementById("wideMode2").checked) {
-    document.getElementById("wideMode2").checked = true;
-  }
-  
-  //New options
-  document.getElementById("groupmgsCk").checked = (response.groupmgs != 0);
-  document.getElementById("openupdateCk").checked = (response.openupdate != 0);
-  document.getElementById("updatechap").value = response.updatechap;
-  document.getElementById("updatemg").value = response.updatemg;
-  document.getElementById("newbarCk").checked = (response.newbar != 0);
-  document.getElementById("addautoCk").checked = (response.addauto != 0);
-  
-  document.getElementById("lrkeysCk").checked = (response.lrkeys != 0);
-  
-  document.getElementById("popupsize").value = response.size;
-  
-  document.getElementById("autobmCk").checked = (response.autobm != 0);
-  document.getElementById("prefetchCk").checked = (response.prefetch != 0);
-
-  document.getElementById("rightnextCk").checked = (response.rightnext != 0);
-
-  //Notifications
-  document.getElementById("shownotificationsCk").checked = (response.shownotifications == 1);
-  document.getElementById("notificationtimer").value = response.notificationtimer;
-  
-  document.getElementById("refreshspinCk").checked = (response.refreshspin == 1);
-  document.getElementById("savebandwidthCk").checked = (response.savebandwidth == 1);
-  document.getElementById("checkmgstartCk").checked = (response.checkmgstart == 1);
-
-  document.getElementById("noCount").checked = (response.nocount == 1);
-  document.getElementById("displastup").checked = (response.displastup == 1);
-  document.getElementById("markwhendownload").checked = (response.markwhendownload == 1);
-
-  document.getElementById("sendstats").checked = (response.sendstats == 1);
-  
-  document.getElementById("shownotifws").checked = (response.shownotifws == 1);
-
-  restore_mirrors();
-  $("#refreshChap").click(function() {
-    chrome.extension.getBackgroundPage().refreshAllLasts(true, true);
-    $("#noteChap").show();
-  });
-  $("#refreshMg").click(function() {
-    chrome.extension.getBackgroundPage().refreshMangaLists(true, true);
-    $("#noteMg").show();
-  });
-  $("#paypalus").click(function() {
-    openTab("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MPJ2DWQP67FHJ");
-  });
-  $("#paypaleuro").click(function() {
-    openTab("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PTFDEMDFNKQAG");
-  });
-}
-
-function loadSelectors() {
-  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='Activate all visible mirrors'/>")
-  var selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>")
-
-  selAll.click(function() {
-    $("#allmirrors tr:visible input[type='checkbox']").each(function(index) {
-      if (!$(this).attr("checked")) {
-        $(this).attr("checked", true);
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendRequest({action: "activateMirror", mirror: mirrorName}, function(res) {});
-      }
-    });
-  });
-  
-  selNone.click(function() {
-    $("#allmirrors tr:visible input[type='checkbox']").each(function(index) {
-      if ($(this).attr("checked")) {
-        $(this).attr("checked", false);
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendRequest({action: "desactivateMirror", mirror: mirrorName}, function(res) {});
-      }
-    });
-  });
-  
-  selAll.appendTo($("#selectors"));
-  selNone.appendTo($("#selectors"));
-
-  var sel = MgUtil.getLanguageSelect(mirrors);
-  sel.change(function() {
-    var lang = $("option:selected", $(this)).val();
-    if (lang == "all") {
-      $("#allmirrors tr").show();
-    } else {
-      var langMirrors = MgUtil.getMirrorsFromLocale(mirrors, lang);
-
-      $("#allmirrors tr .mirrorName").each(function(index) {
-        var isFound = false;
-        for (var i = 0; i < langMirrors.length; i++) {
-          if (langMirrors[i] == $(this).attr("name")) {
-            isFound = true;
-            break;
-          }
-        }
-        if (!isFound) {
-          $(this).closest("tr").hide();
-        } else {
-          $(this).closest("tr").show();
-        }
-      });
-    }
-    pyjmirs();
-  });
-
-  var spansel = $("<span class='custom-select'></span>");
-  sel.appendTo(spansel);
-  spansel.appendTo($("#selectors"));
-}
-  
-function restore_mirrors() {
-  mirrors = chrome.extension.getBackgroundPage().mirrors;
-  mangas = chrome.extension.getBackgroundPage().mangaList;
-  actmirrors = chrome.extension.getBackgroundPage().actMirrors;
-  
-  loadSelectors();
-  mirrors.sort(function(a, b) {
-    if (a.mirrorName < b.mirrorName) {
-      return -1;
-    } else if (a.mirrorName == b.mirrorName) {
-      return 0;
-    } else {
-      return 1;
-    }
-  });
-  
-  $("#results").empty();
-  $("<table id='allmirrors'><thead><tr><td>Website name / number of mangas read</td><td>Developer</td><td>Revision</td><td>Language</td><td>Activated</td><td>Discuss</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
-
-  for (var i = 0; i < mirrors.length; i++) {
-    var trCur = $("<tr></tr>");
-
-    var nb = 0;
-    for (var j = 0; j < mangas.length; j++) {
-      if (mangas[j].mirror == mirrors[i].mirrorName) {
-        nb++;
-      }
-    }
-    var tdHead = $("<td class='mirrorName' name='" +  mirrors[i].mirrorName + "'></td>");
-    var img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />");
-    img.appendTo(tdHead);
-    $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
-    $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
-    tdHead.appendTo(trCur);
-    
-    var lang = mirrors[i].languages.split(",");
-    var langstr = "";
-    for (var j = 0; j < lang.length; j++) {
-      langstr += MgUtil.getLanguageName(lang[j]) + ", ";
-    }
-    
-    $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
-    if (mirrors[i].revision == 0) {
-      var release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
-      release.data("idext", mirrors[i].idext);
-      release.appendTo(trCur);
-    } else {
-      $("<td>" + mirrors[i].revision + "</td>").appendTo(trCur);
-    }
-    var tdLang = $("<td class='lang'>" + langstr.substr(0, langstr.length - 2) + "</td>");
-    tdLang.appendTo(trCur);
-    
-    var tdMgs = $("<td class='mirrorOpt'></td>");
-    tdMgs.appendTo(trCur);
-    
-    var discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>");
-    discuss.data("idext", mirrors[i].idext);
-    discuss.appendTo(trCur);
-    
-    if (nb > 0) {
-      trCur.addClass("desactivate");
-    } else {
-      var isfound = false;
-      for (var j = 0; j < actmirrors.length; j++) {
-        if (actmirrors[j].mirrorName == mirrors[i].mirrorName) {
-          isfound = true;
-          break;
-        }
-      }
-
-      var ck = $("<input type=\"checkbox\" />");
-      ck.attr("checked", isfound);
-      ck.appendTo(tdMgs);
-      ck.click(function() {
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        if ($(this).attr("checked")) {
-          // activate the mirror
-          chrome.extension.sendRequest({action: "activateMirror", mirror: mirrorName}, function(res) {});
-        } else {
-          // desactivate the mirror
-          chrome.extension.sendRequest({action: "desactivateMirror", mirror: mirrorName}, function(res) {});
-        }
-      });
-
-    }
-    
-    trCur.appendTo($("#allmirrors tbody"));
-  }
-  $(".discuss").click(function() {
-    openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
-  });
-  $(".comebacktorelease").click(function() {
-    var req = {
-      action: "releaseimplementation",
-      id: $(this).closest("td").data("idext")
-    };
-    sendExtRequest(req, $(this), function(response) {
-      window.location.href="options.html?tab=sites";
-    }, true);
-  });
-  pyjmirs();
-}
-
-//Used to request background page action
-function sendExtRequest(request, button, callback, backsrc) {
-  //Prevent a second request
-  if (button.data("currentlyClicked")) return;
-  button.data("currentlyClicked", true);
-  
-  //Display a loading image
-  var _ancSrc;
-  if (button.is("img")) {
-    _ancSrc = button.attr("src");
-    button.attr("src", chrome.extension.getURL("img/load16.gif"));
-  } else {
-    if (button.is(".button")) {
-      _ancSrc = $("<img src='" + chrome.extension.getURL("img/ltload.gif") + "'></img>")
-      _ancSrc.appendTo(button);
-    }
-    if (button.is(".category") || button.is(".mgcategory")) {
-      _ancSrc = $("<img src='" + chrome.extension.getURL("img/load10.gif") + "'></img>")
-      _ancSrc.appendTo(button);
-    }
-  }
-  //Call the action
-  chrome.extension.sendRequest(request, function(response) {
-  //setTimeout(function() {
-    //Do the callback
-    callback(response);
-    //Removes the loading image
-    if (button.is("img")) {
-      if (backsrc) {
-        button.attr("src", _ancSrc);
-      }
-    } else {
-      if (button.is(".button") || button.is(".category") || button.is(".mgcategory")) {
-        _ancSrc.remove();
-      }
-    }
-    //Restore request
-    button.removeData("currentlyClicked");
-  //}, 1000);
-  });
-}
-
-function pyjmirs() {
-  $("#allmirrors tr:visible").removeClass("odd").removeClass("even");
-  $("#allmirrors tr:visible").each(function(index) {
-    if (index % 2 == 0) {
-      $(this).addClass("odd");
-    } else {
-      $(this).addClass("even");
-    }
-  });
-}
-function switchOnglet(ong, tab) {
-  $(".tab").removeClass("checked");
-  $(ong).addClass("checked");
-  $(".ongletCont").each(function(index) {
-    if ($(this).attr("id") == tab) {
-      $(this).show();
-    } else {
-      $(this).hide();
-    }
-  });
-}
-
-function switchColor(obj) {
-  var colPicks = getElementsByClass("colorPicker", document);
-  for (var i = 0; i < colPicks.length; i++) {
-    colPicks[i].className="colorPicker";
-  }
-  obj.className += " active";
-}
-function getElementsByClass(searchClass, obj) {
-	if (!obj) {
-		obj = document;
-	}
-	
-	var classElements = new Array();
-	var els = document.getElementsByTagName('*');
-	var elsLen = els.length
-	for (i = 0, j = 0; i < elsLen; i++)
-	{
-		var classes = els[i].className.split(' ');
-		for (k = 0; k < classes.length; k++)
-			if ( classes[k] == searchClass )
-				classElements[j++] = els[i];
-	}
-	return classElements;
-}
-
-</script>
-
-<body onload="init()">
+<body>
   <div id="header">
     <div id="subheader">
       <div class="paypal" style="float:right">
@@ -650,7 +206,7 @@ function getElementsByClass(searchClass, obj) {
           </div>
         </div>
       </div>
-      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <img class="imglogo" src="img/icon-32.png" width="100" />
       <h1>All Mangas Reader Options</h1>
     </div>
   </div>
@@ -664,10 +220,10 @@ function getElementsByClass(searchClass, obj) {
   <div id="corpseone">
     <div id="subcorpseone">
       <ul class="tabs">
-        <li class="tab checked" onclick="switchOnglet(this, 'ong1');">Mangas Web Sites</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong2');">All Mangas Reader</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong3');">Synchronization</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong4');" id="supportedWS">Supported Web Sites</li>
+        <li class="tab checked" id="mangasWS">Mangas Web Sites</li>
+        <li class="tab" id="AMR_options">All Mangas Reader</li>
+        <li class="tab" id="sync">Synchronization</li>
+        <li class="tab" id="supportedWS">Supported Web Sites</li>
       </ul>
       <div class="article parent ongletCont" id="ong1">
       <div class="article main">
@@ -681,13 +237,13 @@ function getElementsByClass(searchClass, obj) {
                 <table>
                   <tr>
                     <td>
-                      <input type="checkbox" id="adsCk" onchange="save_options();"/>
+                      <input type="checkbox" id="adsCk"/>
                       <label for="adsCk">Remove ads in mangas web sites</label>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <input type="checkbox" id="pubAMR" onchange="save_options();"  />
+                      <input type="checkbox" id="pubAMR"/>
                       <label for="pubAMR">Display a link to AMR main page in manga web sites in order for you to give me feedback (I need your opinion to improve AMR, thanks !).</label>
                     </td>
                   </tr>
@@ -704,7 +260,7 @@ function getElementsByClass(searchClass, obj) {
                 <table style="width:100%;">
                   <tr>
                     <td>
-                      <input type="checkbox" id="chapsCk" onchange="save_options();" onclick="if (this.checked) {document.getElementById('chaptersOptions').style.display = 'table-row';} else {document.getElementById('chaptersOptions').style.display = 'none';}"/>
+                      <input type="checkbox" id="chapsCk"/>
                       <label for="chapsCk">While reading a manga, display the whole chapter instead of the current page</label>
                     </td>
                   </tr>
@@ -717,7 +273,7 @@ function getElementsByClass(searchClass, obj) {
                         <table style="width:100%;">
                           <tr>
                             <td>
-                              <input type="radio" name="modeChap" value="1" id="modeChap1" onchange="if (this.checked) {document.getElementById('wideScreenOpts').style.display = 'none';} else {document.getElementById('wideScreenOpts').style.display = 'table-row';}; save_options();"/>
+                              <input type="radio" name="modeChap" value="1" id="modeChap1"/>
                               <label for="modeChap1">Display chapters in normal mode (pages of the chapter will be displayed on top of one another)</label>
                             </td>
                           </tr>
@@ -736,13 +292,13 @@ function getElementsByClass(searchClass, obj) {
                                 <table>
                                   <tr>
                                     <td>
-                                      <input type="radio" name="wideMode" value="1" id="wideMode1" onchange="save_options();" />
+                                      <input type="radio" name="wideMode" value="1" id="wideMode1"/>
                                       <label for="wideMode1">Display the book in Occidental mode (reading left to right)</label>
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
-                                      <input type="radio" name="wideMode" value="2" id="wideMode2" onchange="save_options();" />
+                                      <input type="radio" name="wideMode" value="2" id="wideMode2"/>
                                       <label for="wideMode2">Display the book in Japanese mode (reading right to left)</label>
                                     </td>
                                   </tr>
@@ -756,7 +312,7 @@ function getElementsByClass(searchClass, obj) {
                   </tr>
                   <tr>
                     <td>
-                      <input type="checkbox" id="resizeCk" onchange="save_options();"  />
+                      <input type="checkbox" id="resizeCk"/>
                       <label for="resizeCk">Resize scans images to fit screen if they are to wide</label>
                     </td>
                   </tr>
@@ -773,25 +329,25 @@ function getElementsByClass(searchClass, obj) {
               <table>
                 <tr>
                   <td>
-                    <input type="checkbox" id="loadCk" onchange="save_options();" />
+                    <input type="checkbox" id="loadCk"/>
                     <label for="loadCk">See loading progression in the title bar</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="imgorderCk" onchange="save_options();"  />
+                    <input type="checkbox" id="imgorderCk"/>
                     <label for="imgorderCk">Load scans in the order of the chapter (This option involve that the chapter's loading will be slower but guarantees that the first scan which will be loaded is the first of the chapter and so on...)</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="prefetchCk" onchange="save_options();"  />
+                    <input type="checkbox" id="prefetchCk"/>
                     <label for="prefetchCk">Prefetch next chapter while reading manga. (A progress bar indicating the prefetch level of the next chapter appears inside the "Next" button)</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="markwhendownload" onchange="save_options();"  />
+                    <input type="checkbox" id="markwhendownload"/>
                     <label for="markwhendownload">Mark chapter as read when the full chapter has been downloaded</label>
                   </td>
                 </tr>
@@ -808,37 +364,37 @@ function getElementsByClass(searchClass, obj) {
               <table>
                 <tr>
                   <td>
-                    <input type="checkbox" id="newbarCk" onchange="save_options();"  />
+                    <input type="checkbox" id="newbarCk"/>
                     <label for="newbarCk">Display navigation features in one always visible bar. (If you uncheck it, two navigation panels are included in each page, one on top of the scans and one at the bottom)</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="addautoCk" onchange="save_options();"  />
+                    <input type="checkbox" id="addautoCk"/>
                     <label for="addautoCk">Automatically add manga in my reading list when I read it. If you uncheck this option, you will have a button in the navigation bar to add the current manga in the list.</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="lrkeysCk" onchange="save_options();"  />
+                    <input type="checkbox" id="lrkeysCk"/>
                     <label for="lrkeysCk">Use left /right keys while reading to go previous / next scan.</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="autobmCk" onchange="save_options();"  />
+                    <input type="checkbox" id="autobmCk"/>
                     <label for="autobmCk">Auto Bookmark scans when double click on it.</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="rightnextCk" onchange="save_options();"  />
+                    <input type="checkbox" id="rightnextCk"/>
                     <label for="rightnextCk">Right key goes to next chapter when at bottom of the page.</label>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input type="checkbox" id="sendstats" onchange="save_options();"  />
+                    <input type="checkbox" id="sendstats"/>
                     <label for="sendstats">Keep personnal statistics data.</label>
                   </td>
                 </tr>
@@ -860,7 +416,7 @@ function getElementsByClass(searchClass, obj) {
             <table style="width:100%;">
               <tr>
                 <td>
-                  <input type="checkbox" id="newTab" onchange="save_options();"  />
+                  <input type="checkbox" id="newTab"/>
                   <label for="newTab">Open my manga reading list in a new tab when i click on the All Mangas Reader's icon</label>
                 </td>
               </tr>
@@ -873,23 +429,23 @@ function getElementsByClass(searchClass, obj) {
                     <table style="width:100%;">
                       <tr>
                         <td>
-                          <input type="radio" name="popupMode" value="1" id="popupMode1" onchange="save_options();"  />
+                          <input type="radio" name="popupMode" value="1" id="popupMode1"/>
                           <label for="popupMode1">Display blocks for each manga with detailed information</label>
                         </td>
                         <td>
-                          <input type="radio" name="popupMode" value="2" id="popupMode2" onchange="save_options();"  />
+                          <input type="radio" name="popupMode" value="2" id="popupMode2"/>
                           <label for="popupMode2">Display mangas in a list so i can see many of them</label>
                         </td>
                       </tr>
                       <tr>
                         <td>
                           <center>
-                            <img src="img/help/AMRBlockMode.PNG" alt="blocks" width="350px" />
+                            <img src="img/help/AMRBlockMode.PNG" alt="blocks" width="350" />
                           </center>
                         </td>
                         <td style="vertical-align:top">
                           <center>
-                            <img src="img/help/AMRListMode.PNG" alt="list" width="350px"  />
+                            <img src="img/help/AMRListMode.PNG" alt="list" width="350"  />
                           </center>
                         </td>
                       </tr>
@@ -899,13 +455,13 @@ function getElementsByClass(searchClass, obj) {
               </tr>
               <tr>
                 <td>
-                  <input type="checkbox" id="groupmgsCk" onchange="save_options();"  />
+                  <input type="checkbox" id="groupmgsCk"/>
                   <label for="groupmgsCk">Group mangas which have the same name on one line. When mangas are grouped, you can see all occurrences of the manga by clicking on the + icon next to the manga's name.</label>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <input type="checkbox" id="displastup" onchange="save_options();"  />
+                  <input type="checkbox" id="displastup"/>
                   <label for="displastup">Display a calendar icon representing the last time a new chapter has been published (<img src="img/day.png" title="Last time new chapter : 2 days ago" />, <img src="img/week.png" title="Last time new chapter : 3 weeks ago" /> or <img src="img/month.png" title="Last time new chapter : 4 months ago" />). If unchecked, a tooltip will appear on the manga name telling : "Last time new chapter : 2 weeks ago" for example</label>
                 </td>
               </tr>
@@ -918,11 +474,11 @@ function getElementsByClass(searchClass, obj) {
                     </h3>
                     <table style="margin-left:auto;margin-right:auto;">
                       <tr>
-                        <td><div class="colorPicker" style="background-color:white" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:black" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#DDDDDD" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#F0DDDD" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#EEEEFF" onclick="switchColor(this);save_options();"></div></td>
+                        <td><div class="colorPicker" style="background-color:white"></div></td>
+                        <td><div class="colorPicker" style="background-color:black"></div></td>
+                        <td><div class="colorPicker" style="background-color:#DDDDDD"></div></td>
+                        <td><div class="colorPicker" style="background-color:#F0DDDD"></div></td>
+                        <td><div class="colorPicker" style="background-color:#EEEEFF"></div></td>
                       </tr>
                     </table>
                   </div>
@@ -947,7 +503,7 @@ function getElementsByClass(searchClass, obj) {
                         <span>Update chapters list every : </span>
                       </td>
                       <td>
-                        <select id="updatechap" onchange="save_options();" >
+                        <select id="updatechap">
                           <option value="300000">5 minutes</option>
                           <option value="600000">10 minutes</option>
                           <option value="900000">15 minutes</option>
@@ -973,7 +529,7 @@ function getElementsByClass(searchClass, obj) {
                         <span>Update list of manga for each web site every : </span>
                       </td>
                       <td>
-                        <select id="updatemg" onchange="save_options();" >
+                        <select id="updatemg">
                           <option value="86400000">day</option>
                           <option value="172800000">2 days</option>
                           <option value="604800000">week</option>
@@ -994,7 +550,7 @@ function getElementsByClass(searchClass, obj) {
                         <span>Size of popup : </span>
                       </td>
                       <td colspan="2">
-                        <select id="popupsize" onchange="save_options();" >
+                        <select id="popupsize">
                           <option value="1">Small</option>
                           <option value="2">Medium</option>
                           <option value="3">Big</option>
@@ -1006,19 +562,19 @@ function getElementsByClass(searchClass, obj) {
               </tr>
             	<tr>
             	  <td>
-            	    <input type="checkbox" id="checkmgstartCk" onchange="save_options();" />
+            	    <input type="checkbox" id="checkmgstartCk"/>
             	    <label for="checkmgstartCk">Update chapters list on chrome startup</label>
             	  </td>
             	</tr>
             	<tr>
             	  <td>
-            	    <input type="checkbox" id="refreshspinCk" onchange="save_options();" />
+            	    <input type="checkbox" id="refreshspinCk"/>
             	    <label for="refreshspinCk">Spin the sharingan icon when AMR is updating chapters list.</label>
             	  </td>
             	</tr>
             	<tr>
             	  <td>
-            	    <input type="checkbox" id="savebandwidthCk" onchange="save_options();" />
+            	    <input type="checkbox" id="savebandwidthCk"/>
             	    <label for="savebandwidthCk">Save bandwidth while loading chapter list (this options waits for one manga to be updated before updating the next one)</label>
             	  </td>
             	</tr>
@@ -1034,13 +590,13 @@ function getElementsByClass(searchClass, obj) {
             <table>
               <tr>
                 <td>
-            	    <input type="checkbox" id="shownotificationsCk" onchange="save_options();" />
+            	    <input type="checkbox" id="shownotificationsCk"/>
             	    <label for="shownotificationsCk">Show browser notifications when new chapters are found.</label>
             	  </td>
             	</tr>
               <tr>
                 <td>
-            	    <input type="checkbox" id="shownotifws" onchange="save_options();" />
+            	    <input type="checkbox" id="shownotifws"/>
             	    <label for="shownotifws">Show browser notifications when websites implementations are updated from AMR Community (this will notify you when a developer fix bugs on a website or when a new website is released).</label>
             	  </td>
             	</tr>
@@ -1052,7 +608,7 @@ function getElementsByClass(searchClass, obj) {
               	    Time before the notification close itself.
               	  </td>
               	  <td>
-                    <select id="notificationtimer" onchange="save_options();" >
+                    <select id="notificationtimer">
                       <option value="0">Close by user action</option>
                       <option value="5">5 seconds</option>
                       <option value="10">10 seconds</option>
@@ -1078,25 +634,25 @@ function getElementsByClass(searchClass, obj) {
             <table>
               <tr>
                 <td>
-                  <input type="checkbox" id="displayZero" onchange="save_options();"  />
+                  <input type="checkbox" id="displayZero"/>
                   <label for="displayZero">Display a grey "0" on AMR's icon when there is no new manga.</label>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <input type="checkbox" id="noCount" onchange="save_options();"  />
+                  <input type="checkbox" id="noCount"/>
                   <label for="noCount">Do not display a badge with the number of unread manga but display AMR's icon in color if there are new mangas and in grey if not.</label>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <input type="checkbox" id="devAMR" onchange="save_options();"  />
+                  <input type="checkbox" id="devAMR"/>
                   <label for="devAMR">I am a developer (displays a direct link to the lab in the popup).</label>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <input type="checkbox" id="openupdateCk" onchange="save_options();"  />
+                  <input type="checkbox" id="openupdateCk"/>
                   <label for="openupdateCk">When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)</label>
                 </td>
               </tr> 
@@ -1113,7 +669,7 @@ function getElementsByClass(searchClass, obj) {
       <table>
         <tr>
           <td>
-            <input type="checkbox" id="syncMg" onchange="save_options();"  />
+            <input type="checkbox" id="syncMg"/>
             <label for="syncMg">Synchronize my mangas over my computers</label>
           </td>
         </tr>
