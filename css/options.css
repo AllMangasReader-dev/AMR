@@ -10,7 +10,6 @@
 .colorPicker.active {
   border: 2px solid #777;
 }
-
 #results {
   text-align:center;
 }
@@ -43,22 +42,11 @@
 tr.odd {
   background-color:#CCCCFF;
 }
-
 tr.even {
   background-color:#DDDDFF;
 }
-
 tr.desactivate {
   background-color:#DDDDDD;
-}
-
-tr.lastLine {
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px;
-}
-tr.firstLine {
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px;
 }
 td.mirrorName {
   /*width:500px;*/
@@ -69,7 +57,6 @@ td.mirrorOpt {
   width:50px;
   text-align:center;
 }
-
 .paypal {
   padding-left:10px;
   padding-right:10px;
@@ -82,7 +69,7 @@ td.mirrorOpt {
   color:black;
   margin-top:2px;
   margin-right:3px;
-  -webkit-box-shadow: 0 0 15px #F4F4FF;
+  box-shadow: 0 0 15px #F4F4FF;
 }
 .paypal .payitem {
   display:inline-block;
@@ -91,7 +78,7 @@ td.mirrorOpt {
   padding-left:7px;
   padding-right:2px;
   border-radius:4px;
-  -webkit-box-shadow: inset 0px 0px 2px 2px #AAAADD;
+  box-shadow: inset 0px 0px 2px 2px #AAAADD;
 }
 .paypal p {
   padding:0;
@@ -101,26 +88,11 @@ td.mirrorOpt {
   vertical-align:middle;
   font-weight:bold;
 }
-.paypal table {
-  font-size:8pt;
-}
-#title {
-  height:80px;
-}
-.titImg {
-  vertical-align:middle;
-  margin-top:8px;
-}
-.titTxt {
-  vertical-align:middle;
-}
-
 .bottominfo {
   margin-top:10px;
   font-size:10pt;
   text-align:center;
 }
-
 #selectors {
   display:inline-block;
   text-align:right;
@@ -137,9 +109,6 @@ td.mirrorOpt {
   vertical-align:middle;
   margin-right: 5px;
   cursor:pointer;
-}
-#searchBox p {
-  font-size:9pt;
 }
 #selectors select {
   border:none;
