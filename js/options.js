@@ -41,10 +41,10 @@ function getMangaMirror(mirror) {
 //Opens an url in new tab
 function openTab(urlToOpen) {
     "use strict";
-    chrome.extension.sendRequest({
+    chrome.extension.sendMessage({
         action : "opentab",
         url : urlToOpen
-    }, function (response) {});
+    });
 }
 
 // Saves options to localStorage. TODO: Save options using the sync call.
@@ -119,7 +119,7 @@ function save_options() {
         obj.notificationtimer = 0;
     }
 
-    chrome.extension.sendRequest(obj, function (response) {});
+    chrome.extension.sendMessage(obj);
 }
 function switchOnglet(ong, tab) {
     "use strict";
@@ -159,10 +159,10 @@ function loadSelectors() {
             if (!$(this).attr("checked")) {
                 $(this).attr("checked", true);
                 var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-                chrome.extension.sendRequest({
+                chrome.extension.sendMessage({
                     action : "activateMirror",
                     mirror : mirrorName
-                }, function (res) {});
+                });
             }
         });
     });
@@ -173,10 +173,10 @@ function loadSelectors() {
             if ($(this).attr("checked")) {
                 $(this).attr("checked", false);
                 var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-                chrome.extension.sendRequest({
+                chrome.extension.sendMessage({
                     action : "desactivateMirror",
                     mirror : mirrorName
-                }, function (res) {});
+                });
             }
         });
     });
@@ -240,7 +240,7 @@ function sendExtRequest(request, button, callback, backsrc) {
         }
     }
     //Call the action
-    chrome.extension.sendRequest(request, function (response) {
+    chrome.extension.sendMessage(request, function (response) {
         //setTimeout(function() {
         //Do the callback
         callback(response);
@@ -269,16 +269,16 @@ function state_mirror() {
     var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
     if ($(this).attr("checked")) {
         // activate the mirror
-        chrome.extension.sendRequest({
+        chrome.extension.sendMessage({
             action : "activateMirror",
             mirror : mirrorName
-        }, dummy());
+        });
     } else {
         // desactivate the mirror
-        chrome.extension.sendRequest({
+        chrome.extension.sendMessage({
             action : "desactivateMirror",
             mirror : mirrorName
-        }, dummy());
+        });
     }
 }
 
@@ -379,7 +379,7 @@ function restore_mirrors() {
 function restore_options() {
     "use strict";
     var response = chrome.extension.getBackgroundPage().getParameters(),
-    colPicks;
+        colPicks;
 
     document.getElementById("adsCk").checked = (response.displayAdds !== 1);
     document.getElementById("chapsCk").checked = (response.displayChapters === 1);
@@ -491,16 +491,16 @@ document.getElementsByTagName("input").onchange=function(){save_options()};
 // Change the current tab show.
 $("#mangasWS").click(function () {
     switchOnglet($(this), 'ong1');
-})
+});
 $("#AMR_options").click(function () {
     switchOnglet($(this), 'ong2');
-})
+});
 $("#sync").click(function () {
     switchOnglet($(this), 'ong3');
-})
+});
 $("#supportedWS").click(function () {
     switchOnglet($(this), 'ong4');
-})
+});
 
 // Call save_options on every change made to input elements
 var input = document.getElementsByTagName('input');
