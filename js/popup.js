@@ -106,18 +106,27 @@ function fillActions(mg, where, hasdown) {
    $(acts).appendTo(where);
 }
 function fillChapters(mg, sel) {
-   setTimeout(function () {
-      var opt = $("<option value=''></option>");
-      if (mg.listChaps.length > 0) {
+  sel.parent().before($("<img src='img/load16.gif' />"));
+  sel.parent().hide();
+  setTimeout(function () {
+     var opt = $("<option value=''></option>");
+     if (mg.listChaps.length > 0) {
          $.each(mg.listChaps, function (index, val) {
-            opt.clone().val(val[1]).text(val[0]).attr("selected", ((val[1] == mg.lastChapterReadURL) ? "selected" : "")).appendTo(sel);
+            var tmp = opt.clone().val(val[1]).text(val[0]);
+            if (val[1].trim() == mg.lastChapterReadURL.trim()) {
+              tmp.attr("selected", "selected");
+            }
+            tmp.appendTo(sel);
          });
          sel.attr("title", "Latest published chapter : " + mg.listChaps[0][0]);
          sel.change(function () {
             openTab($(this).val());
          });
+         sel.parent().prev().remove();
+         sel.parent().show();
       } else {
          $("<span>No chapters found yet...</span>").appendTo(sel.parent().parent());
+         sel.parent().prev().remove();
          sel.parent().remove();
       }
    }, 1);
