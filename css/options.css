@@ -159,6 +159,7 @@ td.mirrorOpt {
 }
 .ongletCont {
  -webkit-transition: all .4s ease-in-out;
+ margin-top:-3px;
 }
 .article p {
   font-size:8pt;
@@ -168,4 +169,7 @@ td.mirrorOpt {
 }
 .discusstd {
   text-align:center;
+}
+.mirrorName {
+  text-align: left;
 }

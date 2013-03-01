@@ -42,18 +42,19 @@ function getMangaMirror(mirror) {
 
 function openTab(urlToOpen) {
   "use strict";
-  chrome.extension.sendMessage({
+  chrome.extension.sendRequest({
     action: "opentab",
     url: urlToOpen
-  });
+  }, function() {});
 }
 
 // Saves options to localStorage. TODO: Save options using the sync call.
 
 function save_options() {
   "use strict";
+
   var obj = {},
-  colPicks = $(".colorPicker");
+    colPicks = $(".colorPicker");
   obj.action = "saveparameters";
   obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
   obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
@@ -121,7 +122,7 @@ function save_options() {
     obj.notificationtimer = 0;
   }
 
-  chrome.extension.sendMessage(obj);
+  chrome.extension.sendRequest(obj, function() {});
 }
 
 function switchOnglet(ong, tab) {
@@ -162,10 +163,10 @@ function loadSelectors() {
       if (!$(this).attr("checked")) {
         $(this).attr("checked", true);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendMessage({
+        chrome.extension.sendRequest({
           action: "activateMirror",
           mirror: mirrorName
-        });
+        }, function() {});
       }
     });
   });
@@ -176,10 +177,10 @@ function loadSelectors() {
       if ($(this).attr("checked")) {
         $(this).attr("checked", false);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendMessage({
+        chrome.extension.sendRequest({
           action: "desactivateMirror",
           mirror: mirrorName
-        });
+        }, function() {});
       }
     });
   });
@@ -244,7 +245,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     }
   }
   //Call the action
-  chrome.extension.sendMessage(request, function(response) {
+  chrome.extension.sendRequest(request, function(response) {
     //setTimeout(function() {
     //Do the callback
     callback(response);
@@ -261,7 +262,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     //Restore request
     button.removeData("currentlyClicked");
     //}, 1000);
-  });
+  }, function() {});
 }
 // Don't create fuctions in loops
 
@@ -275,16 +276,16 @@ function state_mirror() {
   var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
   if ($(this).attr("checked")) {
     // activate the mirror
-    chrome.extension.sendMessage({
+    chrome.extension.sendRequest({
       action: "activateMirror",
       mirror: mirrorName
-    });
+    }, function() {});
   } else {
     // desactivate the mirror
-    chrome.extension.sendMessage({
+    chrome.extension.sendRequest({
       action: "desactivateMirror",
       mirror: mirrorName
-    });
+    }, function() {});
   }
 }
 
@@ -309,62 +310,64 @@ function restore_mirrors() {
   $("<table id='allmirrors'><thead><tr><td>Website name / number of mangas read</td><td>Developer</td><td>Revision</td><td>Language</td><td>Activated</td><td>Discuss</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
 
   for (i = 0; i < mirrors.length; i += 1) {
-    var trCur = $("<tr></tr>"),
-      tdHead = $("<td class='mirrorName' name='" + mirrors[i].mirrorName + "'></td>"),
-      img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
-      langstr = "",
-      tdMgs = $("<td class='mirrorOpt'></td>"),
-      discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
-      lang = mirrors[i].languages.split(","),
-      nb = 0,
-      j = 0,
-      tdLang,
-      release,
-      isfound,
-      ck;
-
-    for (j = 0; j < mangas.length; j += 1) {
-      if (mangas[j].mirror === mirrors[i].mirrorName) {
-        nb += 1;
-      }
-    }
-    img.appendTo(tdHead);
-    $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
-    $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
-    tdHead.appendTo(trCur);
-    for (j = 0; j < lang.length; j += 1) {
-      langstr += MgUtil.getLanguageName(lang[j]) + ", ";
-    }
-    $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
-    if (mirrors[i].revision === 0) {
-      release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
-      release.data("idext", mirrors[i].idext);
-      release.appendTo(trCur);
-    } else {
-      $("<td>" + mirrors[i].revision + "</td>").appendTo(trCur);
-    }
-    tdLang = $("<td class='lang'>" + langstr.substr(0, langstr.length - 2) + "</td>");
-    tdLang.appendTo(trCur);
-    tdMgs.appendTo(trCur);
-    discuss.data("idext", mirrors[i].idext);
-    discuss.appendTo(trCur);
-    if (nb > 0) {
-      trCur.addClass("desactivate");
-    } else {
-      isfound = false;
-      ck = $("<input type=\"checkbox\" />");
-      dummy();
-      for (j = 0; j < actmirrors.length; j += 1) {
-        if (actmirrors[j].mirrorName === mirrors[i].mirrorName) {
-          isfound = true;
-          break;
+    if (mirrors[i].mirrorName != undefined) {
+      var trCur = $("<tr></tr>"),
+        tdHead = $("<td class='mirrorName' name='" + mirrors[i].mirrorName + "'></td>"),
+        img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
+        langstr = "",
+        tdMgs = $("<td class='mirrorOpt'></td>"),
+        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
+        lang = mirrors[i].languages.split(","),
+        nb = 0,
+        j = 0,
+        tdLang,
+        release,
+        isfound,
+        ck;
+  
+      for (j = 0; j < mangas.length; j += 1) {
+        if (mangas[j].mirror === mirrors[i].mirrorName) {
+          nb += 1;
         }
       }
-      ck.attr("checked", isfound);
-      ck.appendTo(tdMgs);
-      ck.click(state_mirror());
+      img.appendTo(tdHead);
+      $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
+      $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
+      tdHead.appendTo(trCur);
+      for (j = 0; j < lang.length; j += 1) {
+        langstr += MgUtil.getLanguageName(lang[j]) + ", ";
+      }
+      $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
+      if (mirrors[i].revision === 0) {
+        release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
+        release.data("idext", mirrors[i].idext);
+        release.appendTo(trCur);
+      } else {
+        $("<td>" + mirrors[i].revision + "</td>").appendTo(trCur);
+      }
+      tdLang = $("<td class='lang'>" + langstr.substr(0, langstr.length - 2) + "</td>");
+      tdLang.appendTo(trCur);
+      tdMgs.appendTo(trCur);
+      discuss.data("idext", mirrors[i].idext);
+      discuss.appendTo(trCur);
+      if (nb > 0) {
+        trCur.addClass("desactivate");
+      } else {
+        isfound = false;
+        ck = $("<input type=\"checkbox\" />");
+        dummy();
+        for (j = 0; j < actmirrors.length; j += 1) {
+          if (actmirrors[j].mirrorName === mirrors[i].mirrorName) {
+            isfound = true;
+            break;
+          }
+        }
+        ck.attr("checked", isfound);
+        ck.appendTo(tdMgs);
+        ck.click(state_mirror());
+      }
+      trCur.appendTo($("#allmirrors tbody"));
     }
-    trCur.appendTo($("#allmirrors tbody"));
   }
   $(".discuss").click(function() {
     openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
@@ -488,39 +491,64 @@ function switchColor(obj) {
   }
   obj.className += " active";
 }
-window.addEventListener("load", init);
-/* Examples
-document.getElementById("myBtn").onclick=function(){displayDate()};
-document.getElementById(â€œbutton1â€).addEventListener(â€œclickâ€,handleClick);
-object.onchange=function(){SomeJavaScriptCode};
-document.getElementsByTagName("input").onchange=function(){save_options()};
+
+//Encapsulate events binding here so it waits for the DOM to be loaded...
+$(function() {
+  //window.addEventListener("load", init);
+  init();
+  
+  /* Examples
+  document.getElementById("myBtn").onclick=function(){displayDate()};
+  document.getElementById( €œbutton1 €).addEventListener( €œclick €,handleClick);
+  object.onchange=function(){SomeJavaScriptCode};
+  document.getElementsByTagName("input").onchange=function(){save_options()};
  */
-// Change the current tab show.
-$("#mangasWS").click(function() {
-  switchOnglet($(this), 'ong1');
-});
-$("#AMR_options").click(function() {
-  switchOnglet($(this), 'ong2');
-});
-$("#sync").click(function() {
-  switchOnglet($(this), 'ong3');
-});
-$("#supportedWS").click(function() {
-  switchOnglet($(this), 'ong4');
+ 
+  // Change the current tab show.
+  $("#mangasWS").click(function() {
+    switchOnglet($(this), 'ong1');
+  });
+  $("#AMR_options").click(function() {
+    switchOnglet($(this), 'ong2');
+  });
+  $("#sync").click(function() {
+    switchOnglet($(this), 'ong3');
+  });
+  $("#supportedWS").click(function() {
+    switchOnglet($(this), 'ong4');
+  });
+  
+
+  // Call save_options on every change made to input elements
+  //OLD WAY
+  /*var input = document.getElementsByTagName('input');
+  for (i = 0; i < input.length; i += 1) {
+    input[i].addEventListener('change', save_options);
+  }*/
+  //DO IT the jQuery WAY
+  $("input").change(function() {
+    save_options();
+  });
+  
+  /*<td><div class="colorPicker" style="background-color:white" onclick="switchColor(this);save_options();"></div></td>
+  <td><div class="colorPicker" style="background-color:black" onclick="switchColor(this);save_options();"></div></td>
+  <td><div class="colorPicker" style="background-color:#DDDDDD" onclick="switchColor(this);save_options();"></div></td>
+  <td><div class="colorPicker" style="background-color:#F0DDDD" onclick="switchColor(this);save_options();"></div></td>
+  <td><div class="colorPicker" style="background-color:#EEEEFF" onclick="switchColor(this);save_options();"></div></td>*/
+  $(".colorPicker").click(function() {
+    switchColor(this);
+    save_options();
+  });
+  
+  /* < select id = "updatechap" onchange = "save_options();" >
+  < select id = "updatemg" onchange = "save_options();" >
+  < select id = "popupsize" onchange = "save_options();" >
+  < select id = "notificationtimer" onchange = "save_options();" >*/
+  $("#updatechap").add($("#updatemg")).add($("#popupsize")).add($("#notificationtimer")).change(function() {
+    save_options();
+  });
 });
 
-// Call save_options on every change made to input elements
-var input = document.getElementsByTagName('input');
-for (i = 0; i < input.length; i += 1) {
-  input[i].addEventListener('change', save_options);
-}
-/*<td><div class="colorPicker" style="background-color:white" onclick="switchColor(this);save_options();"></div></td>
-<td><div class="colorPicker" style="background-color:black" onclick="switchColor(this);save_options();"></div></td>
-<td><div class="colorPicker" style="background-color:#DDDDDD" onclick="switchColor(this);save_options();"></div></td>
-<td><div class="colorPicker" style="background-color:#F0DDDD" onclick="switchColor(this);save_options();"></div></td>
-<td><div class="colorPicker" style="background-color:#EEEEFF" onclick="switchColor(this);save_options();"></div></td>*/
 
-/* < select id = "updatechap" onchange = "save_options();" >
-< select id = "updatemg" onchange = "save_options();" >
-< select id = "popupsize" onchange = "save_options();" >
-< select id = "notificationtimer" onchange = "save_options();" >*/
+
+
