@@ -16,30 +16,9 @@
 <script src="js/analytics.js" type="text/javascript"></script>
 <script src="js/innermenu.js" type="text/javascript"></script>
 <script src="js/amrcsql.js" type="text/javascript"></script>
-    
-<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
-<style>
-#results thead {
-  background-color:#EEEEEE;
-  font-weight:bold;
-}
-#results thead * td {
-  text-align: center;
-}
-#results tbody tr.odd {
-  background-color:#FAFABB;
-}
-#results tbody tr.even {
-  background-color:#EBEBBB;
-}
 
-#results * td {
-  font-size:8pt;
-}
-.article * {
-  color:black;
-}
-</style>
+<link href="css/amr_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/lab.css">
 <script type="text/javascript">
 
 var mirrors;
@@ -49,7 +28,7 @@ function getElementsByClass(searchClass, obj) {
 	if (!obj) {
 		obj = document;
 	}
-	
+
 	var classElements = new Array();
 	var els = document.getElementsByTagName('*');
 	var elsLen = els.length
@@ -73,7 +52,7 @@ function load() {
   $(".article:not(#resTr)").show();
   getMirrors(function(mirrorsT) {
     mirrors = mirrorsT;
-    
+
     //var icons = [];
     mirrors.sort(function(a, b) {
       return (a.mirrorName.toUpperCase() < b.mirrorName.toUpperCase()) ? - 1 : ((a.mirrorName.toUpperCase() == b.mirrorName.toUpperCase()) ? 0 : 1);
@@ -107,7 +86,7 @@ function changeMirror() {
 function loadTestForMirror() {
   $("#resTr").css("display", "table-row");
   $("#resZone").empty();
-  
+
   testAttributes();
   testListMgs();
 }
@@ -152,7 +131,7 @@ function testListMgs() {
         $("<option value=\"" + lst[i][1] + "\">" + lst[i][1] + "</option>").appendTo(selUrls);
       }
       $("<br />").appendTo(res)
-      
+
       sel.css("max-width", "300px");
       sel.appendTo(res);
       var al = $("<input type='button' value='Go'/>");
@@ -166,7 +145,7 @@ function testListMgs() {
       });
       als.appendTo(res);
       $("<br />").appendTo(res)
-      
+
       selUrls.css("max-width", "300px");
       selUrls.appendTo(res);
       var alu = $("<input type='button' value='Go'/>");
@@ -188,14 +167,14 @@ function testListMgs() {
       modifyComment("listmgs", "List of mangas loaded. Check that the mangas corresponds to those on the web sites. Check the URLs too...");
     }
     modifyResult("listmgs", res);
-    
+
     if (isOk) {
       modifyStatut("listmgs", "O");
       if ($("#auto").attr("checked") == true) {
         var i = Math.floor(Math.random()*$("option", $("#lstMangas")).size());
         $("option:nth-child(" + i + ")", $("#lstMangas")).attr("selected", "selected");
         testChapters();
-      } 
+      }
     } else {
       modifyStatut("listmgs", "K");
     }
@@ -205,7 +184,7 @@ function testListMgs() {
 function testChapters() {
   resetAfter("listmgs");
   addResult("listchaps", "L", "Test if list of chapters can be loaded for the selected manga.", $("<span>Loading...</span>"), "");
-  
+
   getMangaMirror($("#mirrorList").val()).getListChaps($("#lstMangas").val(), $("#lstMangas option:selected").text(), null, function(lst, obj) {
     var res = $("<div></div>");
     var isOk = true;
@@ -256,14 +235,14 @@ function testChapters() {
       modifyComment("listchaps", "List of chapters loaded. Check that the chapters corresponds to those on the web sites. Check the URLs too... <b>Verify that the list of chapter is in descending order. The latest Chapter must be the first on the list </b>");
     }
     modifyResult("listchaps", res);
-    
+
     if (isOk) {
       modifyStatut("listchaps", "O");
       if ($("#auto").attr("checked") == true) {
         var i = Math.floor(Math.random()*$("option", $("#lstChaps")).size());
         $("option:nth-child(" + i + ")", $("#lstChaps")).attr("selected", "selected");
         testMirrorForChap();
-      } 
+      }
     } else {
       modifyStatut("listchaps", "K");
     }
@@ -298,7 +277,7 @@ function testMirrorForOtherChap() {
       }
     }
   }
-  
+
   if (nbFalse == 0) {
     modifyResult("testmirrorotchap", $("<span>Other mirrors won't find this chapter as to be treated by them</span>"));
     modifyComment("testmirrorotchap", "OK");
@@ -314,12 +293,12 @@ function testMirrorForOtherChap() {
 function loadBackAndGoNextTests() {
   addResult("loadifr", "L", "Load the chapter in background.", $("<span>Loading...</span>"), "");
   $("#mangaChap").remove();
-  
+
   $.ajax({
     url: $("#lstChaps").val(),
-  
+
     success: function(data) {
-      var div = document.createElement( "iframe" ); 
+      var div = document.createElement( "iframe" );
       div.style.display = "none";
       $(div).attr("id", "mangaChap");
       document.body.appendChild(div);
@@ -330,7 +309,7 @@ function loadBackAndGoNextTests() {
         modifyStatut("loadifr", "O");
         testChapter(document.getElementById("mangaChap").contentWindow.document.documentElement);
       });
-    }, 
+    },
     error: function() {
       modifyResult("loadifr", $("<span>Internal error while loading the chapter in background. Check if the URL </span><a href=\"" + $("#lstChaps").val() + "\">"+$("#lstChaps").val()+"</a><span>can be loaded</span>"));
       modifyComment("loadifr", "KO");
@@ -375,7 +354,7 @@ function testInfos(div, callback) {
     var isOk = true;
     var isWarn = false;
     $("<span>Informations retrieved from mirror : </span><br/><span>" + $H(res).toJSON() + "</span><br/>").appendTo(result);
-    
+
     if (res.name == undefined || res.name == null) {
       $("<br/><span>Manga name is not returned by your mirror !</span>").appendTo(result);
       isOk = false;
@@ -420,7 +399,7 @@ function testInfos(div, callback) {
         isOk = false;
       }
     }
-    
+
     modifyResult("testinfos", result);
     if (isOk) {
       if (!isWarn) {
@@ -440,9 +419,9 @@ function testInfos(div, callback) {
 
 function testImages(div) {
   addResult("testimgs", "L", "Test if list of chapter scans can be found in the background chapter page.", $("<span>Loading...</span>"), "");
-  
+
   var lst = getMangaMirror($("#mirrorList").val()).getListImages($(div), $("#lstChaps").val());
-  
+
   var res = $("<div></div>");
   var isOk = true;
   if (lst.length == 0) {
@@ -459,7 +438,7 @@ function testImages(div) {
     $("<br />").appendTo(res)
     sel.css("max-width", "300px");
     sel.appendTo(res);
-    
+
     $("<br />").appendTo(res)
 
     //Add a button
@@ -470,14 +449,14 @@ function testImages(div) {
     modifyComment("testimgs", "List of images loaded.");
   }
   modifyResult("testimgs", res);
-  
+
   if (isOk) {
     modifyStatut("testimgs", "O");
     if ($("#auto").attr("checked") == true) {
       var i = Math.floor(Math.random()*$("option", $("#lstImgs")).size());
       $("option:nth-child(" + i + ")", $("#lstImgs")).attr("selected", "selected");
       testImage();
-    } 
+    }
   } else {
     modifyStatut("testimgs", "K");
   }
@@ -486,7 +465,7 @@ function testImages(div) {
 function testImage() {
   $("#testimg").remove();
   addResultAfter("testimgs", "testimg", "L", "Test if an image can be loaded.", $("<span>Loading...</span>"), "");
-  
+
   var img = new Image();
   //== loadImage
   $(img).css("height", "100px");
@@ -518,11 +497,11 @@ function testNav(div) {
   } else {
     select = $(select);
   }
-  
+
   getMangaMirror($("#mirrorList").val()).doSomethingBeforeWritingScans($(div), $("#lstChaps option:selected").val());
-  
+
   addResult("testnavplace", "L", "Test if the mirror returns a place to write navigation.", $("<span>Loading...</span>"), "");
-  
+
   var where = $(getMangaMirror($("#mirrorList").val()).whereDoIWriteNavigation($(div), $("#lstChaps").val()));
   if (where == null || where == undefined || where.size() == 0) {
     modifyResult("testnavplace", $("<span>Your mirror does not return a place to write navigation</span>"));
@@ -539,9 +518,9 @@ function testNav(div) {
       modifyStatut("testnavplace", "O");
     }
   }
-  
+
   addResult("testscansplace", "L", "Test if the mirror returns a place to write scans.", $("<span>Loading...</span>"), "");
-  
+
   where = $(getMangaMirror($("#mirrorList").val()).whereDoIWriteScans($(div), $("#lstChaps").val()));
   if (where == null || where == undefined || where.size() == 0) {
     modifyResult("testscansplace", $("<span>Your mirror does not return a place to write scans</span>"));
@@ -621,12 +600,12 @@ function testNavPrev(div, select) {
 function loadChapterFromUrlAndTest(urlLoad, libNP, idTestBefore) {
   addResultAfter(idTestBefore, libNP + "load", "L", "Load the " + libNP + " chapter in background", $("<span>Loading...</span>"), "");
   $("#chap" + libNP).remove();
-  
+
   $.ajax({
     url: urlLoad,
-  
+
     success: function(data) {
-      var div = document.createElement( "iframe" ); 
+      var div = document.createElement( "iframe" );
       div.style.display = "none";
       $(div).attr("id", "chap" + libNP);
       document.body.appendChild(div);
@@ -637,7 +616,7 @@ function loadChapterFromUrlAndTest(urlLoad, libNP, idTestBefore) {
         modifyStatut(libNP + "load", "O");
         testNPChapter(urlLoad, libNP, libNP + "load");
       });
-    }, 
+    },
     error: function() {
       modifyResult(libNP + "load", $("<span>Internal error while loading the " + libNP + " chapter in background. Check if the URL </span><a href=\"" + urlLoad + "\">"+urlLoad+"</a><span>can be loaded</span>"));
       modifyComment(libNP + "load", "KO");
@@ -666,7 +645,7 @@ function testNPRetURL(urlLoad, libNP, idTestBefore) {
     var result = $("<div></div>");
     var isOk = true;
     $("<span>Informations retrieved from mirror for the " + libNP + " chapter : </span><br/><span>" + $H(res).toJSON() + "</span><br/>").appendTo(result);
-  
+
     if (res.currentMangaURL == undefined || res.currentMangaURL == null) {
       $("<br/><span>Manga url is not returned by your mirror for the " + libNP + " chapter !</span>").appendTo(result);
       isOk = false;
@@ -695,7 +674,7 @@ function testNPRetURL(urlLoad, libNP, idTestBefore) {
         isOk = false;
       }
     }
-  
+
     modifyResult(libNP + "testinsideurl", result);
     if (isOk) {
       modifyComment(libNP + "testinsideurl", "Your mirror returns good informations for the " + libNP + " chapter page.");
@@ -713,7 +692,7 @@ function testHand() {
 
 function addResult(idTest, statut, testTxt, res, comment) {
   var tr = $("<tr id=\"" + idTest + "\"></tr>");
-  
+
   var tdStat = $("<td class=\"statut\"></td>");
   if (statut=="L") {
     $("<img src=\"img/lab_load.gif\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
@@ -725,27 +704,27 @@ function addResult(idTest, statut, testTxt, res, comment) {
     $("<img src=\"img/warn.png\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
   } else if (statut=="H") {
     $("<img src=\"img/lab_hand.png\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
-  } 
-  
+  }
+
   tdStat.css("text-align", "center");
   var tdTxt = $("<td class=\"test\"><span>" + testTxt+"</span></td>");
   var tdRes = $("<td class=\"res\"></td>");
   res.appendTo(tdRes);
   var tdComment = $("<td class=\"comment\"></td>");
   $(comment).appendTo(tdComment);
-  
+
   tdStat.appendTo(tr);
   tdTxt.appendTo(tr);
   tdRes.appendTo(tr);
   tdComment.appendTo(tr);
-  
+
   tr.appendTo($("#resZone"));
   pyjama();
 }
 
 function addResultAfter(idPrec, idTest, statut, testTxt, res, comment) {
   var tr = $("<tr id=\"" + idTest + "\"></tr>");
-  
+
   var tdStat = $("<td class=\"statut\"></td>");
   if (statut=="L") {
     $("<img src=\"img/lab_load.gif\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
@@ -757,19 +736,19 @@ function addResultAfter(idPrec, idTest, statut, testTxt, res, comment) {
     $("<img src=\"img/warn.png\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
   } else if (statut=="H") {
     $("<img src=\"img/lab_hand.png\" width=\"24\" height=\"24\"/>" ).appendTo(tdStat);
-  } 
+  }
   tdStat.css("text-align", "center");
   var tdTxt = $("<td class=\"test\"><span>" + testTxt+"</span></td>");
   var tdRes = $("<td class=\"res\"></td>");
   res.appendTo(tdRes);
   var tdComment = $("<td class=\"comment\"></td>");
   $(comment).appendTo(tdComment);
-  
+
   tdStat.appendTo(tr);
   tdTxt.appendTo(tr);
   tdRes.appendTo(tr);
   tdComment.appendTo(tr);
-  
+
   $("#" + idPrec).after(tr);
   pyjama();
 }
@@ -793,7 +772,7 @@ function modifyStatut(idTest, statut) {
     $("<img src=\"img/warn.png\" width=\"24\" height=\"24\"/>" ).appendTo($(".statut", $("#" + idTest)));
   } else if (statut=="H") {
     $("<img src=\"img/lab_hand.png\" width=\"24\" height=\"24\"/>" ).appendTo($(".statut", $("#" + idTest)));
-  } 
+  }
 }
 
 function modifyResult(idTest, res) {
@@ -851,12 +830,12 @@ function getMangaMirror(mirror) {
 
         <div class="article" style="width:100%;">
           <h3>
-            Select the mirror you want to test (your mirror must appear in this list) : 
+            Select the mirror you want to test (your mirror must appear in this list) :
           </h3>
           <table  style="width:100%;">
             <tr>
               <td>
-                <p>Mirror list : 
+                <p>Mirror list :
                 <select id="mirrorList" onchange="changeMirror();"></select>
                 <input type="button" value="Load test" onclick="loadTestForMirror();"/>
                 <input type="button" value="Reload mirrors" onclick="reload();"/>
@@ -869,7 +848,7 @@ function getMangaMirror(mirror) {
             </tr>
             <tr id="searchBox">
               <td>
-                <p>This mirror can not load full list of mangas, key here your search : 
+                <p>This mirror can not load full list of mangas, key here your search :
                 <input id="searchBoxInput" type="text" onkeypress="if(event.keyCode==13) loadTestForMirror();" />
                 </p>
               </td>
@@ -889,11 +868,11 @@ function getMangaMirror(mirror) {
                       <td style="width:32px;"></td>
                       <td style="width:25%;">Test</td>
                       <td style="width:45%">Results</td>
-                      <td style="width:25%">Comment</td>  
+                      <td style="width:25%">Comment</td>
                     </tr>
                   </thead>
                   <tbody id="resZone">
-                    
+
                   </tbody>
                 </table>
               </td>

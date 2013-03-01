@@ -1,0 +1,66 @@
+.glob {
+  width:100%;
+  border-spacing:10px;
+}
+.glob td {
+  vertical-align:top;
+}
+.tbstat {
+  width:100%;
+}
+.tbstat, .tbstat tr {
+  border-spacing:0;
+}
+.tbstat tr td {
+  font-size:8pt;
+  padding:2px;
+  color:black;
+}
+.tbstat thead tr {
+  background-color:#BBBBFF;
+}
+.tbstat thead td {
+  vertical-align: middle;
+  text-align:center;
+  color:white;
+  font-weight:bold;
+}
+
+.tbstat tr td.times {
+  text-align:right;
+}
+
+.tbstat tr.odd {
+  background-color:#CCCCFF;
+}
+
+.tbstat tr.even {
+  background-color:#DDDDFF;
+}
+.tbstat tr.lastLine {
+  border-bottom-left-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px;
+}
+.tbstat tr.firstLine {
+  border-top-left-radius: 4px 4px;
+  border-top-right-radius: 4px 4px;
+}
+select {
+  border:none;
+  border-bottom-left-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px;
+  border-top-left-radius: 4px 4px;
+  border-top-right-radius: 4px 4px;
+  background-color:#DDDDFF;
+  font-size:9pt;
+}
+a.link {
+  font-weight:bold;
+  cursor:pointer;
+}
+.tbstat td img {
+  cursor:pointer;
+}
+.tbstat td.buttontd {
+  vertical-align:middle;
+}

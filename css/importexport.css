@@ -1,0 +1,20 @@
+.button {
+  max-width: 300px;
+  cursor:pointer;
+  margin:5px;
+  display:inline-block;
+  padding:4px;
+}
+.button img {
+  margin-left:5px;
+  vertical-align:middle;
+}
+
+.resImpDiv {
+  text-align:center;
+}
+
+.resImport {
+  font-weight:bold;
+  margin-right:10px;
+}

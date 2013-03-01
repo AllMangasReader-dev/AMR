@@ -10,28 +10,7 @@
 <title>All Mangas Reader Import / Export</title></head>
 
 <link href="css/amr_style.css" rel="stylesheet" type="text/css">
-<style>
-  .button {
-      max-width: 300px;
-      cursor:pointer;
-      margin:5px;
-      display:inline-block;
-      padding:4px;
-  }
-  .button img {
-    margin-left:5px;
-    vertical-align:middle;
-  }
-  
-  .resImpDiv {
-    text-align:center;
-  }
-  
-  .resImport {
-    font-weight:bold;
-    margin-right:10px;
-  }
-</style>
+<link rel="stylesheet" href="css/importexport.css">
 
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/analytics.js" type="text/javascript"></script>
@@ -43,13 +22,13 @@
     $(".article").show();
     $(".ongletCont[id!='ong1']").hide();
   });
-  
+
   //Used to request background page action
   function sendExtRequest(request, button, callback, backsrc) {
     //Prevent a second request
     if (button.data("currentlyClicked")) return;
     button.data("currentlyClicked", true);
-    
+
     //Display a loading image
     var _ancSrc;
     if (button.is("img")) {
@@ -87,7 +66,7 @@
     });
     }, 10);
   }
-  
+
   function exportData() {
     var expMgs = ($("#mgCk").attr("checked") == true);
     var expBms = ($("#bmCk").attr("checked") == true);
@@ -98,23 +77,23 @@
       var mgs = chrome.extension.getBackgroundPage().getJSONListToSync();
       res.mangas = mgs;
     }
-    
+
     if (expBms) {
       res.bookmarks = chrome.extension.getBackgroundPage().bookmarks;
     }
-    
+
     $("#exportBox").html(JSON.stringify(res));
     $("#resExp").show();
-    
+
   }
-  
+
   function copy() {
     chrome.extension.getBackgroundPage().setclipboard($("#exportBox").text());
     alert("Data have been saved to clipboard.");
   }
-  
+
   var data;
-  
+
   function importData() {
     $("#resImp").hide();
     try {
@@ -133,7 +112,7 @@
     }
     $("#resImp").show();
   }
-  
+
   function importManga(but, mergeVal) {
     var obj = {
       action: "importMangas",
@@ -147,7 +126,7 @@
     }, true);
 
   }
-  
+
   function importBookmark(but, mergeVal) {
     var obj = {
       action: "importBookmarks",
@@ -160,7 +139,7 @@
       $("#resultBout").val(resp.out);
     }, true);
   }
-  
+
   function switchOnglet(ong, tab) {
     $(".tab").removeClass("checked");
     $(ong).addClass("checked");
@@ -176,7 +155,7 @@
   	if (!obj) {
   		obj = document;
   	}
-  	
+
   	var classElements = new Array();
   	var els = document.getElementsByTagName('*');
   	var elsLen = els.length
@@ -217,7 +196,7 @@
         <center><textarea id="importBox" cols="90" rows="5" ></textarea></center>
         <center><div class="button" onclick="importData();">Let AMR read it !</div></center>
         <div id="resImp" style="display:none;">
-          
+
         </div>
       </div>
       </div>
@@ -228,7 +207,7 @@
         <input type="checkbox" id="bmCk" checked="true"/>
         <label for="bmCk">Export bookmarks</label>
         <center><div class="button" onclick='exportData();'>Export file</div></center>
-        
+
         <center>
         <div id="resExp" style="display:none;">
           <textarea id="exportBox" cols="90" rows="5"></textarea><br />

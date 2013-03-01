@@ -5,180 +5,7 @@
 <title>All Mangas Reader Options</title></head>
 
 <link href="css/amr_style.css" rel="stylesheet" type="text/css">
-
-<style>
-.colorPicker {
-  width:24px;
-  height:24px;
-  border-top-left-radius: 5px 5px;
-  border-top-right-radius: 5px 5px;
-  border-bottom-left-radius: 5px 5px;
-  border-bottom-right-radius: 5px 5px;
-  border: 1px solid #ABC;
-}
-.colorPicker.active {
-  border: 2px solid #777;
-}
-
-#results {
-  text-align:center;
-}
-#allmirrors {
-  margin-left:auto;
-  margin-right:auto;
-  border-spacing:0;
-  border-radius:4px;
-}
-#allmirrors img {
-  margin-right:5px;
-  vertical-align:middle;
-}
-#allmirrors, #allmirrors tr {
-  /*display:block;*/
-}
-#allmirrors tr td {
-  /*display:block;*/
-  padding:2px;
-  padding-right:10px;
-}
-#allmirrors thead td {
-  text-align:center;
-  font-weight:bold;
-  color:white;
-}
-#allmirrors thead tr {
-  background-color:grey;
-}
-tr.odd {
-  background-color:#CCCCFF;
-}
-
-tr.even {
-  background-color:#DDDDFF;
-}
-
-tr.desactivate {
-  background-color:#DDDDDD;
-}
-
-tr.lastLine {
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-}
-tr.firstLine {
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-}
-td.mirrorName {
-  /*width:500px;*/
-  vertical-align:middle;
-  /*font-weight:bold;*/
-}
-td.mirrorOpt {
-  width:50px;
-  text-align:center;
-}
-
-.paypal {
-  padding-left:10px;
-  padding-right:10px;
-  padding-top:2px;
-  padding-bottom:2px;
-  font-size:9pt;
-  text-align:center;
-  background-color: #EEEEFF;
-  border-radius:4px;
-  color:black;
-  margin-top:2px;
-  margin-right:3px;
-  -webkit-box-shadow: 0 0 15px #F4F4FF;
-}
-.paypal .payitem {
-  display:inline-block;
-  background-color:#DDDDFF;
-  padding:1px;
-  padding-left:7px;
-  padding-right:2px;
-  border-radius:4px;
-  -webkit-box-shadow: inset 0px 0px 2px 2px #AAAADD;
-} 
-.paypal p {
-  padding:0;
-  margin:0;
-}
-.paypal .payitem img, .paypal .payitem span {
-  vertical-align:middle;
-  font-weight:bold;
-}
-.paypal table {
-  font-size:8pt;
-}
-#title {
-  height:80px;
-}
-.titImg {
-  vertical-align:middle;
-  margin-top:8px;
-}
-.titTxt {
-  vertical-align:middle;
-}
-
-.bottominfo {
-  margin-top:10px;
-  font-size:10pt;
-  text-align:center;
-}
-
-#selectors {
-  display:inline-block;
-  text-align:right;
-  float:right;
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-  background-color:#CCCCFF;
-  padding-left:5px;
-  padding-right:5px;
-}
-#selectors img {
-  vertical-align:middle;
-  margin-right: 5px;
-  cursor:pointer;
-}
-#searchBox p {
-  font-size:9pt;
-}
-#selectors select {
-  border:none;
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-  background-color:#DDDDFF;
-  font-size:9pt;
-}
-.lang {
-  width: 150px;
-}
-.ongletCont td {
-  color:black;
-  font-size:8pt;
-}
-.ongletCont {
- -webkit-transition: all .4s ease-in-out;
-}
-.article p {
-  font-size:8pt;
-}
-.discuss {
-  cursor:pointer;
-}
-.discusstd {
-  text-align:center;
-}
-</style>
+<link rel="stylesheet" href="css/options.css">
 
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/mgEntry.js" type="text/javascript"></script>
@@ -187,7 +14,7 @@ td.mirrorOpt {
 <script src="js/innermenu.js" type="text/javascript"></script>
 <script src="js/amrcsql.js" type="text/javascript"></script>
 <script src="js/options.js" type="text/javascript"></script>
-    
+
 
 <body>
   <div id="header">
@@ -398,7 +225,7 @@ td.mirrorOpt {
                     <label for="sendstats">Keep personnal statistics data.</label>
                   </td>
                 </tr>
-                
+
               </table>
             </div>
           </td>
@@ -465,7 +292,7 @@ td.mirrorOpt {
                   <label for="displastup">Display a calendar icon representing the last time a new chapter has been published (<img src="img/day.png" title="Last time new chapter : 2 days ago" />, <img src="img/week.png" title="Last time new chapter : 3 weeks ago" /> or <img src="img/month.png" title="Last time new chapter : 4 months ago" />). If unchecked, a tooltip will appear on the manga name telling : "Last time new chapter : 2 weeks ago" for example</label>
                 </td>
               </tr>
-              
+
               <tr>
                 <td>
                   <div class="article">
@@ -483,7 +310,7 @@ td.mirrorOpt {
                     </table>
                   </div>
                 </td>
-              </tr>  
+              </tr>
             </table>
             </div>
           </td>
@@ -534,7 +361,7 @@ td.mirrorOpt {
                           <option value="172800000">2 days</option>
                           <option value="604800000">week</option>
                           <option value="1209600000">2 weeks</option>
-                        </select> 
+                        </select>
                       </td>
                       <td>
                         <a class="button" id="refreshMg" href="#">Refresh manga lists now</a>
@@ -554,7 +381,7 @@ td.mirrorOpt {
                           <option value="1">Small</option>
                           <option value="2">Medium</option>
                           <option value="3">Big</option>
-                        </select> 
+                        </select>
                       </td>
                     </tr>
                   </table>
@@ -655,7 +482,7 @@ td.mirrorOpt {
                   <input type="checkbox" id="openupdateCk"/>
                   <label for="openupdateCk">When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)</label>
                 </td>
-              </tr> 
+              </tr>
 
             </table>
             </div>
@@ -687,8 +514,8 @@ td.mirrorOpt {
             <br />To do this, you can use build in chrome synchronization with your google account (in chrome options > Personal Data, click on the synchronize button, log in your google account and choose to synchronize bookmarks)
             If you prefer to use another bookmark sync (like with <a href="https://chrome.google.com/extensions/detail/ajpgkpeckebdhofmmjfgcjjiiejpodla">XMarks</a>), you can do it.</p>
             <p>
-            As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate. 
-            Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately. 
+            As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate.
+            Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately.
             You can force synchronization of your data in XMarks by clicking "Synchronize Now".
             With chrome synchronization, you can't force sync. When you read a manga, the bookmark will be modified within five minutes but the incoming synchronization takes more time. To force it, the best way is to relaunch Google Chrome or to disable and reenable synchronization.
             </p>
