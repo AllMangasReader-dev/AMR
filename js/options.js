@@ -3,19 +3,20 @@ var mangas;
 var actmirrors;
 var i = 0;
 
-function getElementsByClass(searchClass, obj) {
+// This function is not called anywhere, also JS has a built in fuction called the same.
+/*function getElementsByClass(searchClass, obj) {
     "use strict";
     if (!obj) {
         obj = document;
     }
 
     var classElements = [],
-        els = document.getElementsByTagName('*'),
-        elsLen = els.length,
-        j = 0,
-        i = 0,
-        k = 0,
-        classes;
+    els = document.getElementsByTagName('*'),
+    elsLen = els.length,
+    j = 0,
+    i = 0,
+    k = 0,
+    classes;
     for (i = 0, j = 0; i < elsLen; i += 1) {
         classes = els[i].className.split(' ');
         for (k = 0; k < classes.length; k += 1) {
@@ -25,7 +26,7 @@ function getElementsByClass(searchClass, obj) {
         }
     }
     return classElements;
-}
+}*/
 
 function getMangaMirror(mirror) {
     "use strict";
@@ -50,7 +51,7 @@ function openTab(urlToOpen) {
 function save_options() {
     "use strict";
     var obj = {},
-        colPicks = getElementsByClass("colorPicker", document);
+    colPicks = $(".colorPicker");
     obj.action = "saveparameters";
     obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
     obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
@@ -148,9 +149,9 @@ function pyjmirs() {
 function loadSelectors() {
     "use strict";
     var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='Activate all visible mirrors'/>"),
-        selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>"),
-        sel = MgUtil.getLanguageSelect(mirrors),
-        spansel = $("<span class='custom-select'></span>");
+    selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>"),
+    sel = MgUtil.getLanguageSelect(mirrors),
+    spansel = $("<span class='custom-select'></span>");
 
     selAll.click(function () {
 
@@ -186,7 +187,7 @@ function loadSelectors() {
     sel.change(function () {
 
         var lang = $("option:selected", $(this)).val(),
-            langMirrors;
+        langMirrors;
         if (lang === "all") {
             $("#allmirrors tr").show();
         } else {
@@ -259,7 +260,9 @@ function sendExtRequest(request, button, callback, backsrc) {
     });
 }
 // Don't create fuctions in loops
-function dummy(res) {"use strict"; }
+function dummy(res) {
+    "use strict";
+}
 // Activate/Deactivate mirrors
 function state_mirror() {
     "use strict";
@@ -301,18 +304,18 @@ function restore_mirrors() {
 
     for (i = 0; i < mirrors.length; i += 1) {
         var trCur = $("<tr></tr>"),
-            tdHead = $("<td class='mirrorName' name='" + mirrors[i].mirrorName + "'></td>"),
-            img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
-            langstr = "",
-            tdMgs = $("<td class='mirrorOpt'></td>"),
-            discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
-            lang = mirrors[i].languages.split(","),
-            nb = 0,
-            j = 0,
-            tdLang,
-            release,
-            isfound,
-            ck;
+        tdHead = $("<td class='mirrorName' name='" + mirrors[i].mirrorName + "'></td>"),
+        img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
+        langstr = "",
+        tdMgs = $("<td class='mirrorOpt'></td>"),
+        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
+        lang = mirrors[i].languages.split(","),
+        nb = 0,
+        j = 0,
+        tdLang,
+        release,
+        isfound,
+        ck;
 
         for (j = 0; j < mangas.length; j += 1) {
             if (mangas[j].mirror === mirrors[i].mirrorName) {
@@ -376,7 +379,7 @@ function restore_mirrors() {
 function restore_options() {
     "use strict";
     var response = chrome.extension.getBackgroundPage().getParameters(),
-        colPicks;
+    colPicks;
 
     document.getElementById("adsCk").checked = (response.displayAdds !== 1);
     document.getElementById("chapsCk").checked = (response.displayChapters === 1);
@@ -395,7 +398,7 @@ function restore_options() {
     document.getElementById("resizeCk").checked = (response.resize !== 0);
     document.getElementById("imgorderCk").checked = (response.imgorder !== 0);
     //COLOR
-    colPicks = getElementsByClass("colorPicker", document);
+    colPicks = $(".colorPicker");
     colPicks[response.color].className = "colorPicker active";
 
     if (document.getElementById("chapsCk").checked) {
@@ -462,7 +465,7 @@ function init() {
     "use strict";
     loadMenu("options");
     $(".article").show();
-    $(".ongletCont[id!=='ong1']").hide();
+    $(".ongletCont:not(#ong1)").hide();
     if (window.location.href.indexOf("tab=sites") !== -1) {
         switchOnglet($("#supportedWS")[0], 'ong4');
     }
@@ -471,8 +474,8 @@ function init() {
 
 function switchColor(obj) {
     "use strict";
-    var colPicks = getElementsByClass("colorPicker", document),
-        i;
+    var colPicks = $(".colorPicker"),
+    i;
     for (i = 0; i < colPicks.length; i += 1) {
         colPicks[i].className = "colorPicker";
     }
@@ -486,10 +489,18 @@ object.onchange=function(){SomeJavaScriptCode};
 document.getElementsByTagName("input").onchange=function(){save_options()};
  */
 // Change the current tab show.
-document.getElementById("mangasWS").onclick=function(){switchOnglet(this, 'ong1');};
-document.getElementById("AMR_options").onclick=function(){switchOnglet(this, 'ong2');};
-document.getElementById("sync").onclick=function(){switchOnglet(this, 'ong3');};
-document.getElementById("supportedWS").onclick=function(){switchOnglet(this, 'ong4');};
+$("#mangasWS").click(function () {
+    switchOnglet($(this), 'ong1');
+})
+$("#AMR_options").click(function () {
+    switchOnglet($(this), 'ong2');
+})
+$("#sync").click(function () {
+    switchOnglet($(this), 'ong3');
+})
+$("#supportedWS").click(function () {
+    switchOnglet($(this), 'ong4');
+})
 
 // Call save_options on every change made to input elements
 var input = document.getElementsByTagName('input');
