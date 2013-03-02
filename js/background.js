@@ -15,7 +15,7 @@ pstat.init();
 wssql.init();
 amrcsql.init();
 
-var betaversion = "1.5.0b1";
+var betaversion = "1.5.0";
 
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
