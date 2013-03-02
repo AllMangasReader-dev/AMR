@@ -1,26 +1,20 @@
-<!--///////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
-//                                                                           //
-////////////////////////////////////////////////////////////////////////////-->
-
+<!DOCTYPE html>
 <html>
 <head>
-<title>All Mangas Reader Import / Export</title></head>
+<meta charset="UTF-8"><title>All Mangas Reader Import / Export</title>
 
 <link href="css/amr_style.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="css/importexport.css">
+<link href="css/importexport.css" rel="stylesheet" type="text/css">
 
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/analytics.js" type="text/javascript"></script>
 <script src="js/innermenu.js" type="text/javascript"></script>
 <script src="js/importexport.js" type="text/javascript"></script>
-
+</head>
 <body>
   <div id="header">
     <div id="subheader">
-      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <img class="imglogo" src="img/icon-32.png" width="100" alt="AllMangasReader"/>
       <h1>All Mangas Reader Import / Export Tool</h1>
     </div>
   </div>
@@ -40,8 +34,8 @@
       <div class="article parent ongletCont" id="ong1" style="width:100%;">
       <div class="article main">
         <p>To import a file, open it (with notepad for example), copy its whole content and paste it in the bow below : </p>
-        <center><textarea id="importBox" cols="90" rows="5" ></textarea></center>
-        <center><div class="button" id="importdata">Let AMR read it !</div></center>
+        <textarea class="center" id="importBox" cols="90" rows="5" ></textarea>
+        <div class="button center" id="importdata">Let AMR read it !</div>
         <div id="resImp" style="display:none;"></div>
       </div>
       </div>
@@ -51,7 +45,7 @@
         <label for="mgCk">Export manga list</label><br />
         <input type="checkbox" id="bmCk" checked/>
         <label for="bmCk">Export bookmarks</label>
-        <center><div class="button" id="exportdata">Export file</div></center>
+        <div class="center button" id="exportdata">Export file</div>
         <div id="resExp" style="display:none;">
           <textarea id="exportBox" cols="90" rows="5"></textarea><br />
           <div class="button" id="copytoclip">Copy content to clipboard</div>
