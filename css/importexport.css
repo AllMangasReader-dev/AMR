@@ -1,9 +1,9 @@
 .button {
   max-width: 300px;
-  cursor:pointer;
-  margin:5px;
-  display:inline-block;
-  padding:4px;
+  cursor: pointer;
+  margin: 5px;
+  display: inline-block;
+  padding: 4px;
 }
 .button img {
   margin-left:5px;
@@ -17,4 +17,8 @@
 .resImport {
   font-weight:bold;
   margin-right:10px;
+}
+.ongletCont {
+  -webkit-transition: all .4s ease-in-out;
+  margin-top:-3px;
 }

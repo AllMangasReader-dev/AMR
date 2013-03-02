@@ -34,8 +34,12 @@
       <div class="article parent ongletCont" id="ong1" style="width:100%;">
       <div class="article main">
         <p>To import a file, open it (with notepad for example), copy its whole content and paste it in the bow below : </p>
-        <textarea class="center" id="importBox" cols="90" rows="5" ></textarea>
-        <div class="button center" id="importdata">Let AMR read it !</div>
+        <div style="text-align:center">
+          <textarea id="importBox" cols="90" rows="5"></textarea>
+        </div>
+        <div style="text-align: center;">
+          <div class="button" id="importdata">Let AMR read it !</div>
+        </div>
         <div id="resImp" style="display:none;"></div>
       </div>
       </div>
@@ -45,10 +49,14 @@
         <label for="mgCk">Export manga list</label><br />
         <input type="checkbox" id="bmCk" checked/>
         <label for="bmCk">Export bookmarks</label>
-        <div class="center button" id="exportdata">Export file</div>
+        <div style="text-align: center;">
+          <div class="button" id="exportdata">Export file</div>
+        </div>
         <div id="resExp" style="display:none;">
-          <textarea id="exportBox" cols="90" rows="5"></textarea><br />
-          <div class="button" id="copytoclip">Copy content to clipboard</div>
+        <div style="text-align:center">
+          <textarea id="exportBox" cols="90" rows="5"></textarea></div><br />
+          <div style="text-align: center;">
+          <div class="button" id="copytoclip">Copy content to clipboard</div></div>
           <p>
             To save the result of this export, click on the copy button above and paste it in a new file of your choice.
           </p>

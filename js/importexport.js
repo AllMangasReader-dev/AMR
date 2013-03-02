@@ -133,7 +133,8 @@ function importData() {
     alert("Error while parsing data in the hereinabove box...");
     return;
   }
-  //console.log(data);
+  // TODO: We should check for all implementation scripts be loaded before trying to parse the input.
+  console.log(data);
   resImp.empty();
   if (data.mangas) {
     $("<div class='resImpDiv'><span class='resImport'>" + JSON.parse(data.mangas).length + " mangas found.</span><div class='button' id='btnMangaMerge'>Import manga list (merge)</div><div class='button' id='btnMangaErase'>Import manga list (erase)</div></div>").appendTo(resImp);
