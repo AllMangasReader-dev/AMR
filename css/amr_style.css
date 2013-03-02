@@ -1,4 +1,4 @@
-body {
+﻿body {
   background-color:#000000;
   color:#FFFFFF;
   padding:0;
@@ -466,7 +466,6 @@ ul.icons img {
   padding:5px;
   padding-left:20px;
   padding-right:20px;
-  font-size:bold;
   display:inline-block;
   font-size:14pt;
   font-weight:bold;
@@ -638,13 +637,13 @@ h3 img, h2 img {
   border-bottom-left-radius:10px;
   border-bottom-right-radius:10px;
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FAFAFF), to(#F0F0FF));
-  background: -moz-linear-gradient(0% 0% 90deg,#FAFAFF, #F0F0FF);
+  /*background: -moz-linear-gradient(0% 0% 90deg,#FAFAFF, #F0F0FF);*/
   box-shadow: 0 0 6px #AAAACC;
-  -moz-box-shadow: 0 0 6px #AAAACC;
+  /*-moz-box-shadow: 0 0 6px #AAAACC;*/
   display:inline-block;
   margin:5px;
   -webkit-transition: all .4s ease-in-out;
-  word-break: break-word;
+  word-break: break-all;
 }
 .donateCont:hover {
   box-shadow: 0 0 20px #AAAACC;
@@ -1041,7 +1040,7 @@ input[type='radio'] {
   width:auto;
   padding-left:10px;
   padding-right:10px;
-  min-width:none;
+  min-width:0;
   bottom: 40px;
 }
 .tip.leftbigstick:hover span {
@@ -1062,7 +1061,7 @@ input[type='radio'] {
   width:auto;
   padding-left:10px;
   padding-right:10px;
-  min-width:none;
+  min-width:0;
   bottom: 60px;
 }
 
@@ -1571,6 +1570,14 @@ input[type='radio'] {
   width:50px;
 }
 img.center {
-  display: block; margin-left: auto; margin-right: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-  
+div.center {
+  margin-left:auto;
+  margin-right:auto;
+}
+.center *:not(img) *:not(div) {
+  text-align : center;
+}
