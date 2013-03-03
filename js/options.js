@@ -516,6 +516,17 @@ $(function () {
   $("#supportedWS").click(function () {
     switchOnglet($(this), 'ong4');
   });
+  
+  // Fix chapters options not showing/hiding when clicking 
+  $('#chapsCk').on("click", function() {
+    if (this.checked) {
+        $('#chaptersOptions').show("table-row");
+    }
+    else {
+        $('#chaptersOptions').hide();
+    }
+  });
+
 
   // Call save_options on every change made to input elements
   //OLD WAY
