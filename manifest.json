@@ -85,8 +85,12 @@
       "img/lefttoright.png",
       "img/stop.gif",
       "img/loading.gif",
-	  "img/cancel.png",
-	  "img/ontop.png",
+	    "img/cancel.png",
+	    "img/ontop.png",
+	    "img/righttoleft.png",
+	    "img/load16.gif",
+	    "img/add.png",
+	    "img/bookmarkred.png",
       "img/warn.png"
    ]
 }
