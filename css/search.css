@@ -2,8 +2,11 @@
   width:100%;
   display:block;
 }
+#resTr {
+  font-size: 0pt!important;
+}
 #allres tr td {
-  display:block;
+  display:table-cell;
 }
 tr.odd {
   background-color:#CCCCFF;
@@ -43,7 +46,7 @@ td.listMirror {
     margin-left:10px;
     margin-top:8px;
     padding-left:20px;
-    background-image: url(img/find.png);
+    background-image: url(../img/find.png);
 }
 
 #coverLoadServer {
@@ -126,12 +129,11 @@ input {
 }
 
 .eltmirrorsearch {
-  display:inline-block;
+  float:left;
   border-radius:4px;
   background-color:#EEEEFF;
-  padding:1px;
+  padding:2px;
   margin-right:2px;
-  margin-bottom:2px;
   padding-left:4px;
 }
 

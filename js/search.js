@@ -1,18 +1,20 @@
 var mirrors;
 function load() {
-    "use strict";
-    wssql.init();
-    loadMenu("search");
-    $(".article:not(#resTr)").show();
-    mirrors = chrome.extension.getBackgroundPage().actMirrors;
-    loadSearch();
+  "use strict";
+  wssql.init();
+  loadMenu("search");
+  $(".article:not(#resTr)").show();
+  mirrors = chrome.extension.getBackgroundPage().actMirrors;
+  loadSearch();
 }
-document.getElementById("searchBoxInput").onkeypress = function (e) {
-    "use strict";
+$(function () {
+  "use strict";
+  document.getElementById("searchBoxInput").onkeypress = function (e) {
     var key = e.keyCode || e.which;
     if (key === 13) {
-        search();
+      search();
     }
-};
-document.getElementById("butFind").addEventListener("click", search);
-window.addEventListener("load", load);
+  };
+  document.getElementById("butFind").addEventListener("click", search);
+  window.addEventListener("load", load);
+});
