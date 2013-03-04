@@ -1,4 +1,4 @@
-﻿function switchOnglet(ong, tab) {
+function switchOnglet(ong, tab) {
   "use strict";
   $(".tab").removeClass("checked");
   $(ong).addClass("checked");
@@ -76,7 +76,7 @@ function exportData() {
   }
 
   if (expBms) {
-    res.bookmarks = chrome.extension.getBackgroundPage().bookmarks;
+    res.bookmarks = chrome.extension.getBackgroundPage().bookmarks || [];
   }
 
   $("#exportBox").html(JSON.stringify(res));

@@ -1,4 +1,4 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
@@ -585,7 +585,7 @@ function getPicTs(time) {
 }
 function fillBookmarks(mg, where) {
   "use strict";
-  if (bookmarks.length > 0) {
+  if (bookmarks !== null && bookmarks.length > 0) {
     var first = true;
     setTimeout(function () {
       var sel;
@@ -640,7 +640,7 @@ function fillOthers(mg, where) {
   var infos = $("<div class='mgotherscont'></div>");
   var infoTab = $("<table class='mginfos'><tr><td><span>Categories : </span><div class='mginfo cats'>No categories for this manga</div></td><td><span>Bookmarks : </span><div class='mginfo books'>No bookmarks for this manga</div></td></tr></table>");
   infoTab.appendTo(infos);
-  infos.appendTo(oths);
+  infos.appendTo(oths);   
   fillCategories(mg, $(".cats", infoTab));
   fillBookmarks(mg, $(".books", infoTab));
   var buts = $("<div class='mgotherscont'><div class='button actsearchmg'>Search this mangas elsewhere</div><div class='button actresetreading'>Reset manga reading</div><div class='button actstopupdates' title='If a manga stops follow updates, AMR will check latest published chapters but won t notify you'>Stop following updates</div><div class='button actstopupdating' title='If a manga stops updating, AMR won t try to get updates from website.'>Stop updating</div></div>");
@@ -807,7 +807,6 @@ function createMangaEntryList(mangas, where) {
   "use strict";
   var isRead = false;
   var isUpdate = true;
-  console.log(mangas.length)
   if (mangas.length) {
     $.each(mangas, function (index, val) {
       if (val.read === 1) {
@@ -816,7 +815,7 @@ function createMangaEntryList(mangas, where) {
       if (val.update === 0) {
         isUpdate = false;
       }
-    });
+    });                     
   } else {
     if (mangas.read === 1)
       isRead = true;
@@ -883,7 +882,7 @@ function createMangaEntryList(mangas, where) {
       mg.hide();
     }
     mg.appendTo(where);
-  } else {
+  } else {  
     var mg = $("<div class='manga'><div class='mgtable'><div class='mgtitle'><div class='mgtitlehead'><img src='' class='mgmirroricon' /><span class='mgname'></span></div></div><div class='mglist'><span class='custom-select'><select></select></span></div><div class='mgactions'></div></div></div>");
     setData(mg, mangas);
     if (isRead) {
@@ -1249,9 +1248,9 @@ function init() {
   "use strict";
   setTimeout(function () {
     wssql.init();
-    mirrors = chrome.extension.getBackgroundPage().actMirrors;
-    mangas = chrome.extension.getBackgroundPage().mangaList;
-    bookmarks = chrome.extension.getBackgroundPage().bookmarks;
+    mirrors = chrome.extension.getBackgroundPage().actMirrors || [];
+    mangas = chrome.extension.getBackgroundPage().mangaList || [];
+    bookmarks = chrome.extension.getBackgroundPage().bookmarks || [];
     setColor();
     loadCategories();
     loadMangas();
