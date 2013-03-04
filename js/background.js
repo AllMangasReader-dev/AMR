@@ -202,7 +202,7 @@ function init() {
     if (bms !== undefined) {
       bookmarks = JSON.parse(bms);
     } else {
-      bookmarks = null
+      bookmarks = [];
     }
 
     var pars = getParameters();
@@ -2274,12 +2274,14 @@ function importBookmarks(bms, merge) {
   if (!merge) {
     textOut += 'Deleting all bookmarks...\n';
     var deleteAr = [];
-    for (var i = 0; i < bookmarks.length; i++) {
-      textOut += "\t - Deleting bookmark entry in current list : (type: " + bookmarks[i].type + ", url: " + bookmarks[i].url + ", chapter url: " + bookmarks[i].chapUrl + ", mirror: " + bookmarks[i].mirror + ((bookmarks[i].type == "chapter") ? "" : ", scanName: " + bookmarks[i].scanName) + ", note: " + bookmarks[i].note + ")" + "\n";
-      deleteAr[deleteAr.length] = i;
-    }
-    for (var i = deleteAr.length - 1; i >= 0; i--) {
-      bookmarks.remove(deleteAr[i], deleteAr[i]);
+    if (bookmarks !== null) {
+      for (var i = 0; i < bookmarks.length; i++) {
+        textOut += "\t - Deleting bookmark entry in current list : (type: " + bookmarks[i].type + ", url: " + bookmarks[i].url + ", chapter url: " + bookmarks[i].chapUrl + ", mirror: " + bookmarks[i].mirror + ((bookmarks[i].type == "chapter") ? "" : ", scanName: " + bookmarks[i].scanName) + ", note: " + bookmarks[i].note + ")" + "\n";
+        deleteAr[deleteAr.length] = i;
+      }
+      for (var i = deleteAr.length - 1; i >= 0; i--) {
+        bookmarks.remove(deleteAr[i], deleteAr[i]);
+      }
     }
   }
 
