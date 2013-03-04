@@ -92,7 +92,7 @@ function MangaElt(obj) {
       //New chapter is not in chapters list --> Reload chapter list
       if (getMangaMirror(this.mirror) !== null && this.update === 1) {
         getMangaMirror(this.mirror).getListChaps(this.url, this.name, this, function (lst, obj2) {
-          if (lst.size() > 0) {
+          if (lst.length > 0) {
             obj2.listChaps = lst;
             for (i = 0; i < lst.length; i += 1) {
               if (lst[i][1] === obj2.lastChapterReadURL) {
@@ -170,7 +170,7 @@ function MangaElt(obj) {
         if (getMangaMirror(myself.mirror) !== null) {
           getMangaMirror(myself.mirror).getListChaps(myself.url, myself.name, myself, function (lst, obj) {
             clearTimeout(timeOutRefresh);
-            if (lst.size() > 0) {
+            if (lst.length > 0) {
               var parameters = JSON.parse(localStorage.parameters),
                 oldLastChap = (typeof obj.listChaps[0] === 'object' ? obj.listChaps[0][1] : undefined),
                 newLastChap,
