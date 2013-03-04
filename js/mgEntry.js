@@ -485,8 +485,7 @@ function getMirrors(callback) {
 
 //Instantiate a returned mirror and load the script...
 function loadJSFromRepositoryForMirrors(list, pos, input) {
-    //TODO error managing ?? see above...
-    $.getScript(input.jsCode, function(){
+    $.loadScript(input.jsCode, true, function(){
       list[pos] = loadedImplementations[input.mirrorName];
       if (list[pos] != undefined) {
         list[pos].mirrorName = input.mirrorName;
@@ -500,6 +499,11 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
         console.log("Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode);
         list[pos] = {loadedscript: true};
       }
+    }, function() {
+      // error managing 
+      console.log("Script " + input.mirrorName + " failed to be loaded...");
+      console.log(input);
+      list[pos] = {loadedscript: true};
     });
 }
 
@@ -603,8 +607,7 @@ function getActivatedMirrorsWithList(res, callback) {
 
 //Instantiate a returned activated mirror and load the script...
 function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
-    //TODO error managing ?? see above...
-    $.getScript(input.jsCode, function(){
+    $.loadScript(input.jsCode, true, function(){
       list[pos] = loadedImplementations[input.mirrorName];
       if (list[pos] != undefined) {
         list[pos].mirrorName = input.mirrorName;
@@ -627,6 +630,11 @@ function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
         console.log("Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode);
         list[pos] = {loadedscript: true, listLoaded: true};
       }
+    }, function() {
+      // error managing 
+      console.log("Script " + input.mirrorName + " failed to be loaded...");
+      console.log(input);
+      list[pos] = {loadedscript: true, listLoaded: true};
     });
 }
 

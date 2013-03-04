@@ -895,9 +895,8 @@ chrome.extension.onRequest.addListener(
   }
   if (request.action == "pagematchurls") {
     doesCurrentPageMatchManga(request.url, activatedMirrors(), function (_isOk, _mirrorName, _implementationURL) {
-      // TODO --> Check if script is in cache ?? --> do not reload it...
       //Load remote script implementation corresponding to current website
-      $.get(_implementationURL, function (sScriptBody, textStatus, jsXHR) {
+      $.loadScript(_implementationURL, true, function (sScriptBody, textStatus, jsXHR) {
         //Execute it in the concerned tab context
         chrome.tabs.executeScript(sender.tab.id, {
           code : sScriptBody
@@ -909,7 +908,13 @@ chrome.extension.onRequest.addListener(
             implURL : _implementationURL
           });
         });
-      }, "text");
+      }, function() {
+        // error managing 
+        console.log("Script " + _mirrorName + " failed to be loaded in page...");
+        sendResponse({
+            isOk : false
+          });
+      }, 'text');
     });
   }
   if (request.action == "deletepub") {
