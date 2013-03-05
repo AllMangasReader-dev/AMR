@@ -1,96 +1,94 @@
-{
-   "name":"All Mangas Reader",
-   "version": "1.5.0",
-   "manifest_version":2,
-   "description":"Follow updates of online manga readers. Beautify reading, with full chapters scans.",
-   "icons":{
-      "16":"img/icon-32.png",
-      "32":"img/icon-32.png",
-      "128":"img/icon-32.png"
-   },
-   
-   "browser_action":{
-      "default_icon": "img/icon-32.png",
-      "default_title":"AllMangasReader",
-      "default_popup":"popup.html"
-   },
-   "background":{
-      "persistent":true,
-      "page":"background.html"
-   },
-   "content_scripts":[
-      {
-         "matches":[
-            "http://*/*"
-         ],
-         "css":[
-            "css/back.css"
-         ],
-         "js":[
-			"js/jquery.js",
-            "js/jquery.scrollTo-1.4.3.1-min.js",
-            "js/jquery.simplemodal-1.4.4.js",
-            "js/back.js"
-         ]
-      },
-      {
-         "matches":[
-            "http://*.allmangasreader.com/*"
-         ],
-         "css":[
-            "css/backsite.css"
-         ],
-         "js":[
-            "js/jquery.js",
-            "js/backsite.js"
-         ]
-      },
-      {
-         "matches":[
-            "https://community.allmangasreader.com/*",
-            "http://amrroot/*"
-         ],
-         "css":[
-            "css/backamrc.css"
-         ],
-         "js":[
-            "js/jquery.js",
-            "js/backamrc.js"
-         ]
-      }
-   ],
-   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net; object-src 'self'",
-   "homepage_url":"http://www.allmangasreader.com/",
-   "key":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFE73kwUiPfxcBtTkkkboktSCXCrDxMWvYSO72IabK3Q9pqvkEcViyFcuj6mpztx55kYhwFT+ntasZZiNgzhxkjc9zEuHopyrg+/S2tgGa7ueZ+P8s3IMOeEWj9Mqw2qyvPoZ508Q6FwrGjU6rZAhBtS5dzhibkFxRQc9Yej2ppQIDAQAB",
-   "minimum_chrome_version":"18.0",
-   "options_page":"options.html",
-   "permissions":[
-      "tabs",
-      "http://*/*",
-	    "https://ssl10.ovh.net/*",
-      "unlimited_storage",
-      "clipboardWrite",
-      "contextMenus",
-      "notifications",
-      "webRequestBlocking",
-	  "bookmarks"
-   ],
-   "update_url":"http://allmangasreader.com/update/update.xml",
-   "web_accessible_resources":[
-      "img/icon-32.png",
-      "img/down.png",
-      "img/bookmark.png",
-      "img/down.png",
-      "img/read_stop.png",
-      "img/lefttoright.png",
-      "img/stop.gif",
-      "img/loading.gif",
-	    "img/cancel.png",
-	    "img/ontop.png",
-	    "img/righttoleft.png",
-	    "img/load16.gif",
-	    "img/add.png",
-	    "img/bookmarkred.png",
-      "img/warn.png"
-   ]
+﻿{
+  "name" : "All Mangas Reader",
+  "version" : "1.5.0",
+  "manifest_version" : 2,
+  "description" : "Follow updates of online manga readers. Beautify reading, with full chapters scans.",
+  "icons" : {
+    "16" : "img/icon-32.png",
+    "32" : "img/icon-32.png",
+    "128" : "img/icon-32.png"
+  },
+
+  "browser_action" : {
+    "default_icon" : "img/icon-32.png",
+    "default_title" : "AllMangasReader",
+    "default_popup" : "popup.html"
+  },
+  "background" : {
+    "persistent" : true,
+    "page" : "background.html"
+  },
+  "content_scripts" : [{
+      "matches" : [
+        "http://*/*"
+      ],
+      "css" : [
+        "css/back.css"
+      ],
+      "js" : [
+        "js/jquery.js",
+        "js/jquery.scrollTo-1.4.3.1-min.js",
+        "js/jquery.simplemodal-1.4.4.js",
+        "js/back.js"
+      ]
+    }, {
+      "matches" : [
+        "http://*.allmangasreader.com/*"
+      ],
+      "css" : [
+        "css/backsite.css"
+      ],
+      "js" : [
+        "js/jquery.js",
+        "js/backsite.js"
+      ]
+    }, {
+      "matches" : [
+        "https://community.allmangasreader.com/*",
+        "http://amrroot/*"
+      ],
+      "css" : [
+        "css/backamrc.css"
+      ],
+      "js" : [
+        "js/jquery.js",
+        "js/backamrc.js"
+      ]
+    }
+  ],
+  "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net; object-src 'self'",
+  "homepage_url" : "http://www.allmangasreader.com/",
+  "key" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFE73kwUiPfxcBtTkkkboktSCXCrDxMWvYSO72IabK3Q9pqvkEcViyFcuj6mpztx55kYhwFT+ntasZZiNgzhxkjc9zEuHopyrg+/S2tgGa7ueZ+P8s3IMOeEWj9Mqw2qyvPoZ508Q6FwrGjU6rZAhBtS5dzhibkFxRQc9Yej2ppQIDAQAB",
+  "minimum_chrome_version" : "18.0",
+  "options_page" : "options.html",
+  "permissions" : [
+    "tabs",
+    "http://*/*",
+    "https://ssl10.ovh.net/*",
+    "unlimited_storage",
+    "clipboardWrite",
+    "contextMenus",
+    "notifications",
+    "webRequestBlocking",
+    "bookmarks"
+  ],
+  "update_url" : "http://allmangasreader.com/update/update.xml",
+  "web_accessible_resources" : [
+    "img/icon-32.png",
+    "img/down.png",
+    "img/bookmark.png",
+    "img/down.png",
+    "img/read_stop.png",
+    "img/lefttoright.png",
+    "img/stop.gif",
+    "img/loading.gif",
+    "img/cancel.png",
+    "img/ontop.png",
+    "img/righttoleft.png",
+    "img/load16.gif",
+    "img/add.png",
+    "img/bookmarkred.png",
+    "img/warn.png",
+    "img/read_play.png"
+  ]
 }

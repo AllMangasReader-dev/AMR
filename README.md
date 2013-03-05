@@ -1,12 +1,11 @@
-AMR
+﻿AMR
 ===
 
 AllMangasReader developer branch has the lastest changes made to the AllMangasReader Chrome Extension.
 
 Get our lastest stable version from http://allmangasreader.com
 
-If you would like to test this, just clone the repo, go to Chrome Extension page, activate "Developer Mode",
-click "Load unpacked extension...", look for the folder where you cloned the repository and load it.
+If you would like to test this, just clone the repo, go to Chrome Extension page, activate "Developer Mode", click "Load unpacked extension...", look for the folder where you cloned the repository and load it.
 
 More info:
 
@@ -16,5 +15,5 @@ More info:
   * prettyPhoto
   * SimpleModal
   * Treeview
-  * Prototype
+  
 
