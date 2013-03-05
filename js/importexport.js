@@ -76,7 +76,7 @@ function exportData() {
   }
 
   if (expBms) {
-    res.bookmarks = chrome.extension.getBackgroundPage().bookmarks || [];
+    res.bookmarks = JSON.stringify(chrome.extension.getBackgroundPage().bookmarks || []);
   }
 
   $("#exportBox").html(JSON.stringify(res));
