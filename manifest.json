@@ -1,8 +1,9 @@
-{
+﻿{
   "name" : "All Mangas Reader",
   "version" : "1.5.0",
   "manifest_version" : 2,
-  "description" : "Follow updates of online manga readers. Beautify reading, with full chapters scans.",
+  "description" : "__MSG_description__",
+  "default_locale" : "en",
   "icons" : {
     "16" : "img/icon-32.png",
     "32" : "img/icon-32.png",
