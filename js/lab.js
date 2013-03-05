@@ -69,7 +69,6 @@ function load() {
       curmir = decodeURI(window.location.href).substr(window.location.href.indexOf("mirror=") + 7);
     }
     for (var i = 0; i < mirrors.length; i++) {
-      console.log(mirrors[i].mirrorName + " --> " + curmir);
       if ( mirrors[i].mirrorName == curmir) {
         $("<option value=\"" + mirrors[i].mirrorName + "\" selected=\"selected\">" + mirrors[i].mirrorName + "</option>").appendTo($("#mirrorList"));
       } else {

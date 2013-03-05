@@ -78,23 +78,6 @@ function getMirrorsDescription(callback) {
 }
 
 function loadJSFromRepository(description) {
-  /*$.ajax({
-      url: amrc_repository + description.jsFile,
-
-      success: function( objResponse ){
-        console.log("code loaded for " + description.mirrorName);
-        //New way (CSP with manifest 2) --> store link to js on https to include when needed...
-        description.jsCode = amrc_repository + description.jsFile;
-        console.log("insert " + description.mirrorName + " in database");
-        amrcsql.webdb.storeWebsite(description, function() {
-          description.loaded = true;
-        });
-      },
-      
-      error: function() {
-        description.loaded = true;
-      }
-  });*/
   //New way (CSP with manifest 2) --> store link to js on https to include when needed...
   description.jsCode = amrc_repository + description.jsFile;
   console.log("insert or update " + description.mirrorName + " in database");
@@ -204,43 +187,6 @@ function updateWebsitesFromRepository(callback) {
 }
 
 function updateJSFromRepository(description, change) {
-  /*$.ajax({
-      url: amrc_repository + description.jsFile,
-
-      success: function( objResponse ){
-        console.log("code loaded for " + description.mirrorName);
-        description.jsCode = objResponse;
-        var isNew = false;
-        if (change.type == "create") {
-          console.log("insert " + description.mirrorName + " in database");
-          amrcsql.webdb.storeWebsite(description, function() {
-            change.loaded = true;
-          });
-          isNew = true;
-        } else if (change.type == "update") {
-          console.log("update " + description.mirrorName + " in database");
-          amrcsql.webdb.updateWebsite(description, function() {
-            change.loaded = true;
-          });
-        }
-        //Notification
-        var params = getParameters();
-        if (params['shownotifws'] == 1) {
-  	      var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
-  	      var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
-                notification.show();
-  	      if (params['notificationtimer'] > 0) {
-  	        setTimeout(function() {
-        		  notification.cancel();
-        		}, params['notificationtimer'] * 1000);
-  	      }
-	      }
-      },
-      
-      error: function() {
-        change.loaded = true;
-      }
-  });*/
   description.jsCode = amrc_repository + description.jsFile;
   var isNew = false;
   if (change.type == "create") {
@@ -456,25 +402,6 @@ function getMirrors(callback) {
     var wsloc = list;
     var mirrorsTmp = [];
     for (var i = 0; i < wsloc.length; i++) {
-      /*var isOk = false;
-      try {
-        eval(wsloc[i].jsCode);
-        isOk = true;
-      } catch (e) {
-        console.log("Impossible to load the following website. JS does not compile... --> " + e.message);
-        console.log(wsloc[i]);
-      }
-      if (isOk) {
-        var cur = mirrorsTmp.length;
-        mirrorsTmp[cur] = eval(wsloc[i].objectName);
-        //console.log(mirrorsTmp[cur]);
-        mirrorsTmp[cur].mirrorName = wsloc[i].mirrorName;
-        mirrorsTmp[cur].mirrorIcon = wsloc[i].mirrorIcon;
-        mirrorsTmp[cur].revision = wsloc[i].revision;
-        mirrorsTmp[cur].developer = wsloc[i].developer;
-        mirrorsTmp[cur].idext = wsloc[i].idext;
-      }*/
-      //TODO --> A TESTER
       var cur = mirrorsTmp.length;
       mirrorsTmp[cur] = {}; //Keep this place for the object...
       loadJSFromRepositoryForMirrors(mirrorsTmp, cur, wsloc[i]);
@@ -574,32 +501,6 @@ function getActivatedMirrorsWithList(res, callback) {
     for (var i = 0; i < wsloc.length; i++) {
       for (var j = 0; j < lstAc.length; j++) {
         if (lstAc[j].mirror == wsloc[i].mirrorName) {
-          /*var isOk = false;
-          try {
-            eval(wsloc[i].jsCode);
-            isOk = true;
-          } catch (e) {
-            console.log("Impossible to load the following website. JS does not compile... --> " + e.message);
-            console.log(wsloc[i]);
-          }
-          if (isOk) {
-            var cur = mirrorsTmp.length;
-            mirrorsTmp[cur] = eval(wsloc[i].objectName);
-            mirrorsTmp[cur].mirrorName = wsloc[i].mirrorName;
-            mirrorsTmp[cur].mirrorIcon = wsloc[i].mirrorIcon;
-            mirrorsTmp[cur].revision = wsloc[i].revision;
-            mirrorsTmp[cur].developer = wsloc[i].developer;
-            mirrorsTmp[cur].idext = wsloc[i].idext;
-            mirrorsTmp[cur].listLoaded = false;
-            if (mirrorsTmp[cur].canListFullMangas) {
-              wssql.webdb.getMangaList(mirrorsTmp[cur].mirrorName, function(list) {
-                mirrorsTmp[cur].listmgs = list;
-                mirrorsTmp[cur].listLoaded = true;
-              });
-            } else {
-              mirrorsTmp[cur].listLoaded = true;
-            }
-          }*/
           var cur = mirrorsTmp.length;
           mirrorsTmp[cur] = {}; //Keep the place for the object...
           loadJSFromRepositoryForActivatedMirrors(mirrorsTmp, cur, wsloc[i]);
