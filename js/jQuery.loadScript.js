@@ -1,4 +1,4 @@
-jQuery.loadScript = function (url, arg1, arg2, errorfunc, datatyp) {
+﻿jQuery.loadScript = function (url, arg1, arg2, errorfunc, datatyp) {
     "use strict";
     var cache = false,
         callback = null,

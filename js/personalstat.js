@@ -1,4 +1,4 @@
-var pstat = {};
+﻿var pstat = {};
 pstat.webdb = {};
 pstat.webdb.db = null;
 

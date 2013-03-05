@@ -1,16 +1,4 @@
-<!--/////////////////////////////////////////////////////////////////////////////////////
-//                                                                                     //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.                 //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)               //
-//This class has been written by phaistonian. It can be found at                       //
-//http://phaistonian.pblogs.gr/2010/06/bsync-syncing-for-chrome-extensions-part-ii.html//
-//The code here is an extract from extension memory with some fix i made when          //
-//phaistonian had not published his class. Now it is published, i try to change it for //
-//the real code but can't make it work... So i kept my old unreadable class...         //
-//                                                                                     //
-//////////////////////////////////////////////////////////////////////////////////////-->
-
-
+﻿// This code will be changed for the storage.sync call of Chrome.
 function BSync (_opt) {
 
     this.options = {};

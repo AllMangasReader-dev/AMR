@@ -1,4 +1,4 @@
-var nbclasses = 0;
+﻿var nbclasses = 0;
 var mirrors;
 var states;
 

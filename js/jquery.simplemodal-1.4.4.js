@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SimpleModal 1.4.4 - jQuery Plugin
  * http://simplemodal.com/
  * Copyright (c) 2013 Eric Martin

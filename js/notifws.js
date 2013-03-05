@@ -1,4 +1,4 @@
-function openDiscuss() {
+﻿function openDiscuss() {
     var data = JSON.parse(document.location.hash.slice(1));
     chrome.extension.sendRequest({action: "opentab", url: "http://community.allmangasreader.com/comments.php?type=1&id=" + data.idext}, function(response) {});
 }

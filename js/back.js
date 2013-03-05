@@ -1,4 +1,4 @@
-var currentMirror = null;
+﻿var currentMirror = null;
 var amrWhereScans;
 var useLeftRightKeys = false;
 var autoBookmarkScans = false;

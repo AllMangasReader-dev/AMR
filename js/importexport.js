@@ -1,4 +1,4 @@
-function switchOnglet(ong, tab) {
+﻿function switchOnglet(ong, tab) {
   "use strict";
   $(".tab").removeClass("checked");
   $(ong).addClass("checked");

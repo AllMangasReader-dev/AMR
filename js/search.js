@@ -1,4 +1,4 @@
-var mirrors;
+﻿var mirrors;
 function load() {
   "use strict";
   wssql.init();

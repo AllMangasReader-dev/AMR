@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
     "use strict";
     loadMenu("release");
     $("#nav").treeview({

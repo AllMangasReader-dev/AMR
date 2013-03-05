@@ -1,5 +1,4 @@
-// The eval functions are market with (***), if you like to hunt them donw, just find those.
-//jQuery.noConflict();
+﻿//jQuery.noConflict();
 var mangaList;
 var mirrors;
 var ctxIds = [];
@@ -63,7 +62,6 @@ var sync = new BSync({
 
       if (!(json == undefined || json == null || json == "null")) {
         console.log(' - Updating incoming entries');
-        // Here we are using eval (***)
         // var lstTmp = $A(eval('(' + json.mangas + ')')); --> remove prototype usage
         lstTmp = JSON.parse(json.mangas);
         for (var i = 0; i < lstTmp.length; i++) {
@@ -172,7 +170,6 @@ function init() {
     mangaList = new Array();
     if (!(list == undefined || list == null || list == "null")) {
       //console.log("Liste de mangas : " + list);
-      // Here we are using eval (***)
       // var lstTmp = $A(eval('(' + list + ')')); --> remove eval function
       var lstTmp = JSON.parse(list);
       console.log(lstTmp);
@@ -199,7 +196,7 @@ function init() {
     //Load bookmarks
     var bms = localStorage["bookmarks"];
     //bookmarks = $A(eval('(' + bms + ')')); --> remove eval function
-	// If there are no bookmarks just skip it.
+  // If there are no bookmarks just skip it.
     if (bms !== undefined) {
       bookmarks = JSON.parse(bms);
     } else {
@@ -1360,7 +1357,6 @@ function deleteBookmark(obj) {
 
 function activateMirror(mirrorName) {
   var states = localStorage["mirrorStates"];
-  // Here we are using eval (***)
   //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
@@ -1401,7 +1397,6 @@ function desactivateMirror(mirrorName) {
   }
   if (nb == 0) {
     var states = localStorage["mirrorStates"];
-    // Here we are using eval (***)
     //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
     var lstTmp = JSON.parse(states);
     if (lstTmp.length > 0) {
@@ -1438,7 +1433,6 @@ function initMirrorState() {
   if (states == undefined || states == null || states == "null") {
     instantiateMirrors();
   } else {
-    // Here we are using eval (***)
     //var lstTmp = $A(eval('(' + states + ')')); --> Remove eval function
     var lstTmp = JSON.parse(states);
     if (lstTmp.length > 0) {
@@ -1486,7 +1480,6 @@ function instantiateMirrors() {
 
 function isMirrorActivated(mirrorName) {
   var states = localStorage["mirrorStates"];
-  // Here we are using eval (***)
   //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
@@ -1501,7 +1494,6 @@ function isMirrorActivated(mirrorName) {
 
 function hasDesactivatedOnce() {
   var states = localStorage["mirrorStates"];
-  // Here we are using eval (***)
   //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   var nbActi = 0;
@@ -1518,7 +1510,6 @@ function hasDesactivatedOnce() {
 function activatedMirrors() {
   var list = new Array();
   var states = localStorage["mirrorStates"];
-  // Here we are using eval (***)
   //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
@@ -1545,7 +1536,6 @@ function getParameters() {
     //localStorage["parameters"] = $H(res).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(res);
   } else {
-    // Here we are using eval (***)
     // res = eval('(' + params + ')'); --> remove eval function
     res = JSON.parse(params);
     initParam(res, "omSite", 0);

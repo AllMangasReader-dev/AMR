@@ -1,4 +1,4 @@
-function openTab(urlToOpen) {
+﻿function openTab(urlToOpen) {
     chrome.extension.sendRequest({action: "opentab", url: urlToOpen}, function(response) {});
 }
 

@@ -1,11 +1,4 @@
-<!--///////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
-//                                                                           //
-////////////////////////////////////////////////////////////////////////////-->
-
-/**
+﻿/**
  * Contains utils function...
  */ 
 var MgUtil = {

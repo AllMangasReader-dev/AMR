@@ -1,4 +1,4 @@
-var mirrors;
+﻿var mirrors;
 var stats = [];
 var mangas = [];
 var months = [];
