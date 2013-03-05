@@ -294,7 +294,7 @@ function waitForFinishUpdatingRepository(changes, callback) {
 
 function importImplentationFromId(id, callback) {
   $.ajax({
-    url: amrc_root + "service.php?name=implementation_get&id=" + id,
+    url: amrc_root + "service.php?name=implementation_get_v2&id=" + id,
     beforeSend: function(xhr) {
       xhr.setRequestHeader("Cache-Control", "no-cache");
       xhr.setRequestHeader("Pragma", "no-cache");
@@ -317,6 +317,7 @@ function importImplentationFromId(id, callback) {
           console.log("description loaded for " + description.mirrorName);
           var isNew = false;
           description.revision = 0;
+          description.jsCode = amrc_root + description.jsFile;
           if (found == null) {
             //Ajout de l'implem
             console.log("insert " + description.mirrorName + " in database");
@@ -362,7 +363,7 @@ function finishImportAfterInsert(description, callback, isNew) {
 
 function releaseImplentationFromId(id, callback) {
   $.ajax({
-    url: amrc_root + "service.php?name=implementation_getrelease&id=" + id,
+    url: amrc_root + "service.php?name=implementation_getrelease_v2&id=" + id,
     beforeSend: function(xhr) {
       xhr.setRequestHeader("Cache-Control", "no-cache");
       xhr.setRequestHeader("Pragma", "no-cache");
@@ -383,6 +384,7 @@ function releaseImplentationFromId(id, callback) {
             }
           }
           console.log("description loaded for " + description.mirrorName);
+          description.jsCode = amrc_repository + description.jsFile;
           var isNew = false;
           if (found == null) {
             //Ajout de l'implem
@@ -485,7 +487,11 @@ function getMirrors(callback) {
 
 //Instantiate a returned mirror and load the script...
 function loadJSFromRepositoryForMirrors(list, pos, input) {
-    $.loadScript(input.jsCode, true, function(){
+    var docache = true;
+    if (input.jsCode.indexOf(".php") != -1) {
+      docache = false;
+    }
+    $.loadScript(input.jsCode, docache, function(){
       list[pos] = loadedImplementations[input.mirrorName];
       if (list[pos] != undefined) {
         list[pos].mirrorName = input.mirrorName;
@@ -497,13 +503,13 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
         list[pos].loadedscript = true;
       } else {
         console.log("Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode);
-        list[pos] = {loadedscript: true};
+        list[pos] = {loadedscript: true, error: "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode};
       }
     }, function() {
       // error managing 
       console.log("Script " + input.mirrorName + " failed to be loaded...");
       console.log(input);
-      list[pos] = {loadedscript: true};
+      list[pos] = {loadedscript: true, error: "Script " + input.mirrorName + " failed to be loaded..."};
     });
 }
 
@@ -607,7 +613,11 @@ function getActivatedMirrorsWithList(res, callback) {
 
 //Instantiate a returned activated mirror and load the script...
 function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
-    $.loadScript(input.jsCode, true, function(){
+    var docache = true;
+    if (input.jsCode.indexOf(".php") != -1) {
+      docache = false;
+    }
+    $.loadScript(input.jsCode, docache, function(){
       list[pos] = loadedImplementations[input.mirrorName];
       if (list[pos] != undefined) {
         list[pos].mirrorName = input.mirrorName;
@@ -628,13 +638,13 @@ function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
         list[pos].loadedscript = true;
       } else {
         console.log("Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode);
-        list[pos] = {loadedscript: true, listLoaded: true};
+        list[pos] = {loadedscript: true, listLoaded: true, error: "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode};
       }
     }, function() {
       // error managing 
       console.log("Script " + input.mirrorName + " failed to be loaded...");
       console.log(input);
-      list[pos] = {loadedscript: true, listLoaded: true};
+      list[pos] = {loadedscript: true, listLoaded: true, error: "Script " + input.mirrorName + " failed to be loaded..."};
     });
 }
 

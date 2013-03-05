@@ -1,0 +1,28 @@
+        html {
+            height: 100px;
+            max-height:100px;
+        }
+        body
+        {
+            margin: 5px;
+            cursor: pointer;
+            height: 100px;
+            max-height:100px;
+        }
+        table
+        {
+            /*width: 100%;*/
+            border-collapse: collapse;
+            font: 8pt 'Arial', sans-serif;
+            height: 100px;
+            max-height:100px;
+        }
+        td
+        {
+            vertical-align: middle;
+        }
+        img
+        {
+            margin-right: 5px;
+            height: 32px;
+        }

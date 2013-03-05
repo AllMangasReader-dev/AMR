@@ -18,3 +18,11 @@
 .article * {
   color:black;
 }
+
+.globerrors {
+  display: none;
+}
+.globerrors li {
+  font-size:8pt;
+  color: red;
+}

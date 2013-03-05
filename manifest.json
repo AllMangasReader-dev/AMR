@@ -1,4 +1,4 @@
-﻿{
+{
   "name" : "All Mangas Reader",
   "version" : "1.5.0",
   "manifest_version" : 2,
@@ -44,7 +44,7 @@
       ]
     }, {
       "matches" : [
-        "https://community.allmangasreader.com/*",
+        "http://community.allmangasreader.com/*",
         "http://amrroot/*"
       ],
       "css" : [
@@ -89,6 +89,10 @@
     "img/add.png",
     "img/bookmarkred.png",
     "img/warn.png",
-    "img/read_play.png"
+    "img/read_play.png",
+    "img/amrlittle.png",
+    "img/dev.png",
+    "img/ltload.gif",
+    "img/load10.gif"
   ]
 }

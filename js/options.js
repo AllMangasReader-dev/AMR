@@ -262,7 +262,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     //Restore request
     button.removeData("currentlyClicked");
     //}, 1000);
-  }, function () {});
+  });
 }
 // Don't create fuctions in loops
 

@@ -896,7 +896,11 @@ chrome.extension.onRequest.addListener(
   if (request.action == "pagematchurls") {
     doesCurrentPageMatchManga(request.url, activatedMirrors(), function (_isOk, _mirrorName, _implementationURL) {
       //Load remote script implementation corresponding to current website
-      $.loadScript(_implementationURL, true, function (sScriptBody, textStatus, jsXHR) {
+      var docache = true;
+      if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
+        docache = false;
+      }
+      $.loadScript(_implementationURL, docache, function (sScriptBody, textStatus, jsXHR) {
         //Execute it in the concerned tab context
         chrome.tabs.executeScript(sender.tab.id, {
           code : sScriptBody
