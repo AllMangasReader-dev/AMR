@@ -64,7 +64,8 @@ var sync = new BSync({
       if (!(json == undefined || json == null || json == "null")) {
         console.log(' - Updating incoming entries');
         // Here we are using eval (***)
-        var lstTmp = $A(eval('(' + json.mangas + ')'));
+        // var lstTmp = $A(eval('(' + json.mangas + ')')); --> remove prototype usage
+        lstTmp = JSON.parse(json.mangas);
         for (var i = 0; i < lstTmp.length; i++) {
           var tmpManga = new MangaElt(lstTmp[i]);
           console.log("\t - Reading manga entry : " + tmpManga.name + " in mirror : " + tmpManga.mirror);
@@ -819,7 +820,8 @@ chrome.extension.onRequest.addListener(
         } catch (e) {}
       }
     }
-    localStorage["parameters"] = $H(obj).toJSON();
+    // localStorage["parameters"] = $H(obj).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(obj);
     if (ancParams.displayzero != obj.displayzero) {
       refreshTag();
     }
@@ -924,7 +926,8 @@ chrome.extension.onRequest.addListener(
   if (request.action == "deletepub") {
     var params = getParameters();
     params.pub = 0;
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
     sendResponse({});
   }
   if (request.action == "getListManga") {
@@ -1321,7 +1324,8 @@ function addBookmark(obj) {
   } else {
     bookmarks[posFound].note = obj.note;
   }
-  localStorage["bookmarks"] = $A(bookmarks).toJSON();
+  //localStorage["bookmarks"] = $A(bookmarks).toJSON(); --> remove prototype usage
+  localStorage["bookmarks"] = JSON.stringify(bookmarks);
 }
 
 function deleteBookmark(obj) {
@@ -1349,7 +1353,8 @@ function deleteBookmark(obj) {
   }
   if (isFound) {
     bookmarks.remove(posFound, posFound);
-    localStorage["bookmarks"] = $A(bookmarks).toJSON();
+    //localStorage["bookmarks"] = $A(bookmarks).toJSON(); --> remove prototype usage
+    localStorage["bookmarks"] = JSON.stringify(bookmarks);
   }
 }
 
@@ -1365,8 +1370,9 @@ function activateMirror(mirrorName) {
           mirror : mirrorName,
           activated : true
         };
-        localStorage["mirrorStates"] = $A(lstTmp).toJSON();
-
+        //localStorage["mirrorStates"] = $A(lstTmp).toJSON(); --> remove prototype usage
+        localStorage["mirrorStates"] = JSON.stringify(lstTmp);
+        
         // Load refreshMirror
         try {
           for (var i = 0; i < mirrors.length; i++) {
@@ -1405,7 +1411,9 @@ function desactivateMirror(mirrorName) {
             mirror : mirrorName,
             activated : false
           };
-          localStorage["mirrorStates"] = $A(lstTmp).toJSON();
+          //localStorage["mirrorStates"] = $A(lstTmp).toJSON(); --> remove prototype usage
+          localStorage["mirrorStates"] = JSON.stringify(lstTmp);
+          
           // Delete from localStorage
           wssql.webdb.empty(mirrorName, function () {});
           //localStorage[mirrorName] = null;
@@ -1455,7 +1463,8 @@ function initMirrorState() {
         }
       }
       if (toUpdate) {
-        localStorage["mirrorStates"] = $A(lstTmp).toJSON();
+        //localStorage["mirrorStates"] = $A(lstTmp).toJSON(); --> remove prototype usage
+        localStorage["mirrorStates"] = JSON.stringify(lstTmp);
       }
     } else {
       instantiateMirrors();
@@ -1471,7 +1480,8 @@ function instantiateMirrors() {
       activated : true
     };
   }
-  localStorage["mirrorStates"] = $A(lst).toJSON();
+  // localStorage["mirrorStates"] = $A(lst).toJSON(); --> remove prototype usage
+  localStorage["mirrorStates"] = JSON.stringify(lst);
 }
 
 function isMirrorActivated(mirrorName) {
@@ -1532,7 +1542,8 @@ function getParameters() {
   var res;
   if (params == undefined || params == null || params == "null") {
     res = defaultParams();
-    localStorage["parameters"] = $H(res).toJSON();
+    //localStorage["parameters"] = $H(res).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(res);
   } else {
     // Here we are using eval (***)
     // res = eval('(' + params + ')'); --> remove eval function
@@ -1569,7 +1580,8 @@ function getParameters() {
     initParam(res, "sendstats", 1);
     initParam(res, "shownotifws", 1);
 
-    localStorage["parameters"] = $H(res).toJSON();
+    //localStorage["parameters"] = $H(res).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(res);
   }
   return res;
 }
@@ -2031,7 +2043,8 @@ function refreshUpdate() {
     var params = getParameters();
     params.updated = new Date().getTime();
     params.changesSinceSync = 1;
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
 
@@ -2040,7 +2053,8 @@ function refreshUpdateSyncSite(update) {
     var params = getParameters();
     params.syncAMR = update;
     params.changesSinceSync = 0;
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 
 }
@@ -2048,7 +2062,8 @@ function refreshUpdateWith(update) {
   try {
     var params = getParameters();
     params.updated = update;
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
 
@@ -2056,7 +2071,8 @@ function resetUpdate() {
   try {
     var params = getParameters();
     params.updated = undefined;
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
 
@@ -2064,7 +2080,8 @@ function refreshSync() {
   try {
     var params = getParameters();
     params.lastsync = new Date().getTime();
-    localStorage["parameters"] = $H(params).toJSON();
+    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
+    localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
 
@@ -2094,16 +2111,19 @@ function jsonmangaelt(mangaelt) {
   obj.upts = mangaelt.upts;
 
   //console.log("before saving length : " + mangaelt.listChaps.length);
-  obj.listChaps = $A(mangaelt.listChaps).toJSON();
-  obj.cats = $A(mangaelt.cats).toJSON();
-  return $H(obj).toJSON();
+  //obj.listChaps = $A(mangaelt.listChaps).toJSON(); --> remove prototype usage
+  obj.listChaps = JSON.stringify(mangaelt.listChaps);
+  // obj.cats = $A(mangaelt.cats).toJSON(); --> remove prototype usage
+  obj.cats = JSON.stringify(mangaelt.cats);
+  //return $H(obj).toJSON(); --> remove prototype usage
+  return JSON.stringify(obj);
 }
 
 function getJSONListToSync() {
   var results = [];
-  mangaList.each(function (object) {
+  $.each(mangaList, function (index, object) {
     var value = jsonmangaelttosync(object);
-    if (!Object.isUndefined(value))
+    if (value !== undefined)
       results.push(value);
   });
 
@@ -2121,8 +2141,10 @@ function jsonmangaelttosync(mangaelt) {
   obj.update = mangaelt.update;
   obj.ts = mangaelt.ts;
   obj.display = mangaelt.display;
-  obj.cats = $A(mangaelt.cats).toJSON();
-  return $H(obj).toJSON();
+  // obj.cats = $A(mangaelt.cats).toJSON(); --> remove prototype usage
+  obj.cats = JSON.stringify(mangaelt.cats);
+  //return $H(obj).toJSON(); --> remove prototype usage
+  return JSON.stringify(obj);
 }
 
 chrome.extension.getVersion = function () {
@@ -2334,7 +2356,8 @@ function importBookmarks(bms, merge) {
       bookmarks[posFound].note = obj.note;
     }
   }
-  localStorage["bookmarks"] = $A(bookmarks).toJSON();
+  //localStorage["bookmarks"] = $A(bookmarks).toJSON(); --> remove prototype usage
+  localStorage["bookmarks"] = JSON.stringify(bookmarks);
   return textOut;
 }
 init();
