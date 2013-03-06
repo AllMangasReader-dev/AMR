@@ -520,7 +520,13 @@ function drawPerMonth() {
     chartt.draw(dataViewt, {
         title : 'Time spent per month'
     });
+  $("#history").click(function () {
+    switchOnglet($(this), 'histo');
+  });
+  $("#day").click(function () {
+    switchOnglet($(this), 'perday');
+  });
+  $("#month").click(function () {
+    switchOnglet($(this), 'permonth');
+  });
 }
-document.getElementById("history").addEventListener(“click”,switchOnglet(this, 'histo'));
-document.getElementById("day").addEventListener(“click”,switchOnglet(this, 'perday');loadPerDay(););
-document.getElementById("month").addEventListener(“click”,switchOnglet(this, 'permonth');loadPerMonth(););

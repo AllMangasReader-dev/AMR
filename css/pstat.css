@@ -1,4 +1,4 @@
-.glob {
+﻿.glob {
   width:100%;
   border-spacing:10px;
 }
@@ -63,4 +63,8 @@ a.link {
 }
 .tbstat td.buttontd {
   vertical-align:middle;
+}
+.ongletCont {
+ -webkit-transition: all .4s ease-in-out;
+ margin-top:-3px;
 }
