@@ -92,7 +92,7 @@ function renderTot() {
     $("<tr class='odd'><td>Most read manga (number of chapters)</td><td class='times'>" + mostmgch.name + " (" + mostmgch.nb + ")" + "</td></tr>").appendTo($(".totstats tbody"));
     $("<tr class='even'><td>Most read manga (time spent)</td><td class='times'>" + mostmgtime.name + " (" + getTimespent(mostmgtime.time) + ")" + "</td></tr>").appendTo($(".totstats tbody"));
     $("<tr class='odd'><td>Most read website</td><td class='times'>" + "<img src='" +
-        chrome.extension.getURL(getMangaMirror(mostws.text).mirrorIcon) +
+        getMangaMirror(mostws.text).mirrorIcon +
         "'/>&nbsp;" + mostws.text + "</td></tr>").appendTo($(".totstats tbody"));
 
 }
@@ -299,7 +299,7 @@ function renderTable() {
         }
         if (display) {
             var tr = $("<tr class='" + ((i % 2 == 0) ? "odd" : "even") + "'><td><img src='" +
-                    chrome.extension.getURL(getMangaMirror(stats[i].mirror).mirrorIcon) +
+                    getMangaMirror(stats[i].mirror).mirrorIcon +
                     "'/></td><td><a class='link' onclick=\"openTab('" + stats[i].mgurl + "');\">" +
                     stats[i].mgname + "</a></td><td><a class='link' onclick=\"openTab('" +
                     stats[i].chaptext + "');\">" + stats[i].chapname + "</a></td><td>" +
