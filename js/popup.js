@@ -2582,4 +2582,8 @@ $(function () {
   $("#butFind").click(function (e) {
     search();
   });
+  $('img').each( function() {
+    var o = $(this);
+    if( ! o.attr('title') && o.attr('alt') ) o.attr('title', o.attr('alt') );
+  });
 });
