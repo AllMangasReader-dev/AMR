@@ -1,4 +1,4 @@
-﻿//jQuery.noConflict();
+//jQuery.noConflict();
 var mangaList;
 var mirrors;
 var ctxIds = [];
@@ -172,8 +172,8 @@ function init() {
       //console.log("Liste de mangas : " + list);
       // var lstTmp = $A(eval('(' + list + ')')); --> remove eval function
       var lstTmp = JSON.parse(list);
-      console.log(lstTmp);
-      console.log("Taille de la liste de mangas : " + lstTmp.length);
+      //console.log(lstTmp);
+      //console.log("Taille de la liste de mangas : " + lstTmp.length);
       for (var i = 0; i < lstTmp.length; i++) {
         //if (lstTmp[i].urlListChaps == undefined || lstTmp[i].urlListChaps == null || lstTmp[i].urlListChaps == "null" || lstTmp[i].urlListChaps == "") {
         //This test is done to remove inconsistent entries
@@ -1948,10 +1948,10 @@ function saveList() {
     try {
       refreshTag();
     } catch (e) {
-      //
+      //console.log(e);
     }
   } catch (e) {
-    //
+    //console.log(e);
   }
 }
 
@@ -2077,9 +2077,9 @@ function refreshSync() {
 
 function getJSONList() {
   var results = [];
-  mangaList.each(function (object) {
+  $.each(mangaList, function (index, object) {
     var value = jsonmangaelt(object);
-    if (!Object.isUndefined(value))
+    if (value !== undefined)
       results.push(value);
   });
   return '[' + results.join(', ') + ']';

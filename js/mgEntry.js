@@ -465,7 +465,7 @@ function doesCurrentPageMatchManga(url, activatedMirrors, callback) {
         }
       }
       if (isFound) {
-        var wss = JSON.parse(wsloc[i].webSites);
+        var wss = (typeof wsloc[i].webSites === 'object') ? wsloc[i].webSites : JSON.parse(wsloc[i].webSites);
         for (var j = 0; j < wss.length; j++) {
           //console.log(wss[j] + " --> " + url);
           if (url.match(wss[j].replace(/\./g, "\\.").replace(/\*/g, ".*"))) {

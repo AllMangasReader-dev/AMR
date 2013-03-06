@@ -1,7 +1,8 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
+
 function openTab(urlToOpen) {
   "use strict";
   chrome.extension.sendRequest({
@@ -414,7 +415,7 @@ function fillCategories(mg, where) {
       $.each(manga.cats, function (index, cat) {
         var found = false;
         $.each(categs, function (index, val) {
-          if (cat === val) {
+          if (cat.trim() === val.trim()) {
             found = true;
           }
         });
@@ -422,8 +423,8 @@ function fillCategories(mg, where) {
           if (categs.length === 0) {
             where.empty();
           }
-          categs[categs.length] = cat;
-          $("<div class='mgcategory'>" + cat + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
+          categs[categs.length] = cat.trim();
+          $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
         }
       });
     });
@@ -433,7 +434,7 @@ function fillCategories(mg, where) {
       where.empty();
     }
     $.each(mg.cats, function (index, cat) {
-      $("<div class='mgcategory'>" + cat + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
+      $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
     });
     bindCatsButtons();
   }
@@ -1331,7 +1332,7 @@ function isMangaDisplayable(mg) {
     var myselfCat = this;
     var found = false;
     $(".mginfos .cats .mgcategory", $(mg)).each(function (index) {
-      if ($(this).text().trim() === $(myselfCat).text()) {
+      if ($(this).text().trim() === $(myselfCat).text().trim()) {
         found = true;
       }
     });
@@ -1354,13 +1355,13 @@ function displayMangasByCat() {
   "use strict";
   $(".manga").each(function (index) {
     if (isMangaDisplayable($(this))) {
-      if (!$(this).is(":visible")) {
-        mg.removeClass("hiddenMg");
+      if ($(this).hasClass("hiddenMg")) {
+        $(this).removeClass("hiddenMg");
         $(this).toggle("blind", {}, 250);
       }
     } else {
-      if ($(this).is(":visible")) {
-        mg.addClass("hiddenMg");
+      if (!$(this).hasClass("hiddenMg")) {
+        $(this).addClass("hiddenMg");
         $(this).toggle("blind", {}, 250);
       }
     }
@@ -1371,14 +1372,14 @@ function displayMangasByCat() {
   } else {
     $("#nomangas").hide();
   }
-  setTimeout(function () {
+  /*setTimeout(function () {
     if ($(".manga:not(.hiddenMg)").size() === 0) {
       $("#nomangas").show();
       return;
     } else {
       $("#nomangas").hide();
     }
-  }, 300);
+  }, 300);*/
 }
 function dragCatManga(mg, _cat) {
   "use strict";
@@ -1405,7 +1406,7 @@ function dragCatManga(mg, _cat) {
     sendExtRequest(obj, $(_cat), function () {
       var isFound = false;
       $(".mginfos .cats .mgcategory", $(mg).closest(".manga")).each(function (index) {
-        if ($(this).text() === $(_cat).text()) {
+        if ($(this).text().trim() === $(_cat).text().trim()) {
           isFound = true;
         }
       });
@@ -1413,16 +1414,16 @@ function dragCatManga(mg, _cat) {
         if ($(".mginfos .cats .mgcategory", $(mg).closest(".manga")).size() === 0) {
           $(".mginfos .cats", $(mg).closest(".manga")).empty();
         }
-        $("<div class='mgcategory'>" + $(_cat).text() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo($(".mginfos .cats", $(mg).closest(".manga")));
+        $("<div class='mgcategory'>" + $(_cat).text().trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo($(".mginfos .cats", $(mg).closest(".manga")));
         bindCatsButtons();
       }
       if (isMangaDisplayable($(mg).closest(".manga"))) {
-        if (!$(mg).closest(".manga").is(":visible")) {
+        if ($(mg).closest(".manga").hasClass("hiddenMg")) {
           mg.removeClass("hiddenMg");
           $(mg).closest(".manga").toggle("blind", {}, 250);
         }
       } else {
-        if ($(mg).closest(".manga").is(":visible")) {
+        if (!$(mg).closest(".manga").hasClass("hiddenMg")) {
           mg.addClass("hiddenMg");
           $(mg).closest(".manga").toggle("blind", {}, 250);
         }
@@ -1437,7 +1438,7 @@ function dragCatManga(mg, _cat) {
     sendExtRequest(obj, $(_cat), function () {
       var isFound = false;
       $(".mginfos .cats .mgcategory", $(mg).closest(".manga")).each(function (index) {
-        if ($(this).text() === $(_cat).text()) {
+        if ($(this).text().trim() === $(_cat).text().trim()) {
           isFound = true;
         }
       });
@@ -1445,7 +1446,7 @@ function dragCatManga(mg, _cat) {
         if ($(".mginfos .cats .mgcategory", $(mg).closest(".manga")).size() === 0) {
           $(".mginfos .cats", $(mg).closest(".manga")).empty();
         }
-        $("<div class='mgcategory'>" + $(_cat).text() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo($(".mginfos .cats", $(mg).closest(".manga")));
+        $("<div class='mgcategory'>" + $(_cat).text().trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo($(".mginfos .cats", $(mg).closest(".manga")));
         bindCatsButtons();
       }
       if (isMangaDisplayable($(mg).closest(".manga"))) {
@@ -2135,7 +2136,7 @@ function bindCatsButtons() {
   $(".actcatedit").unbind();
   $(".actcatedit").click(function (event) {
     var _par = $(this).parent();
-    var cat = _par.text();
+    var cat = _par.text().trim();
     _par.data("anccat", cat);
     _par.empty();
     _par.unbind();
@@ -2168,8 +2169,8 @@ function bindCatsButtons() {
           imgs.appendTo(_par);
           $(myself).remove();
           $(".mgcategory").each(function (index) {
-            if ($(this).text() === anccat) {
-              $(this).text(newcat);
+            if ($(this).text().trim() === anccat.trim()) {
+              $(this).text(newcat.trim());
               $("<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' />").appendTo($(this));
             }
           });
@@ -2183,10 +2184,10 @@ function bindCatsButtons() {
   });
   $(".actcatdelete").unbind();
   $(".actcatdelete").click(function () {
-    var catTxt = $(this).parent().text();
+    var catTxt = $(this).parent().text().trim();
     var nbmgs = 0;
     $(".mgcategory").each(function (index) {
-      if ($(this).text() === catTxt)
+      if ($(this).text().trim() === catTxt.trim())
         nbmgs++;
     });
     $(".actdeleteglobcat span").text("Are you sure to delete this category (" + catTxt + ", " + nbmgs + " mangas affected) ?");
@@ -2197,7 +2198,7 @@ function bindCatsButtons() {
   });
   $(".actdeleteglobcat .yes").unbind();
   $(".actdeleteglobcat .yes").click(function () {
-    var catTxt = $(this).data("catdel");
+    var catTxt = $(this).data("catdel").trim();
     var obj = {
       action : "removeCategory",
       cat : catTxt
@@ -2206,7 +2207,7 @@ function bindCatsButtons() {
     var _par = $(_btn).parent();
     sendExtRequest(obj, _par, function () {
       $(".mgcategory").each(function (index) {
-        if ($(this).text() === catTxt) {
+        if ($(this).text().trim() === catTxt.trim()) {
           var _mg = $(this).closest(".manga");
           $(this).remove();
           if ($(".mgcategory", _mg).size() === 0) {
