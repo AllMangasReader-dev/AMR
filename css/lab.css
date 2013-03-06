@@ -26,3 +26,6 @@
   font-size:8pt;
   color: red;
 }
+#testinfos {
+  word-break: break-word;
+}
