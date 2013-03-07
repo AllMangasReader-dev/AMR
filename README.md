@@ -1,6 +1,5 @@
 ﻿AMR
 ===
-
 AllMangasReader developer branch has the lastest changes made
 to the AllMangasReader Chrome Extension.
 
@@ -8,7 +7,6 @@ Get our lastest stable version from http://allmangasreader.com
 
 PLUGINS
 -------------
-
   * jQuery UI
   * jQuery
   * prettyPhoto
@@ -18,7 +16,6 @@ PLUGINS
   
 INSTALLATION
 -------------
-
 1. Download the zip file or clone the git repository
 2. Go to the extension list.
 3. Activate "Developers Mode"
@@ -27,6 +24,5 @@ INSTALLATION
 
 BUGS
 -------------
-
 All bugs from the current developing version should be
 reported under GitHub.
