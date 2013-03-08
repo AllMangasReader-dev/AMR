@@ -1,4 +1,4 @@
-﻿AMR
+AMR
 ===
 AllMangasReader developer branch has the lastest changes made
 to the AllMangasReader Chrome Extension.
@@ -8,12 +8,12 @@ also get support on our forums in http://allmangasreader.com/forum
 
 PLUGINS
 -------------
-  * jQuery UI
-  * jQuery
-  * prettyPhoto
-  * SimpleModal
-  * Treeview
-  * Prototype (depreciated)
+* jQuery UI
+* jQuery
+* prettyPhoto
+* SimpleModal
+* Treeview
+* Prototype (depreciated)
   
 INSTALLATION
 -------------
@@ -27,3 +27,11 @@ BUGS
 -------------
 All bugs from the current developing version should be
 reported under GitHub.
+
+KNOW BUGS
+----------
+No chart generation in the Personal Statistics page,
+due using Google Visualization API hasn't changed to
+comply with manifest v2 rules as can be seen here:
+https://code.google.com/p/google-visualization-api-issues/issues/detail?id=978
+
