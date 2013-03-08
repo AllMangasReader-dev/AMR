@@ -3,7 +3,8 @@
 AllMangasReader developer branch has the lastest changes made
 to the AllMangasReader Chrome Extension.
 
-Get our lastest stable version from http://allmangasreader.com
+Get our lastest stable version from http://allmangasreader.com,
+also get support on our forums in http://allmangasreader.com/forum
 
 PLUGINS
 -------------
