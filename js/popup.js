@@ -1,4 +1,4 @@
-var mirrors;
+﻿var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
@@ -108,9 +108,9 @@ function groupHasNew(elt) {
 }
 function findPlaceAfter(elt) {
   "use strict";
-  var tit = $(".mgname", elt.closest(".manga")).text();
+  var tit = $(".mgname", elt.closest(".manga")).text(),
+    eltNext = null;
   tit = formatMgName(tit.trim());
-  var eltNext = null;
   $(".manga:not(.new)").each(function (index) {
     if (eltNext === null) {
       var titTmp = $(".mgname", $(this)).text();
@@ -339,6 +339,52 @@ function moveMangaElement(elt) {
     }
   }
 }
+function updateProgression(elt) {
+  "use strict";
+  var par;
+  if (elt.is(".manga")) {
+    par = elt;
+  } else {
+    par = elt.closest(".manga");
+  }
+  var progBar = $(".mgprogress", par);
+  var progNum = $(".mgprogressnum", par);
+  var selects;
+  if (isInGroup($(".mgtitle:first", par))) {
+    if (isList()) {
+      selects = $(".mgline select", par);
+    } else {
+      selects = $(".mgelt select", par);
+    }
+  } else {
+    selects = $(".mglist select", par);
+  }
+  var value = 0;
+  if (selects.size() > 0) {
+    var min = 100;
+    selects.each(function (index) {
+      var tmpval = 0;
+      var nbTot = $("option", $(this)).size();
+      $("option", $(this)).each(function (index) {
+        if ($(this).is(":selected")) {
+          if (nbTot < 2) {
+            tmpval = 100;
+          } else {
+            tmpval = Math.floor((nbTot - 1 - index) * 100 / (nbTot - 1));
+          }
+        }
+      });
+      if (tmpval < min) {
+        min = tmpval;
+      }
+    });
+    value = min;
+  }
+  progBar.progressbar({
+    "value" : value
+  });
+  progNum.text(value + "%");
+}
 function actionRead() {
   "use strict";
   var obj = {
@@ -407,6 +453,211 @@ function fillChapters(mg, sel) {
     }
   }, 1);
 }
+function displayMangasByCat() {
+  "use strict";
+  $(".manga").each(function (index) {
+    if (isMangaDisplayable($(this))) {
+      if ($(this).hasClass("hiddenMg")) {
+        $(this).removeClass("hiddenMg");
+        $(this).toggle("blind", {}, 250);
+      }
+    } else {
+      if (!$(this).hasClass("hiddenMg")) {
+        $(this).addClass("hiddenMg");
+        $(this).toggle("blind", {}, 250);
+      }
+    }
+  });
+  if ($(".manga:not(.hiddenMg)").size() === 0) {
+    $("#nomangas").show();
+    return;
+  } else {
+    $("#nomangas").hide();
+  }
+  /*setTimeout(function () {
+    if ($(".manga:not(.hiddenMg)").size() === 0) {
+      $("#nomangas").show();
+      return;
+    } else {
+      $("#nomangas").hide();
+    }
+  }, 300);*/
+}
+function saveCategories() {
+  "use strict";
+  var cats = [];
+  $(".category:not(.addcategory):not(.newcat)").each(function (index) {
+    var cat = {
+      name : $(this).text().trim(),
+      state : "",
+      type : ""
+    };
+    if ($(this).hasClass("user")) {
+      cat.type = "user";
+    } else if ($(this).hasClass("native")) {
+      cat.type = "native";
+    }
+    if ($(this).hasClass("include")) {
+      cat.state = "include";
+    } else if ($(this).hasClass("exclude")) {
+      cat.state = "exclude";
+    }
+    cats[cats.length] = cat;
+  });
+  localStorage["categoriesStates"] = JSON.stringify(cats);
+}
+function bindCatsButtons() {
+  "use strict";
+  $(".actcatview").unbind();
+  $(".actcatview").click(function (event) {
+    $(".category:not(.addcategory):not(.newcat)").removeClass("include").removeClass("exclude");
+    $(this).parent().addClass("include");
+    displayMangasByCat();
+    saveCategories();
+    event.stopImmediatePropagation();
+  });
+  $(".actcatedit").unbind();
+  $(".actcatedit").click(function (event) {
+    var _par = $(this).parent();
+    var cat = _par.text().trim();
+    _par.data("anccat", cat);
+    _par.empty();
+    _par.unbind();
+    var inp = $("<input type='text' value='" + cat + "'/>");
+    inp.appendTo(_par);
+    inp.focus();
+    inp.blur(function () {
+      var _par = $(this).parent();
+      _par.text(_par.data("anccat"));
+      var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
+      imgs.appendTo(_par);
+      bindCatsButtons();
+      $(this).remove();
+      bindCategories();
+    });
+    inp.keydown(function (event) {
+      if (event.which === 13) {
+        var obj = {
+          action : "editCategory",
+          cat : $(this).parent().data("anccat"),
+          newcat : $(this).val()
+        };
+        var _par = $(this).parent();
+        var myself = this;
+        sendExtRequest(obj, _par, function () {
+          var newcat = $(myself).val();
+          var anccat = $(_par).data("anccat");
+          _par.text(newcat);
+          var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
+          imgs.appendTo(_par);
+          $(myself).remove();
+          $(".mgcategory").each(function (index) {
+            if ($(this).text().trim() === anccat.trim()) {
+              $(this).text(newcat.trim());
+              $("<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' />").appendTo($(this));
+            }
+          });
+          bindCatsButtons();
+          bindCategories();
+          saveCategories();
+        });
+      }
+    });
+    event.stopImmediatePropagation();
+  });
+  $(".actcatdelete").unbind();
+  $(".actcatdelete").click(function () {
+    var catTxt = $(this).parent().text().trim();
+    var nbmgs = 0;
+    $(".mgcategory").each(function (index) {
+      if ($(this).text().trim() === catTxt.trim())
+        nbmgs++;
+    });
+    $(".actdeleteglobcat span").text("Are you sure to delete this category (" + catTxt + ", " + nbmgs + " mangas affected) ?");
+    $(".actdeleteglobcat .yes").data("catdel", catTxt);
+    $(".actdeleteglobcat .yes").data("catbtn", $(this));
+    $(".actdeleteglobcat").toggle("blind", {}, 250);
+    event.stopImmediatePropagation();
+  });
+  $(".actdeleteglobcat .yes").unbind();
+  $(".actdeleteglobcat .yes").click(function () {
+    var catTxt = $(this).data("catdel").trim();
+    var obj = {
+      action : "removeCategory",
+      cat : catTxt
+    };
+    var _btn = $($(this).data("catbtn"));
+    var _par = $(_btn).parent();
+    sendExtRequest(obj, _par, function () {
+      $(".mgcategory").each(function (index) {
+        if ($(this).text().trim() === catTxt.trim()) {
+          var _mg = $(this).closest(".manga");
+          $(this).remove();
+          if ($(".mgcategory", _mg).size() === 0) {
+            $(".mginfos .cats", _mg).text("No category for this manga");
+          }
+        }
+      });
+      _par.remove();
+      displayMangasByCat();
+      saveCategories();
+      $(".actdeleteglobcat").toggle("blind", {}, 250);
+    });
+  });
+  $(".actdeleteglobcat .no").unbind();
+  $(".actdeleteglobcat .no").click(function () {
+    $(".actdeleteglobcat").toggle("blind", {}, 250);
+  });
+  $(".actcatmgdel").unbind();
+  $(".actcatmgdel").click(function (event) {
+    var catToDel = $(this).parent().text();
+    if (isInGroup($(this))) {
+      var obj = {
+        action : "removeCatMangas",
+        list : []
+      };
+      if (isList()) {
+        $(".mgline", $(this).closest(".manga")).each(function (index) {
+          obj.list[obj.list.length] = {
+            cat : catToDel,
+            url : $(this).data("mgurl")
+          };
+        });
+      } else {
+        $(".mgelt", $(this).closest(".manga")).each(function (index) {
+          obj.list[obj.list.length] = {
+            cat : catToDel,
+            url : $(this).data("mgurl")
+          };
+        });
+      }
+      var _par = $(this).parent();
+      sendExtRequest(obj, _par, function () {
+        var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
+        $(_par).remove();
+        if ($(".mgcategory", _cats).size() === 0) {
+          _cats.text("No category for this manga");
+        }
+        displayMangasByCat();
+      });
+    } else {
+      var obj = {
+        action : "removeCatManga",
+        cat : catToDel,
+        url : closestEltData($(this)).data("mgurl")
+      };
+      var _par = $(this).parent();
+      sendExtRequest(obj, _par, function () {
+        var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
+        $(_par).remove();
+        if ($(".mgcategory", _cats).size() === 0) {
+          _cats.text("No category for this manga");
+        }
+        displayMangasByCat();
+      });
+    }
+  });
+}
 function fillCategories(mg, where) {
   "use strict";
   if (mg.length) {
@@ -464,51 +715,6 @@ function progression(mg) {
     }
     return value;
   }
-}
-function updateProgression(elt) {
-  "use strict";
-  var par;
-  if (elt.is(".manga")) {
-    par = elt;
-  } else {
-    par = elt.closest(".manga");
-  }
-  var progBar = $(".mgprogress", par);
-  var progNum = $(".mgprogressnum", par);
-  var selects;
-  if (isInGroup($(".mgtitle:first", par))) {
-    if (isList()) {
-      selects = $(".mgline select", par);
-    } else {
-      selects = $(".mgelt select", par);
-    }
-  } else {
-    selects = $(".mglist select", par);
-  }
-  var value = 0;
-  if (selects.size() > 0) {
-    var min = 100;
-    selects.each(function (index) {
-      var tmpval = 0;
-      var nbTot = $("option", $(this)).size();
-      $("option", $(this)).each(function (index) {
-        if ($(this).is(":selected")) {
-          if (nbTot < 2) {
-            tmpVal = 100;
-          } else {
-            tmpval = Math.floor((nbTot - 1 - index) * 100 / (nbTot - 1));
-          }
-        }
-      });
-      if (tmpval < min)
-        min = tmpval;
-    });
-    value = min;
-  }
-  progBar.progressbar({
-    "value" : value
-  });
-  progNum.text(value + "%");
 }
 function addBookmarkInSel(bm, sel) {
   "use strict";
@@ -1351,36 +1557,6 @@ function isMangaDisplayable(mg) {
     return false;
   }
 }
-function displayMangasByCat() {
-  "use strict";
-  $(".manga").each(function (index) {
-    if (isMangaDisplayable($(this))) {
-      if ($(this).hasClass("hiddenMg")) {
-        $(this).removeClass("hiddenMg");
-        $(this).toggle("blind", {}, 250);
-      }
-    } else {
-      if (!$(this).hasClass("hiddenMg")) {
-        $(this).addClass("hiddenMg");
-        $(this).toggle("blind", {}, 250);
-      }
-    }
-  });
-  if ($(".manga:not(.hiddenMg)").size() === 0) {
-    $("#nomangas").show();
-    return;
-  } else {
-    $("#nomangas").hide();
-  }
-  /*setTimeout(function () {
-    if ($(".manga:not(.hiddenMg)").size() === 0) {
-      $("#nomangas").show();
-      return;
-    } else {
-      $("#nomangas").hide();
-    }
-  }, 300);*/
-}
 function dragCatManga(mg, _cat) {
   "use strict";
   if (isInGroup(mg)) {
@@ -2122,181 +2298,6 @@ function loadCategories() {
     $(".addcategory").before($("<li class='category user " + cat.state + "'>" + cat.name + "<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/></li>"));
   });
   bindCatsButtons();
-}
-function bindCatsButtons() {
-  "use strict";
-  $(".actcatview").unbind();
-  $(".actcatview").click(function (event) {
-    $(".category:not(.addcategory):not(.newcat)").removeClass("include").removeClass("exclude");
-    $(this).parent().addClass("include");
-    displayMangasByCat();
-    saveCategories();
-    event.stopImmediatePropagation();
-  });
-  $(".actcatedit").unbind();
-  $(".actcatedit").click(function (event) {
-    var _par = $(this).parent();
-    var cat = _par.text().trim();
-    _par.data("anccat", cat);
-    _par.empty();
-    _par.unbind();
-    var inp = $("<input type='text' value='" + cat + "'/>");
-    inp.appendTo(_par);
-    inp.focus();
-    inp.blur(function () {
-      var _par = $(this).parent();
-      _par.text(_par.data("anccat"));
-      var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
-      imgs.appendTo(_par);
-      bindCatsButtons();
-      $(this).remove();
-      bindCategories();
-    });
-    inp.keydown(function (event) {
-      if (event.which === 13) {
-        var obj = {
-          action : "editCategory",
-          cat : $(this).parent().data("anccat"),
-          newcat : $(this).val()
-        };
-        var _par = $(this).parent();
-        var myself = this;
-        sendExtRequest(obj, _par, function () {
-          var newcat = $(myself).val();
-          var anccat = $(_par).data("anccat");
-          _par.text(newcat);
-          var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
-          imgs.appendTo(_par);
-          $(myself).remove();
-          $(".mgcategory").each(function (index) {
-            if ($(this).text().trim() === anccat.trim()) {
-              $(this).text(newcat.trim());
-              $("<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' />").appendTo($(this));
-            }
-          });
-          bindCatsButtons();
-          bindCategories();
-          saveCategories();
-        });
-      }
-    });
-    event.stopImmediatePropagation();
-  });
-  $(".actcatdelete").unbind();
-  $(".actcatdelete").click(function () {
-    var catTxt = $(this).parent().text().trim();
-    var nbmgs = 0;
-    $(".mgcategory").each(function (index) {
-      if ($(this).text().trim() === catTxt.trim())
-        nbmgs++;
-    });
-    $(".actdeleteglobcat span").text("Are you sure to delete this category (" + catTxt + ", " + nbmgs + " mangas affected) ?");
-    $(".actdeleteglobcat .yes").data("catdel", catTxt);
-    $(".actdeleteglobcat .yes").data("catbtn", $(this));
-    $(".actdeleteglobcat").toggle("blind", {}, 250);
-    event.stopImmediatePropagation();
-  });
-  $(".actdeleteglobcat .yes").unbind();
-  $(".actdeleteglobcat .yes").click(function () {
-    var catTxt = $(this).data("catdel").trim();
-    var obj = {
-      action : "removeCategory",
-      cat : catTxt
-    };
-    var _btn = $($(this).data("catbtn"));
-    var _par = $(_btn).parent();
-    sendExtRequest(obj, _par, function () {
-      $(".mgcategory").each(function (index) {
-        if ($(this).text().trim() === catTxt.trim()) {
-          var _mg = $(this).closest(".manga");
-          $(this).remove();
-          if ($(".mgcategory", _mg).size() === 0) {
-            $(".mginfos .cats", _mg).text("No category for this manga");
-          }
-        }
-      });
-      _par.remove();
-      displayMangasByCat();
-      saveCategories();
-      $(".actdeleteglobcat").toggle("blind", {}, 250);
-    });
-  });
-  $(".actdeleteglobcat .no").unbind();
-  $(".actdeleteglobcat .no").click(function () {
-    $(".actdeleteglobcat").toggle("blind", {}, 250);
-  });
-  $(".actcatmgdel").unbind();
-  $(".actcatmgdel").click(function (event) {
-    var catToDel = $(this).parent().text();
-    if (isInGroup($(this))) {
-      var obj = {
-        action : "removeCatMangas",
-        list : []
-      };
-      if (isList()) {
-        $(".mgline", $(this).closest(".manga")).each(function (index) {
-          obj.list[obj.list.length] = {
-            cat : catToDel,
-            url : $(this).data("mgurl")
-          };
-        });
-      } else {
-        $(".mgelt", $(this).closest(".manga")).each(function (index) {
-          obj.list[obj.list.length] = {
-            cat : catToDel,
-            url : $(this).data("mgurl")
-          };
-        });
-      }
-      var _par = $(this).parent();
-      sendExtRequest(obj, _par, function () {
-        var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
-        $(_par).remove();
-        if ($(".mgcategory", _cats).size() === 0) {
-          _cats.text("No category for this manga");
-        }
-        displayMangasByCat();
-      });
-    } else {
-      var obj = {
-        action : "removeCatManga",
-        cat : catToDel,
-        url : closestEltData($(this)).data("mgurl")
-      };
-      var _par = $(this).parent();
-      sendExtRequest(obj, _par, function () {
-        var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
-        $(_par).remove();
-        if ($(".mgcategory", _cats).size() === 0) {
-          _cats.text("No category for this manga");
-        }
-        displayMangasByCat();
-      });
-    }
-  });
-}
-function saveCategories() {
-  "use strict";
-  var cats = [];
-  $(".category:not(.addcategory):not(.newcat)").each(function (index) {
-    var cat = {
-      name : $(this).text().trim(),
-      state : "",
-      type : ""
-    };
-    if ($(this).hasClass("user")) {
-      cat.type = "user";
-    } else if ($(this).hasClass("native")) {
-      cat.type = "native";
-    }
-    if ($(this).hasClass("include")) {
-      cat.state = "include";
-    } else if ($(this).hasClass("exclude")) {
-      cat.state = "exclude";
-    }
-    cats[cats.length] = cat;
-  });
-  localStorage["categoriesStates"] = JSON.stringify(cats);
 }
 function bindFoot() {
   "use strict";
