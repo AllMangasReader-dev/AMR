@@ -1393,6 +1393,17 @@ function setHWZoom(img) {
   $(img).css("width", $(img).data("zoom") * $(img).data("basewidth") + "px");
   $(img).css("max-width", "none");  
 }
+function getTopPlus() {
+  "use strict";
+  var ret;
+  if (document.body.style.borderTopWidth !== undefined && document.body.style.borderTopWidth !== "") {
+    ret = parseInt(document.body.style.borderTopWidth, 10);
+  } else {
+    ret = 0;
+  }
+  console.log(ret);
+  return ret;
+}
 
 function zoomin(){
   var ancheight = document.body.offsetHeight - getTopPlus();
@@ -1444,16 +1455,7 @@ function stopEventProp(e) {
 }
 var lastpresstime;
 var dirpress;
-function getTopPlus() {
-  var ret;
-  if (document.body.style.borderTopWidth != undefined && document.body.style.borderTopWidth != "") {
-    ret = parseInt(document.body.style.borderTopWidth, 10);
-  } else {
-    ret = 0;
-  }
-  //console.log(ret);
-  return ret;
-}
+
 function setKeys() {
   //disable default websites shortcuts (mangafox)
   document.onkeypress=null;
@@ -1511,7 +1513,8 @@ function setKeys() {
             //If top not visible
             if (!viss.topVis && !doubleTap) {
               //Move to top of current scan
-              $.scrollTo($(curimg).closest("tr")[0], 800, {queue:true, offset: {top: getTopPlus()}});
+              console.log(getTopPlus())
+              $.scrollTo($(curimg).closest("tr")[0], 800, {queue:true, /*offset: {top: getTopPlus()}*/});
             } else {
               //Calculate previous scan id
               var nb = curimg.data("order") - 1;
@@ -1522,7 +1525,7 @@ function setKeys() {
                 //Move to bottom of previous scan
                 $(".spanForImg").each(function(index) {
                   if ($(this).data("order") == nb) {
-                    $.scrollTo($(this).closest("tr")[0], 800, {queue:true, offset: {top: scrollbotoffset($(this).closest("tr")[0]) + getTopPlus()}});
+                    $.scrollTo($(this).closest("tr")[0], 800, {queue:true, offset: {top: scrollbotoffset($(this).closest("tr")[0]) /*+ getTopPlus()*/}});
                   }
                 });
               }
@@ -1544,7 +1547,7 @@ function setKeys() {
             var nb = 0;
             $(".spanForImg").each(function(index) {
               if ($(this).data("order") == nb) {
-                $.scrollTo($(this).closest("tr")[0], 800, {queue:true, offset: {top: getTopPlus()}});
+                $.scrollTo($(this).closest("tr")[0], 800, {queue:true/*, offset: {top: getTopPlus()}*/});
               }
             });
           } else {
@@ -1564,18 +1567,18 @@ function setKeys() {
               //If bottom not visible
               if (!viss.bottomVis && !doubleTap) {
                 //Move to bottom of current scan
-                $.scrollTo($(curimg).closest("tr")[0], 800, {queue:true, offset: {top: scrollbotoffset($(curimg).closest("tr")[0]) + getTopPlus()}});
+                $.scrollTo($(curimg).closest("tr")[0], 800, {queue:true, offset: {top: scrollbotoffset($(curimg).closest("tr")[0]) /*+ getTopPlus()*/}});
               } else {
                 //Calculate next scan id
                 var nb = curimg.data("order") + 1;
                 if (nb >= $(".spanForImg").size()) {
                   //Current scan was last scan -> move to bottom of page
-                  $.scrollTo($(document.body), 800, {queue:true, offset: {top: document.body.offsetHeight + getTopPlus()}});
+                  $.scrollTo($(document.body), 800, {queue:true, offset: {top: document.body.offsetHeight/* + getTopPlus()*/}});
                 } else {
                   // Move to top of next scan
                   $(".spanForImg").each(function(index) {
                     if ($(this).data("order") == nb) {
-                      $.scrollTo($(this).closest("tr")[0], 800, {queue:true, offset: {top: getTopPlus()}});
+                      $.scrollTo($(this).closest("tr")[0], 800, {queue:true/*, offset: {top: getTopPlus()}*/});
                     }
                   });
                 }
