@@ -21,6 +21,7 @@ Download http://www.allmangasreader.com/versions/AllMangasReader_V1_5_0_BETA.crx
 go to the extension page and drag-n-drop the file. The extension will autoupdate.
 
 Manual installation
+
 1. Download the zip file or clone the git repository
 2. Go to the extension list.
 3. Activate "Developers Mode"
