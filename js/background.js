@@ -14,7 +14,7 @@ pstat.init();
 wssql.init();
 amrcsql.init();
 
-var betaversion = "1.5.0";
+//var betaversion = "1.5.0";
 
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
@@ -225,9 +225,10 @@ function init() {
       } catch (e) {}
     }
 
-    if (typeof betaversion != 'undefined') {
+    //IsBeta returns true if homepage_url (in manifest) contains github.com. homepage_url is changed by auto release tool... if it's beta channel, contains the link to github latest commit.
+    if (chrome.extension.isBeta()) {
       chrome.browserAction.setTitle({
-        title : "All Mangas Reader " + betaversion
+        title : "All Mangas Reader Beta Channel " + curVersion
       });
     } else {
       chrome.browserAction.setTitle({
@@ -2139,18 +2140,36 @@ function jsonmangaelttosync(mangaelt) {
 
 chrome.extension.getVersion = function () {
   if (!chrome.extension.version_) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", chrome.extension.getURL('manifest.json'), false);
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4) {
-        var manifest = JSON.parse(this.responseText);
-        chrome.extension.version_ = manifest.version;
-      }
-    };
-    xhr.send();
+    initManifestVars();
   }
   return chrome.extension.version_;
 }
+
+chrome.extension.isBeta = function () {
+  if (chrome.extension.beta_ == undefined) {
+    initManifestVars();
+  }
+  return chrome.extension.beta_;
+}
+
+function initManifestVars() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", chrome.extension.getURL('manifest.json'), false);
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4) {
+      var manifest = JSON.parse(this.responseText);
+      chrome.extension.version_ = manifest.version;
+      var url = manifest.homepage_url;
+      if (url.indexOf("github.com") > 0) {
+        chrome.extension.beta_ = true;
+      } else {
+        chrome.extension.beta_ = false;
+      }
+    }
+  };
+  xhr.send();
+}
+
 function setclipboard(text) {
   var txt = document.createElement('textarea');
   txt.value = text;
