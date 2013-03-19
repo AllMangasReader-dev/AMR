@@ -179,7 +179,8 @@ function MangaElt(obj) {
                 notification;
               obj.listChaps = lst;
               newLastChap = obj.listChaps[0][1];
-              if ((newLastChap !== oldLastChap) && (oldLastChap !== 'undefined')) {
+              // if oldLastChap === undefined --> new manga added --> no notifications (Issue #40)
+              if ((newLastChap !== oldLastChap) && (oldLastChap !== undefined)) {
                 if (obj.read === 0 && (parameters.shownotifications === 1)) {
                   urls = $.map(obj.listChaps, function (chap) {return chap[1]; });
                   mangaData = {name: obj.name, mirror: obj.mirror, url: urls[urls.indexOf(obj.lastChapterReadURL) - 1]};
