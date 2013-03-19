@@ -1,4 +1,4 @@
-/* Object manga */
+﻿/* Object manga */
 XMLHttpRequest.prototype.mangaEltRef = null;
 XMLHttpRequest.prototype.extensionRef = null;
 HTMLLinkElement.prototype.mangaEltRef = null;

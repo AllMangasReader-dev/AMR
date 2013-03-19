@@ -1,4 +1,4 @@
-//jQuery.noConflict();
+﻿//jQuery.noConflict();
 var mangaList;
 var mirrors;
 var ctxIds = [];

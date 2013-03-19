@@ -1,4 +1,4 @@
-//Manga list known from server
+﻿//Manga list known from server
 var mglstacc;
 var tsacc;
 
