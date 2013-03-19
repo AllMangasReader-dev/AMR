@@ -1,4 +1,4 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var actmirrors;
 var i = 0;
@@ -160,9 +160,11 @@ function loadSelectors() {
   selAll.click(function () {
 
     $("#allmirrors tr:visible input[type='checkbox']").each(function (index) {
-      if (!$(this).attr("checked")) {
-        $(this).attr("checked", true);
+      if (!$(this).is(":checked")) {
+        $(this).prop("checked", true);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
+        console.log("activate " + mirrorName + " ischecked : " + $(this).is(":checked"));
+        
         chrome.extension.sendRequest({
           action: "activateMirror",
           mirror: mirrorName
@@ -172,10 +174,9 @@ function loadSelectors() {
   });
 
   selNone.click(function () {
-
     $("#allmirrors tr:visible input[type='checkbox']").each(function (index) {
-      if ($(this).attr("checked")) {
-        $(this).attr("checked", false);
+      if ($(this).is(":checked")) {
+        $(this).prop("checked", false);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
         chrome.extension.sendRequest({
           action: "desactivateMirror",
@@ -271,24 +272,6 @@ function dummy(res) {
 }
 // Activate/Deactivate mirrors
 
-var state_mirror = function () {
-  "use strict";
-  var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-  if ($(this).attr("checked")) {
-    // activate the mirror
-    chrome.extension.sendRequest({
-      action: "activateMirror",
-      mirror: mirrorName
-    }, function () {});
-  } else {
-    // desactivate the mirror
-    chrome.extension.sendRequest({
-      action: "desactivateMirror",
-      mirror: mirrorName
-    }, function () {});
-  }
-};
-
 function restore_mirrors() {
   "use strict";
   mirrors = chrome.extension.getBackgroundPage().mirrors;
@@ -361,9 +344,25 @@ function restore_mirrors() {
             break;
           }
         }
-        ck.attr("checked", isfound);
+        ck.prop("checked", isfound);
         ck.appendTo(tdMgs);
-        ck.click(state_mirror());
+        ck.click(function () {
+          "use strict";
+          var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
+          if ($(this).is(":checked")) {
+            // activate the mirror
+            chrome.extension.sendRequest({
+              action: "activateMirror",
+              mirror: mirrorName
+            }, function () {});
+          } else {
+            // desactivate the mirror
+            chrome.extension.sendRequest({
+              action: "desactivateMirror",
+              mirror: mirrorName
+            }, function () {});
+          }
+        });
       }
       trCur.appendTo($("#allmirrors tbody"));
     }
