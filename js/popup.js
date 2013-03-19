@@ -1,4 +1,4 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
@@ -486,7 +486,7 @@ function displayMangasByCat() {
 function saveCategories() {
   "use strict";
   var cats = [];
-  $(".category:not(.addcategory):not(.newcat)").each(function (index) {
+  $(".category:not(.addcategory):not(.newcat):not(.clearcategory)").each(function (index) {
     var cat = {
       name : $(this).text().trim(),
       state : "",
@@ -510,7 +510,7 @@ function bindCatsButtons() {
   "use strict";
   $(".actcatview").unbind();
   $(".actcatview").click(function (event) {
-    $(".category:not(.addcategory):not(.newcat)").removeClass("include").removeClass("exclude");
+    $(".category:not(.addcategory):not(.newcat):not(.clearcategory)").removeClass("include").removeClass("exclude");
     $(this).parent().addClass("include");
     displayMangasByCat();
     saveCategories();
@@ -1647,11 +1647,11 @@ function bindCategories() {
   $(".category.exclude").each(function (ind) {
     $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are excluded from the list.");
   });
-  $(".category:not(.addcategory):not(.newcat):not(.include):not(.exclude)").each(function (ind) {
+  $(".category:not(.addcategory):not(.newcat):not(.include):not(.exclude):not(.clearcategory)").each(function (ind) {
     $(this).attr("title", "Click here to exlude / include mangas from this category.");
   });
-  $(".category:not(.addcategory)").unbind();
-  $(".category:not(.addcategory)").click(function () {
+  $(".category:not(.addcategory):not(.clearcategory)").unbind();
+  $(".category:not(.addcategory):not(.clearcategory)").click(function () {
     if ($(this).hasClass("include")) {
       $(this).removeClass("include");
       $(this).addClass("exclude");
@@ -1688,6 +1688,16 @@ function bindCategories() {
     $("input", newCat).blur(function () {
       $(this).parent().remove();
     });
+  });
+  $(".clearcategory").unbind();
+  $(".clearcategory").click(function () {
+    $(".category:not(.addcategory):not(.clearcategory)").each(function(index, cat) {
+      $(this).addClass("include");
+      $(this).removeClass("exclude");
+      $(this).attr("title", "All mangas in category " + $(this).text().trim() + " are included in the list.");
+    });
+    displayMangasByCat();
+    saveCategories();
   });
   $(".mgtitlehead").draggable({
     revert : true,

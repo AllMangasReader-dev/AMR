@@ -209,6 +209,7 @@ function MangaElt(obj) {
                   }
                   //console.log('A new chapter of "' + mangaList[i].name + '" was issued by "' + mangaList[i].mirror + '".');
                 }
+                //Set upts to now (means : 'last time we found a new chapter is now');
                 obj.upts = new Date().getTime();
               }
               if (obj.lastChapterReadURL === null) {
