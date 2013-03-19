@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Contains utils function...
  */ 
 var MgUtil = {
@@ -6,18 +6,20 @@ var MgUtil = {
    * Sort mirrors list according to user's most used mirrors
    */ 
   sortMirrors: function(mirrors, mangas) {
-    $.each(mangas, function(index, value) {
-      for (var i = 0; i < mirrors.length; i++) {
-        if (value.mirror == mirrors[i].mirrorName) {
-          if (mirrors[i].nb) {
-            mirrors[i].nb++
-          } else {
-            mirrors[i].nb = 1;
+    if (mangas !== undefined) {
+      $.each(mangas, function(index, value) {
+        for (var i = 0; i < mirrors.length; i++) {
+          if (value.mirror == mirrors[i].mirrorName) {
+            if (mirrors[i].nb) {
+              mirrors[i].nb++
+            } else {
+              mirrors[i].nb = 1;
+            }
+            break;
           }
-          break;
         }
-      }
-    });
+      });
+    }
     mirrors.sort(function(a, b) {
       if (a.nb == undefined && b.nb == undefined) return ((a.mirrorName < b.mirrorName) ? -1 : 1);
       if (a.nb == undefined) return 1;
@@ -31,25 +33,28 @@ var MgUtil = {
    * Sort mirrors list according to user's most used mirrors
    */ 
   getUnusedNames: function(mirrors, mangas) {
-    $.each(mangas, function(index, value) {
-      for (var i = 0; i < mirrors.length; i++) {
-        if (value.mirror == mirrors[i].mirrorName) {
-          if (mirrors[i].nb) {
-            mirrors[i].nb++
-          } else {
-            mirrors[i].nb = 1;
+    if (mangas !== undefined) {
+      $.each(mangas, function(index, value) {
+        for (var i = 0; i < mirrors.length; i++) {
+          if (value.mirror == mirrors[i].mirrorName) {
+            if (mirrors[i].nb) {
+              mirrors[i].nb++
+            } else {
+              mirrors[i].nb = 1;
+            }
+            break;
           }
-          break;
         }
-      }
-    });
-  
+      });
+    }
     var unused = [];
-    $.each(mirrors, function(index, value) {
-      if (value.nb == undefined) {
-        unused[unused.length] = value.mirrorName;
-      }
-    });
+    if (mirrors !== undefined) {
+      $.each(mirrors, function(index, value) {
+        if (value.nb == undefined) {
+          unused[unused.length] = value.mirrorName;
+        }
+      });
+    }
   
     return unused;
   },
@@ -77,21 +82,23 @@ var MgUtil = {
    */ 
   getLanguageList: function(mirrors) {
     var langs = [];
-    $.each(mirrors, function(index, value) {
-      var l = (value.languages ? value.languages.split(",") : []);
-      
-      $.each(l, function(index, lang) {
-        var isFound = false;
-        for (var i = 0; i < langs.length; i++) {
-          if (langs[i].code == lang) {
-            isFound = true;
+    if (mirrors !== undefined) {
+      $.each(mirrors, function(index, value) {
+        var l = (value.languages ? value.languages.split(",") : []);
+        
+        $.each(l, function(index, lang) {
+          var isFound = false;
+          for (var i = 0; i < langs.length; i++) {
+            if (langs[i].code == lang) {
+              isFound = true;
+            }
           }
-        }
-        if (!isFound) {
-          langs[langs.length] = {'code': lang, 'language': MgUtil.getLanguageName(lang)};
-        }
+          if (!isFound) {
+            langs[langs.length] = {'code': lang, 'language': MgUtil.getLanguageName(lang)};
+          }
+        });
       });
-    });
+    }
     return langs;
   },
   
@@ -100,11 +107,13 @@ var MgUtil = {
    */ 
   getLanguageName: function (code) {
     var lang;
-    $.each(MgUtil.languages, function(index, value) {
-      if (code == value.code) {
-        lang = value.language;
-      }
-    });
+    if (MgUtil.languages !== undefined) {
+      $.each(MgUtil.languages, function(index, value) {
+        if (code == value.code) {
+          lang = value.language;
+        }
+      });
+    }
     return lang;
   },
   

@@ -133,11 +133,6 @@ function replaceInUrls(url, find, rep) {
 }
 /* Initialise the list of followed mangas */
 function init() {
-  //Test notif
-  /*var mangaData = {name: "This is a long manga name... very long", mirror: "ThisIsALongMirror", url: "tets.com"}
-  var notification = window.webkitNotifications.createHTMLNotification('notification.html#' + JSON.stringify(mangaData));
-  notification.show();*/
-
   getMirrors(function (mirrorsT) {
     mirrors = mirrorsT;
 

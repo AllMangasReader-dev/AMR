@@ -29,3 +29,8 @@
 #testinfos {
   word-break: break-word;
 }
+.bottominfo {
+  margin-top:10px;
+  font-size:10pt;
+  text-align:center;
+}

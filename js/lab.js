@@ -1,4 +1,4 @@
-﻿
+
 var mirrors;
 amrcsql.init();
 
@@ -21,7 +21,70 @@ $(function() {
       loadTestForMirror();
   });
   
+  $("#testnotif").click(testnotif);
+  $("#testwsnot").click(testwsnot);
+  $("#testwsnot2").click(testwsnot2);
+  $("#testwsnot3").click(testwsnot3);
+  
 });
+
+function testnotif() {
+  var mangaData = {name: "Test Manga", mirror: "TestMirror", url: "http://test.allmangasreader.com/"};
+  var title = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter."
+  var notif = window.webkitNotifications.createNotification(
+        chrome.extension.getURL('img/icon-32.png'), mangaData.name, title)
+  notif.url = mangaData.url;
+  notif.onclick = function() {
+    var _url = this.url;
+    chrome.tabs.create({
+      "url" : _url
+    });
+  };
+  notif.show();
+  /*setTimeout(function () {
+    notif.cancel();
+  }, 1000);*/
+}
+function testwsnot() {
+  var wsData = {ws: "TestMirror", developer: "testdev", revision: 0, idext: 1, isnew: false};
+  displayNotification(wsData);
+}
+function testwsnot2() {
+  var wsData = {ws: "TestMirror", developer: "testdev", revision: 2, idext: 1, isnew: false};
+  displayNotification(wsData);
+}
+function testwsnot3() {
+  var wsData = {ws: "TestMirror", developer: "testdev", revision: 2, idext: 1, isnew: true};
+  displayNotification(wsData);
+}
+
+function displayNotification(wsData) {
+  //var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
+  var text = "";
+  if (wsData.revision > 0) {
+    if (wsData.isnew) {
+      text = "Implementation created by " + wsData.developer + ".";
+    } else {
+      text = "Implementation updated by " + wsData.developer + " (revision " + wsData.revision + ").\nThis may have fixed issues on this website !";
+    }
+  } else {
+    text = "Implementation updated for a temporary version. (developer : " + wsData.developer + ").\nIf you want to come back to normal revision, go to option page, 'Supported websites' tab.";
+  }
+  text += "\nYou can discuss this implementation by clicking on the notification (login required)";
+  var notif = window.webkitNotifications.createNotification(
+        chrome.extension.getURL('img/icon-32.png'), wsData.ws, text);
+  notif.url = "http://community.allmangasreader.com/comments.php?type=1&id=" + wsData.idext;
+  notif.onclick = function() {
+    var _url = this.url;
+    chrome.tabs.create({
+      "url" : _url
+    });
+  };
+  notif.show();
+  /*setTimeout(function () {
+    notif.cancel();
+  }, 1000);*/
+}
 
 function getElementsByClass(searchClass, obj) {
 	if (!obj) {

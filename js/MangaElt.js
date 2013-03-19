@@ -1,4 +1,4 @@
-﻿/* Object manga */
+/* Object manga */
 XMLHttpRequest.prototype.mangaEltRef = null;
 XMLHttpRequest.prototype.extensionRef = null;
 HTMLLinkElement.prototype.mangaEltRef = null;
@@ -183,11 +183,27 @@ function MangaElt(obj) {
                 if (obj.read === 0 && (parameters.shownotifications === 1)) {
                   urls = $.map(obj.listChaps, function (chap) {return chap[1]; });
                   mangaData = {name: obj.name, mirror: obj.mirror, url: urls[urls.indexOf(obj.lastChapterReadURL) - 1]};
-                  notification = window.webkitNotifications.createHTMLNotification('notification.html#' + JSON.stringify(mangaData));
+                  /*notification = window.webkitNotifications.createHTMLNotification('notification.html#' + JSON.stringify(mangaData));
                   notification.show();
                   if (parameters.notificationtimer > 0) {
                     setTimeout(function () {
                       notification.cancel();
+                    }, parameters.notificationtimer * 1000);
+                  }*/
+                  var description = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter."
+                  var notif = window.webkitNotifications.createNotification(
+                        chrome.extension.getURL('img/icon-32.png'), mangaData.name, description);
+                  notif.url = mangaData.url;
+                  notif.onclick = function() {
+                    var _url = this.url;
+                    chrome.tabs.create({
+                      "url" : _url
+                    });
+                  };
+                  notif.show();
+                  if (parameters.notificationtimer > 0) {
+                    setTimeout(function () {
+                      notif.cancel();
                     }, parameters.notificationtimer * 1000);
                   }
                   //console.log('A new chapter of "' + mangaList[i].name + '" was issued by "' + mangaList[i].mirror + '".');

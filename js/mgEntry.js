@@ -199,13 +199,14 @@ function updateJSFromRepository(description, change) {
   var params = getParameters();
   if (params['shownotifws'] == 1 && (change.nonotif == undefined || !change.nonotif)) {
     var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
-    var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
+    displayNotification(wsData, params);
+    /*var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
           notification.show();
     if (params['notificationtimer'] > 0) {
       setTimeout(function() {
   		  notification.cancel();
   		}, params['notificationtimer'] * 1000);
-    }
+    }*/
   }
 }
 
@@ -290,13 +291,14 @@ function finishImportAfterInsert(description, callback, isNew) {
   var params = getParameters();
   if (params['shownotifws'] == 1) {
     var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
-    var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
+    displayNotification(wsData, params);
+    /*var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
           notification.show();
     if (params['notificationtimer'] > 0) {
       setTimeout(function() {
   		  notification.cancel();
   		}, params['notificationtimer'] * 1000);
-    }
+    }*/
   }
   callback(description.mirrorName);
 }
@@ -340,13 +342,14 @@ function releaseImplentationFromId(id, callback) {
           var params = getParameters();
           if (params['shownotifws'] == 1) {
     	      var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
-    	      var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
+    	      displayNotification(wsData, params);
+            /*var notification = window.webkitNotifications.createHTMLNotification('notifws.html#' + JSON.stringify(wsData));
                   notification.show();
     	      if (params['notificationtimer'] > 0) {
     	        setTimeout(function() {
           		  notification.cancel();
           		}, params['notificationtimer'] * 1000);
-    	      }
+    	      }*/
     	    }
         } else {
           console.log("Error --> No local websites ?? Reload the extension... !");
@@ -554,5 +557,35 @@ function waitForActivatedAndListFinish(mirrorsT, callback) {
     setTimeout(function () {
       waitForActivatedAndListFinish(mirrorsT, callback);
     }, 100);
+  }
+}
+
+function displayNotification(wsData, params) {
+  //var wsData = {ws: description.mirrorName, developer: description.developer, revision: description.revision, idext: description.id, isnew: isNew};
+  var text = "";
+  if (wsData.revision > 0) {
+    if (wsData.isnew) {
+      text = "Implementation created by " + wsData.developer + ".";
+    } else {
+      text = "Implementation updated by " + wsData.developer + " (revision " + wsData.revision + ").\nThis may have fixed issues on this website !";
+    }
+  } else {
+    text = "Implementation updated for a temporary version. (developer : " + wsData.developer + ").\nIf you want to come back to normal revision, go to option page, 'Supported websites' tab.";
+  }
+  text += "\nYou can discuss this implementation by clicking on the notification (login required)";
+  var notif = window.webkitNotifications.createNotification(
+        chrome.extension.getURL('img/icon-32.png'), wsData.ws, text);
+  notif.url = "http://community.allmangasreader.com/comments.php?type=1&id=" + wsData.idext;
+  notif.onclick = function() {
+    var _url = this.url;
+    chrome.tabs.create({
+      "url" : _url
+    });
+  };
+  notif.show();
+  if (params['notificationtimer'] > 0) {
+    setTimeout(function() {
+		  notif.cancel();
+		}, params['notificationtimer'] * 1000);
   }
 }
