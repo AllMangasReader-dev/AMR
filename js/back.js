@@ -1,4 +1,6 @@
-﻿var currentMirror = null;
+﻿var lastpresstime;
+var dirpress;
+var currentMirror = null;
 var amrWhereScans;
 var useLeftRightKeys = false;
 var autoBookmarkScans = false;
@@ -10,14 +12,11 @@ var starttime = new Date().getTime();
 var updatetime = 10000;
 var isActive = true;
 var sendStats = false;
+var times = [];
+var debugTimes = false;
+var timeoutAMRbar = 0;
 
 function getMangaMirror() {
-  /*for (var i = 0; i < mirrors.length; i++) {
-    if (mirrors[i].isMe(window.location.href)) {
-      return mirrors[i];
-    }
-  }
-  return null;*/
   return currentMirror;
 }
 
@@ -137,9 +136,6 @@ function initPage() {
   }
 }
 
-var times = [];
-var debugTimes = false;
-
 function bindCalculateTime() {
   window.onbeforeunload = function() {
     if (isActive) {
@@ -188,8 +184,6 @@ function updateStat(estimated) {
   }
   setTimeout(updateStat, updatetime);
 }
-
-var timeoutAMRbar = 0;
 
 function createBar(barVis) {
   var div = $("<div id='AMRBar'></div>");
@@ -883,10 +877,7 @@ function onLoadImage() {
   if ($(this).attr("src") != chrome.extension.getURL("img/imgerror.png")) {
     $(this).css("border", "10px solid white");
     $(this).css("margin-bottom", "50px");
-    */
-
-    
-  //}
+    }*/
     
   var divNum = $("<div class='pagenumberAMR'><div class='number'>" + ($(this).data("idScan") + 1) + "</div></div>");
   divNum.appendTo($(this).closest(".spanForImg"));
@@ -1453,8 +1444,6 @@ function zoomrest(){
 function stopEventProp(e) {
     e.stopPropagation();
 }
-var lastpresstime;
-var dirpress;
 
 function setKeys() {
   //disable default websites shortcuts (mangafox)

@@ -8,13 +8,16 @@ var timeoutChap;
 var timeoutMg;
 var timeoutWs;
 var updatews = 86400 * 1000;
+var canvas;
+var canvasContext;
+var animationFrames = 20;
+var animationSpeed = 30;
+var rotation = 0;
+var sharinganImage;
 
-//Init databases
 pstat.init();
 wssql.init();
 amrcsql.init();
-
-//var betaversion = "1.5.0";
 
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
@@ -158,22 +161,11 @@ function init() {
         actMirrors[actMirrors.length] = mirrors[i];
       }
     }
-    //console.log("init");
-    //resetUpdate();
-
     list = localStorage["mangas"];
     mangaList = new Array();
     if (!(list == undefined || list == null || list == "null")) {
-      //console.log("Liste de mangas : " + list);
-      // var lstTmp = $A(eval('(' + list + ')')); --> remove eval function
       var lstTmp = JSON.parse(list);
-      //console.log(lstTmp);
-      //console.log("Taille de la liste de mangas : " + lstTmp.length);
       for (var i = 0; i < lstTmp.length; i++) {
-        //if (lstTmp[i].urlListChaps == undefined || lstTmp[i].urlListChaps == null || lstTmp[i].urlListChaps == "null" || lstTmp[i].urlListChaps == "") {
-        //This test is done to remove inconsistent entries
-        //} else {
-        //if (lstTmp[i].mirror) {
         // ########### CONVERSION submanga.me en submanga.com
         lstTmp[i].url = replaceInUrls(lstTmp[i].url, "submanga.me", "submanga.com");
         lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "submanga.me", "submanga.com");
@@ -181,11 +173,7 @@ function init() {
         lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.mangafox.com", "mangafox.me");
         lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.mangafox.com", "mangafox.me");
 
-        // ################
         mangaList[i] = new MangaElt(lstTmp[i]);
-        //  }
-
-        //}
       }
     }
     //Load bookmarks
@@ -867,12 +855,6 @@ chrome.extension.onRequest.addListener(
     getActivatedMirrorsWithList({
       list : activatedMirrors()
     }, function (mirrorsDesc) {
-      // getActivatedMirrorsWithList fills listmgs for each mirror
-      /*for (var i = 0; i < mirrorsDesc.length; i++) {
-      if (mirrorsDesc[i].canListFullMangas) {
-      mirrorsDesc[i].listmgs = localStorage[mirrorsDesc[i].mirrorName];
-      }
-      }*/
       sendResponse(mirrorsDesc);
     });
   }
@@ -923,7 +905,6 @@ chrome.extension.onRequest.addListener(
   if (request.action == "deletepub") {
     var params = getParameters();
     params.pub = 0;
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
     sendResponse({});
   }
@@ -1033,7 +1014,6 @@ chrome.extension.onRequest.addListener(
           },
           targetUrlPatterns : [encodeURI(request.lstUrls[0]), request.lstUrls[0]]
         }, function () {
-          //console.log("Id : " + id + "; url : " + request.lstUrls[0]);
           sendResponse({});
         });
     } else {
@@ -1165,74 +1145,8 @@ chrome.extension.onRequest.addListener(
       });
     });
   }
-
-  /*
-  if (request.action == "createZipFile") {
-  ZipGen.createZipFile(request, function(cont) {
-  sendResponse({content: cont});
-  });
-  }*/
 });
 
-/*
-HTMLImageElement.prototype.zipGen = null;
-
-var ZipGen = {
-cmpt: 0,
-zip: null,
-callbac: null,
-
-createZipFile: function(request, callback) {
-this.callbac = callback;
-
-if (!document.getElementById('canvas')) {
-var ctxObj = document.createElement('canvas');
-ctxObj.setAttribute("id", "canvas");
-ctxObj.setAttribute("width", "1000px");
-ctxObj.setAttribute("height", "1000px");
-document.body.appendChild(ctxObj);
-}
-
-this.cmpt = 1;//request.lst.length;
-this.zip = new JSZip("DEFLATE");
-
-for (var i = 0; i < 1; i++) { //request.lst.length
-var img = new Image();
-img.zipGen = this;
-img.onload = function() {
-console.log("image loaded" + this.getAttribute("dataNumber"));
-var ctx = document.getElementById('canvas').getContext('2d');
-ctx.drawImage(this, 0, 0);
-var dataurl = document.getElementById('canvas').toDataURL("image/png", "");
-//console.log(this.getAttribute("dataNumber") + " --> " + dataurl);
-this.zipGen.zip.add("scan" + this.getAttribute("dataNumber") + ".png", dataurl, {base64: true});
-this.zipGen.cmpt--;
-}
-img.onerror = function(){
-console.log("image error");
-this.zipGen.cmpt--;
-}
-img.setAttribute("dataNumber", i);
-console.log(i + " --> " + request.lst[i]);
-img.src = request.lst[i];
-}
-this.waitForLoaded();
-},
-waitForLoaded: function() {
-if (this.cmpt == 0) {
-console.log("sending...");
-var content = this.zip.generate(true);
-this.callbac(content);
-} else {
-console.log("waiting...");
-var _th = this;
-setTimeout(function() {
-_th.waitForLoaded();
-}, 100);
-}
-}
-}
- */
 function updateMirrors(_callback) {
   getMirrors(function (mirrorsT) {
     mirrors = mirrorsT;
@@ -1250,7 +1164,6 @@ function updateMirrors(_callback) {
     _callback();
   });
 }
-//bookmark : obj {mirror, url, chapUrl, type(chapter, scan), name, chapName, scanUrl, scanName, note}
 function getBookmark(obj) {
   if (bookmarks.length > 0) {
     for (var j = 0; j < bookmarks.length; j++) {
@@ -1259,14 +1172,12 @@ function getBookmark(obj) {
          && obj.chapUrl == bookmarks[j].chapUrl
          && obj.type == bookmarks[j].type) {
         if (obj.type == "chapter") {
-          //console.log("chapter booked get");
           return {
             booked : true,
             note : bookmarks[j].note
           };
         } else {
           if (obj.scanUrl == bookmarks[j].scanUrl || encodeURI(obj.scanUrl) == bookmarks[j].scanUrl) {
-            //console.log({booked: true, note: lstTmp[j].note, scanSrc: obj.scanUrl});
             return {
               booked : true,
               note : bookmarks[j].note,
@@ -1357,7 +1268,6 @@ function deleteBookmark(obj) {
 
 function activateMirror(mirrorName) {
   var states = localStorage["mirrorStates"];
-  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
@@ -1366,7 +1276,6 @@ function activateMirror(mirrorName) {
           mirror : mirrorName,
           activated : true
         };
-        //localStorage["mirrorStates"] = $A(lstTmp).toJSON(); --> remove prototype usage
         localStorage["mirrorStates"] = JSON.stringify(lstTmp);
         
         // Load refreshMirror
@@ -1380,7 +1289,6 @@ function activateMirror(mirrorName) {
             }
           }
         } catch (e) {
-          //
         }
         break;
       }
@@ -1397,7 +1305,6 @@ function desactivateMirror(mirrorName) {
   }
   if (nb == 0) {
     var states = localStorage["mirrorStates"];
-    //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
     var lstTmp = JSON.parse(states);
     if (lstTmp.length > 0) {
       for (var j = 0; j < lstTmp.length; j++) {
@@ -1406,12 +1313,10 @@ function desactivateMirror(mirrorName) {
             mirror : mirrorName,
             activated : false
           };
-          //localStorage["mirrorStates"] = $A(lstTmp).toJSON(); --> remove prototype usage
           localStorage["mirrorStates"] = JSON.stringify(lstTmp);
           
           // Delete from localStorage
           wssql.webdb.empty(mirrorName, function () {});
-          //localStorage[mirrorName] = null;
           break;
         }
       }
@@ -1474,13 +1379,11 @@ function instantiateMirrors() {
       activated : true
     };
   }
-  // localStorage["mirrorStates"] = $A(lst).toJSON(); --> remove prototype usage
   localStorage["mirrorStates"] = JSON.stringify(lst);
 }
 
 function isMirrorActivated(mirrorName) {
   var states = localStorage["mirrorStates"];
-  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
@@ -1494,7 +1397,6 @@ function isMirrorActivated(mirrorName) {
 
 function hasDesactivatedOnce() {
   var states = localStorage["mirrorStates"];
-  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   var nbActi = 0;
   if (lstTmp.length > 0) {
@@ -1510,7 +1412,6 @@ function hasDesactivatedOnce() {
 function activatedMirrors() {
   var list = new Array();
   var states = localStorage["mirrorStates"];
-  //var lstTmp = $A(eval('(' + states + ')')); --> remove eval function
   var lstTmp = JSON.parse(states);
   if (lstTmp.length > 0) {
     for (var j = 0; j < lstTmp.length; j++) {
@@ -1533,10 +1434,8 @@ function getParameters() {
   var res;
   if (params == undefined || params == null || params == "null") {
     res = defaultParams();
-    //localStorage["parameters"] = $H(res).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(res);
   } else {
-    // res = eval('(' + params + ')'); --> remove eval function
     res = JSON.parse(params);
     initParam(res, "omSite", 0);
     initParam(res, "newTab", 0);
@@ -1570,7 +1469,6 @@ function getParameters() {
     initParam(res, "sendstats", 1);
     initParam(res, "shownotifws", 1);
 
-    //localStorage["parameters"] = $H(res).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(res);
   }
   return res;
@@ -1617,7 +1515,7 @@ function defaultParams() {
   return obj;
 }
 
-/* Return the existing manga in the follow list that match with the request */
+// Return the existing manga in the follow list that match with the request
 function isInMangaList(url) {
   for (var i = 0; i < mangaList.length; i++) {
     if (mangaList[i].url == url) {
@@ -1635,13 +1533,6 @@ function isInMangaListId(url) {
   }
   return -1;
 }
-
-var canvas;
-var canvasContext;
-var animationFrames = 20;
-var animationSpeed = 30;
-var rotation = 0;
-var sharinganImage;
 
 function ease(x) {
   return (1 - Math.sin(Math.PI / 2 + x * Math.PI)) / 2;
@@ -1669,7 +1560,6 @@ function drawIcon(isgrey) {
     sharinganImage = document.getElementById('sharingan');
     canvasContext = canvas.getContext('2d');
   }
-  //console.log("drawIcon " + isgrey);
   canvasContext.save();
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
   canvasContext.translate(
@@ -1679,16 +1569,13 @@ function drawIcon(isgrey) {
     -canvas.width / 2,
     -canvas.height / 2);
   if (isgrey) {
-    //console.log("Grey !");
     grayscale(canvasContext, canvas.width, canvas.height);
   }
   canvasContext.restore();
-  //console.log("set it");
   chrome.browserAction.setIcon({
     imageData : canvasContext.getImageData(0, 0,
       canvas.width, canvas.height)
   });
-  //console.log("done");
 }
 function drawIconAtRotation(doEase) {
   if (doEase == undefined) {
@@ -1871,7 +1758,6 @@ function refreshMangaLists(refreshTimer, perform) {
       }
     }
   } catch (e) {
-    //
   }
   var nextTime = getParameters().updatemg;
   if (refreshTimer) {
@@ -1931,9 +1817,7 @@ function mangaListLoaded(mirror, lst) {
 }
 
 function getMangaMirror(mirror) {
-  //console.log("get Manga mirror called");
   for (var i = 0; i < mirrors.length; i++) {
-    //console.log(mirrors[i].mirrorName + " --> " + mirror);
     if (mirrors[i].mirrorName == mirror) {
       return mirrors[i];
     }
@@ -1942,7 +1826,6 @@ function getMangaMirror(mirror) {
 }
 /* Save the manga list in storage */
 function saveList() {
-  //console.log("saving current list");
   try {
     localStorage["mangas"] = getJSONList();
     try {
@@ -1957,7 +1840,6 @@ function saveList() {
 
 function refreshTag() {
   var nbNews = 0;
-  //console.log("refreshTag");
   var listDone = [];
   for (var i = 0; i < mangaList.length; i++) {
     if (mangaList[i].listChaps.length > 0) {
@@ -2033,7 +1915,6 @@ function refreshUpdate() {
     var params = getParameters();
     params.updated = new Date().getTime();
     params.changesSinceSync = 1;
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
@@ -2043,7 +1924,6 @@ function refreshUpdateSyncSite(update) {
     var params = getParameters();
     params.syncAMR = update;
     params.changesSinceSync = 0;
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 
@@ -2052,7 +1932,6 @@ function refreshUpdateWith(update) {
   try {
     var params = getParameters();
     params.updated = update;
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
@@ -2061,7 +1940,6 @@ function resetUpdate() {
   try {
     var params = getParameters();
     params.updated = undefined;
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
@@ -2070,7 +1948,6 @@ function refreshSync() {
   try {
     var params = getParameters();
     params.lastsync = new Date().getTime();
-    //localStorage["parameters"] = $H(params).toJSON(); --> remove prototype usage
     localStorage["parameters"] = JSON.stringify(params);
   } catch (e) {}
 }
@@ -2087,9 +1964,7 @@ function getJSONList() {
 
 function jsonmangaelt(mangaelt) {
   var obj = {};
-  //console.log("before manga mirror save");
   obj.mirror = mangaelt.mirror;
-  //console.log("aftre");
   obj.name = mangaelt.name;
   obj.url = mangaelt.url;
   obj.lastChapterReadURL = mangaelt.lastChapterReadURL;
@@ -2100,12 +1975,8 @@ function jsonmangaelt(mangaelt) {
   obj.ts = mangaelt.ts;
   obj.upts = mangaelt.upts;
 
-  //console.log("before saving length : " + mangaelt.listChaps.length);
-  //obj.listChaps = $A(mangaelt.listChaps).toJSON(); --> remove prototype usage
   obj.listChaps = JSON.stringify(mangaelt.listChaps);
-  // obj.cats = $A(mangaelt.cats).toJSON(); --> remove prototype usage
   obj.cats = JSON.stringify(mangaelt.cats);
-  //return $H(obj).toJSON(); --> remove prototype usage
   return JSON.stringify(obj);
 }
 
@@ -2131,9 +2002,7 @@ function jsonmangaelttosync(mangaelt) {
   obj.update = mangaelt.update;
   obj.ts = mangaelt.ts;
   obj.display = mangaelt.display;
-  // obj.cats = $A(mangaelt.cats).toJSON(); --> remove prototype usage
   obj.cats = JSON.stringify(mangaelt.cats);
-  //return $H(obj).toJSON(); --> remove prototype usage
   return JSON.stringify(obj);
 }
 
@@ -2205,7 +2074,6 @@ function importMangas(mangas, merge) {
       deleteAr[deleteAr.length] = i;
       try {
         _gaq.push(['_trackEvent', 'DeleteManga', mangaList[i].mirror, mangaList[i].name]);
-        //pageTracker._trackEvent('DeleteManga', request.name);
       } catch (e) {}
     }
     for (var i = deleteAr.length - 1; i >= 0; i--) {
@@ -2214,36 +2082,28 @@ function importMangas(mangas, merge) {
   }
 
   textOut += 'Adding mangas...\n';
-  //console.log('Adding mangas...');
   var lstTmp = mangas;
   for (var i = 0; i < lstTmp.length; i++) {
     var tmpManga = new MangaElt(lstTmp[i]);
     textOut += "\t - Reading manga entry : " + tmpManga.name + " in mirror : " + tmpManga.mirror + "\n";
-    //console.log("\t - Reading manga entry : " + tmpManga.name + " in mirror : " + tmpManga.mirror);
     var mangaExist = isInMangaList(tmpManga.url);
     if (mangaExist == null) {
       textOut += "\t  --> Manga not found in current list, adding manga... " + "\n";
-      //console.log("\t  --> Manga not found in current list, adding manga... ");
       if (!isMirrorActivated(tmpManga.mirror)) {
         activateMirror(tmpManga.mirror);
       }
       var last = mangaList.length;
       mangaList[last] = tmpManga;
-      //mangaList[last].refreshLast();
       try {
         _gaq.push(['_trackEvent', 'AddManga', tmpManga.mirror, tmpManga.name]);
-        //pageTracker._trackEvent('AddManga', newManga.name);
       } catch (e) {}
     } else {
       //Verify chapter last
       textOut += "\t  --> Manga found in current list, verify last chapter read. incoming : " + tmpManga.lastChapterReadURL + "; current : " + mangaExist.lastChapterReadURL + "\n";
-      //console.log("\t  --> Manga found in current list, verify last chapter read. incoming : " + tmpManga.lastChapterReadURL + "; current : " + mangaExist.lastChapterReadURL);
       mangaExist.consult(tmpManga);
-      //saveList();
       try {
         _gaq.push(['_trackEvent', 'ReadManga', tmpManga.mirror, tmpManga.name]);
         _gaq.push(['_trackEvent', 'ReadMangaChapter', tmpManga.name, tmpManga.lastChapterReadName]);
-        //pageTracker._trackEvent('ReadManga', request.name, request.lastChapterReadName);
       } catch (e) {}
     }
   }
@@ -2300,7 +2160,6 @@ function updateFromSite(mangas, merge) {
     }
   }
   refreshAllLasts();
-  //saveList();
 }
 // This fuction should not exist as we will be using chrome.sync call.
 function importBookmarks(bms, merge) {
@@ -2364,7 +2223,6 @@ function importBookmarks(bms, merge) {
       bookmarks[posFound].note = obj.note;
     }
   }
-  //localStorage["bookmarks"] = $A(bookmarks).toJSON(); --> remove prototype usage
   localStorage["bookmarks"] = JSON.stringify(bookmarks);
   return textOut;
 }
