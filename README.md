@@ -1,4 +1,4 @@
-﻿AMR
+AMR
 ===
 AllMangasReader developer branch has the lastest changes made
 to the AllMangasReader Chrome Extension.
@@ -13,7 +13,6 @@ PLUGINS
 * prettyPhoto
 * SimpleModal
 * Treeview
-* Prototype (depreciated)
   
 INSTALLATION
 -------------

@@ -1,4 +1,4 @@
-﻿var mirrors;
+var mirrors;
 var mangas;
 var actmirrors;
 var i = 0;
@@ -163,7 +163,7 @@ function loadSelectors() {
       if (!$(this).is(":checked")) {
         $(this).prop("checked", true);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        console.log("activate " + mirrorName + " ischecked : " + $(this).is(":checked"));
+        //console.log("activate " + mirrorName + " ischecked : " + $(this).is(":checked"));
         
         chrome.extension.sendRequest({
           action: "activateMirror",

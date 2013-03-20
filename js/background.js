@@ -1,4 +1,4 @@
-﻿//jQuery.noConflict();
+//jQuery.noConflict();
 var mangaList;
 var mirrors;
 var ctxIds = [];
@@ -215,7 +215,11 @@ function init() {
         localStorage["versionViewRelease"] = localStorage["version"];
       }
       try {
-        _gaq.push(['_trackEvent', 'Install', curVersion]);
+        if (chrome.extension.isBeta()) {
+          _gaq.push(['_trackEvent', 'Install', 'Beta Channel', curVersion]);
+        } else {
+          _gaq.push(['_trackEvent', 'Install', curVersion]);
+        }
         //pageTracker._trackEvent('Install', curVersion);
       } catch (e) {}
     }
