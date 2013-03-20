@@ -1,4 +1,4 @@
-var mirrors;
+﻿var mirrors;
 var mangas;
 var actmirrors;
 var i = 0;
