@@ -1,21 +1,8 @@
-﻿$(function () {
-    "use strict";
-    loadMenu("release");
-    $("#nav").treeview({
-        collapsed : false,
-        animated : "fast"
-    });
-    $(".menu").click(function () {
-        var pathstr = $(this).attr("rel");
-        viewArticle(pathstr);
-    });
-    viewArticle("release v5");
-});
-function viewArticle(pathstr) {
+﻿function viewArticle(pathstr) {
     "use strict";
     var path,
-    elt = $(".menu[rel='" + pathstr + "']"),
-    i = 0;
+        elt = $(".menu[rel='" + pathstr + "']"),
+        i = 0;
     $(".menu").removeClass("selected");
     $(elt).addClass("selected");
     $(".menu:first", $(elt).parents("li")).addClass("selected");
@@ -40,23 +27,6 @@ function viewArticle(pathstr) {
         }
     }
 }
-function createTree() {
-    "use strict";
-    var main = $("<div id=\"maincorpse\"></div>");
-    main.css("display", "none");
-    $("#nav a.menu").each(function (index) {
-        var pathstr = $(this).attr("rel"),
-        path = pathstr.split(" "),
-        curdiv = $("#" + path[path.length - 2], main);
-        if (path.length === 1) {
-            $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
-        } else {
-            $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
-        }
-    });
-    main.appendTo($(document.body));
-    show(main[0]);
-}
 function nodeToXML(node, indentation, out) {
     "use strict";
     if (node.nodeName.toLowerCase() === "#text") {
@@ -64,14 +34,15 @@ function nodeToXML(node, indentation, out) {
     } else {
         out += indentation + "<" + node.nodeName.toLowerCase();
         var i = 0,
-        item,
-        value;
+            item,
+            value;
         if (node.attributes !== null) {
             for (i; i < node.attributes.length; i += 1) {
                 item = node.attributes.item(i);
                 value = item.nodeValue;
-                if (value === null)
+                if (value === null) {
                     value = "";
+                }
                 out += " " + item.nodeName + "=\"" + value + "\"";
             }
         }
@@ -81,11 +52,12 @@ function nodeToXML(node, indentation, out) {
             out += ">";
         }
         for (i; i < node.childNodes.length; i += 1) {
-            var item = node.childNodes.item(i);
+            item = node.childNodes.item(i);
             out = nodeToXML(item, indentation + "   ", out);
         }
-        if (node.nodeValue !== null)
+        if (node.nodeValue !== null) {
             out += indentation + "   " + node.nodeValue + "\n";
+        }
         if (node.nodeName.toLowerCase() === "div") {
             out += indentation + "</" + node.nodeName.toLowerCase() + ">\n";
         } else {
@@ -96,10 +68,10 @@ function nodeToXML(node, indentation, out) {
 }
 function show(doc) {
     "use strict";
-    var w = window.open('', 'Popup', '');
-    w.document.write('<html><head><title>Document Dump</title>');
+    var w = window.open('', 'Popup', ''),
+        s = nodeToXML(doc, '', '');
+    w.document.write('<!DOCTYPE html><html><head><title>Document Dump</title>');
     w.document.write('</head><body><pre>');
-    var s = nodeToXML(doc, '', '');
     s = s.replace(new RegExp('&', 'g'), '&amp;');
     s = s.replace(new RegExp('<', 'g'), '&lt;');
     s = s.replace(new RegExp('>', 'g'), '&gt;');
@@ -107,3 +79,33 @@ function show(doc) {
     w.document.write('</pre></body></html>');
     w.document.close();
 }
+function createTree() {
+    "use strict";
+    var main = $("<div id=\"maincorpse\"></div>");
+    main.css("display", "none");
+    $("#nav a.menu").each(function (index) {
+        var pathstr = $(this).attr("rel"),
+            path = pathstr.split(" "),
+            curdiv = $("#" + path[path.length - 2], main);
+        if (path.length === 1) {
+            $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
+        } else {
+            $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
+        }
+    });
+    main.appendTo($(document.body));
+    show(main[0]);
+}
+$(function () {
+    "use strict";
+    loadMenu("release");
+    $("#nav").treeview({
+        collapsed : false,
+        animated : "fast"
+    });
+    $(".menu").click(function () {
+        var pathstr = $(this).attr("rel");
+        viewArticle(pathstr);
+    });
+    viewArticle("release v5");
+});
