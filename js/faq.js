@@ -109,14 +109,13 @@ $(function () {
     viewArticle(pathstr);
   });
   viewArticle("overview");
-  $('#search').click(function() {viewArticle('overview mainelements search');});
-  $('#bookmarks').click(function() {viewArticle('overview mainelements bookmark');});
-  $('#category').click(function() {viewArticle('manage category');});
-  $('#impexp').click(function() {viewArticle('overview mainelements impexp');});
+  $('#search').click(function () {viewArticle('overview mainelements search'); });
+  $('#bookmarks').click(function () {viewArticle('overview mainelements bookmark'); });
+  $('#category').click(function () {viewArticle('manage category'); });
+  $('#impexp').click(function () {viewArticle('overview mainelements impexp'); });
   $('.extmain').click(function () {
     chrome.extension.sendRequest({
       action : 'openExtensionMainPage'
     }, function (response) {});
   });
-
 });
