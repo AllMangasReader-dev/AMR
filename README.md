@@ -16,6 +16,7 @@ PLUGINS
   
 INSTALLATION
 -------------
+We require Chrome version 18.0 or up to work.
 Download http://www.allmangasreader.com/versions/AllMangasReader_V1_5_0_BETA.crx using right-click "save as...",
 go to the extension page and drag-n-drop the file. The extension will autoupdate.
 
