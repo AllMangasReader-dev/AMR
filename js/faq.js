@@ -1,4 +1,4 @@
-﻿function viewArticle(pathstr) {
+function viewArticle(pathstr) {
   "use strict";
   var elt = $(".menu[rel='" + pathstr + "']"),
     path,
@@ -109,13 +109,14 @@ $(function () {
     viewArticle(pathstr);
   });
   viewArticle("overview");
-  $('#search').click(viewArticle('overview mainelements search'));
-  $('#bookmarks').click(viewArticle('overview mainelements bookmark'));
-  $('#category').click(viewArticle('manage category'));
-  $('#impexp').click(viewArticle('overview mainelements impexp'));
+  $('#search').click(function() {viewArticle('overview mainelements search');});
+  $('#bookmarks').click(function() {viewArticle('overview mainelements bookmark');});
+  $('#category').click(function() {viewArticle('manage category');});
+  $('#impexp').click(function() {viewArticle('overview mainelements impexp');});
   $('.extmain').click(function () {
     chrome.extension.sendRequest({
       action : 'openExtensionMainPage'
     }, function (response) {});
   });
+
 });

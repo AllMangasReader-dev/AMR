@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
     "use strict";
     loadMenu("release");
     $("#nav").treeview({
@@ -9,7 +9,7 @@
         var pathstr = $(this).attr("rel");
         viewArticle(pathstr);
     });
-    viewArticle("release v4");
+    viewArticle("release v5");
 });
 function viewArticle(pathstr) {
     "use strict";
