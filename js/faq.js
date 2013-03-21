@@ -1,4 +1,4 @@
-function viewArticle(pathstr) {
+﻿function viewArticle(pathstr) {
   "use strict";
   var elt = $(".menu[rel='" + pathstr + "']"),
     path,
