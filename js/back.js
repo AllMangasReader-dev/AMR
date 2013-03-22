@@ -1,4 +1,4 @@
-﻿var lastpresstime;
+var lastpresstime;
 var dirpress;
 var currentMirror = null;
 var amrWhereScans;
@@ -1076,7 +1076,14 @@ function writeImages(where, list, mode, res) {
     $(spanner).data("order", i);
     spanner.appendTo(td);
     
-    var img = new Image();
+    // Using jQuery to create this image instead of DOM native method fix a
+    //weird bug on canary and only some websites.
+    //My thought is that a version of canary was mistaking the embedded jQuery 
+    //on the website and when the extension creates image from DOM and container 
+    //from website's jQuery. We can't have both of them interract (DOM restriction)
+    //It might be a Canary issue more than an AMR issue... Here it is fixed...
+    var img = $("<img></img>");//new Image();
+    
     $(img).addClass("imageAMR");
     //$(img).attr("title", i+1);
     loadImageAMR(where, list[i], img, i, res, mode);
