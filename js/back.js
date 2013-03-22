@@ -1,4 +1,4 @@
-var lastpresstime;
+﻿var lastpresstime;
 var dirpress;
 var currentMirror = null;
 var amrWhereScans;
