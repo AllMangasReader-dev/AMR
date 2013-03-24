@@ -193,10 +193,10 @@ function createBar(barVis) {
   img.appendTo(divIn);
   var divContent = $("<div></div>");
   divContent.appendTo(divIn);
-  divContent.attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+  divContent.attr('style', 'display : inline-block !important');
   
   var divBottom = $("<div></div>");
-  divBottom.attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+  divBottom.attr('style', 'display : inline-block !important');
   var imgBtn = $("<img src='" + chrome.extension.getURL("img/down.png") + "' width='16;' title='Hide AMR Toolbar'/>");
   imgBtn.appendTo(divBottom);
   imgBtn.click(function() {
@@ -209,14 +209,15 @@ function createBar(barVis) {
           }
         }
         $("#AMRBarInLtl").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : center !important');
+          $("#AMRBar").attr('style', 'text-align : center !important');
           $("#AMRBarIn").fadeIn();
         });
       } else {
         $("#AMRBarIn").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : left !important; max-width : 90% !important');
+          $("#AMRBar").attr('style', 'text-align : left !important');
+          $("#AMRBar").attr('style', 'max-width : 90% !important');
           $("#AMRBarInLtl").fadeIn(function() {
-            $(this).attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+            $(this).attr('style', 'display : inline-block !important');
           });
         });
       }
@@ -231,7 +232,7 @@ function createBar(barVis) {
     if (!$("#AMRBarIn", $(this)).is(":visible")) {
       $("#AMRBarIn").data("temporary", true);
       $("#AMRBarInLtl").fadeOut('fast', function() {
-        $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : center !important');
+        $("#AMRBar").attr('style', 'text-align : center !important');
         $("#AMRBarIn").fadeIn();
       });
     }
@@ -245,9 +246,9 @@ function createBar(barVis) {
       timeoutAMRbar = setTimeout(function() {
         $("#AMRBarIn").removeData("temporary");
         $("#AMRBarIn").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : left !important');
+          $("#AMRBar").attr('style', 'text-align : left !important');
           $("#AMRBarInLtl").fadeIn(function() {
-            $(this).attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+            $(this).attr('style', 'display : inline-block !important');
           });
         });
       }, 2000);
@@ -257,35 +258,38 @@ function createBar(barVis) {
   divBottom.appendTo(divIn);
   
   var divInLtl = $("<div id='AMRBarInLtl'></div>");
-  divInLtl.attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+  divInLtl.attr('style', 'display : inline-block !important');
   
   var imgLtl = $("<img src='" + chrome.extension.getURL("img/icon-32.png") + "' width='40;' title='Display AMR ToolBar'/>");
-  imgLtl.attr('style', 'margin-top : -10 !important; margin-left : -10 !important; cursor : pointer !important');
+  imgLtl.attr('style', 'margin-top : -10 !important');
+  imgLtl.attr('style', 'margin-left : -10 !important');
+  imgLtl.attr('style', 'cursor : pointer !important');
 
   imgLtl.appendTo(divInLtl);
   imgLtl.click(function() {
     $("#AMRBarInLtl").fadeOut('fast', function() {
-      $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : center !important');
+      $("#AMRBar").attr('style', 'text-align : center !important');
       $("#AMRBarIn").fadeIn();
       chrome.extension.sendRequest({action: "showBar"}, function(response) {});
     });
   });
   
-  divIn.attr('style', $(this).attr('style') + '; ' + 'display : inline-block !important');
+  divIn.attr('style', 'display : inline-block !important');
   divIn.appendTo(div);
   divInLtl.appendTo(div);
   
   div.appendTo($(document.body));
-  $(document.body).attr('style', $(this).attr('style') + '; ' + 'border-top : 34 solid black !important; background-position-y : 34 !important');
+  $(document.body).attr('style', 'border-top : 34 solid black !important');
+  $(document.body).attr('style', 'background-position-y : 34 !important');
   
   
   //console.log("BARVIS : " + barVis);
   if (barVis == 0) {
-    $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : left !important');
+    $("#AMRBar").attr('style', 'text-align : left !important');
     $("#AMRBarIn").hide();
     //console.log("Cas 1");
   } else {
-    $("#AMRBar").attr('style', $(this).attr('style') + '; ' + 'text-align : center !important');
+    $("#AMRBar").attr('style', 'text-align : center !important');
     $("#AMRBarInLtl").hide();
     //console.log("Cas 2");
   }
@@ -400,8 +404,8 @@ function writeNavigation(where, select, res, params) {
     var selectIns;
 
     selectIns = $(select).clone();
-    $(selectIns).attr('style', $(this).attr('style') + '; ' + 'float : none !important');
-    $(selectIns).attr('style', $(this).attr('style') + '; ' + 'max-width : 70% !important');
+    $(selectIns).attr('style', 'float : none !important');
+    $(selectIns).attr('style', 'max-width : 70% !important');
     selectIns.attr("value", $(select).children("option:selected").val());
     
     selectIns.change(function () {
@@ -598,7 +602,7 @@ function writeNavigation(where, select, res, params) {
         var linkPub = $("<div class=\"titleAMRPub\"></div>");
         var linkP2 = $("<span>You like reading your mangas this way with All Mangas Reader Extension, please donate !!&nbsp;&nbsp;</span><form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" style='display:inline-block;'><input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\"><input type=\"hidden\" name=\"hosted_button_id\" value=\"7GQN3EZ6KK5MU\"><input type=\"image\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\"><img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\"></form>");
         linkP2.css("vertical-align", "middle");
-        linkP2.attr('style', $(this).attr('style') + '; ' + "color : red!important");
+        linkP2.attr("style", "color : red!important");
         /*linkP2.click(function() {
           chrome.extension.sendRequest({action: "openExtensionMainPage"}, function(response) {});
         });*/
