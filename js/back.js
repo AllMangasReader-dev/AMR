@@ -189,15 +189,15 @@ function createBar(barVis) {
   var div = $("<div id='AMRBar'></div>");
   var divIn = $("<div id='AMRBarIn'></div>");
 
-  var img = $("<img src='" + chrome.extension.getURL("img/icon-32.png") + "' width='20;'/>");
+  var img = $("<img src='" + chrome.extension.getURL("img/icon-32.png") + "' width='20px;'/>");
   img.appendTo(divIn);
   var divContent = $("<div></div>");
   divContent.appendTo(divIn);
-  divContent.attr('style', 'display : inline-block !important');
+  divContent.css("display", "inline-block");
   
   var divBottom = $("<div></div>");
-  divBottom.attr('style', 'display : inline-block !important');
-  var imgBtn = $("<img src='" + chrome.extension.getURL("img/down.png") + "' width='16;' title='Hide AMR Toolbar'/>");
+  divBottom.css("display", "inline-block");
+  var imgBtn = $("<img src='" + chrome.extension.getURL("img/down.png") + "' width='16px;' title='Hide AMR Toolbar'/>");
   imgBtn.appendTo(divBottom);
   imgBtn.click(function() {
     chrome.extension.sendRequest({action: "hideBar"}, function(response) {
@@ -209,15 +209,14 @@ function createBar(barVis) {
           }
         }
         $("#AMRBarInLtl").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', 'text-align : center !important');
+          $("#AMRBar").css("text-align", "center");
           $("#AMRBarIn").fadeIn();
         });
       } else {
         $("#AMRBarIn").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', 'text-align : left !important');
-          $("#AMRBar").attr('style', 'max-width : 90% !important');
+          $("#AMRBar").css("text-align", "left");
           $("#AMRBarInLtl").fadeIn(function() {
-            $(this).attr('style', 'display : inline-block !important');
+            $(this).css("display", "inline-block");
           });
         });
       }
@@ -232,7 +231,7 @@ function createBar(barVis) {
     if (!$("#AMRBarIn", $(this)).is(":visible")) {
       $("#AMRBarIn").data("temporary", true);
       $("#AMRBarInLtl").fadeOut('fast', function() {
-        $("#AMRBar").attr('style', 'text-align : center !important');
+        $("#AMRBar").css("text-align", "center");
         $("#AMRBarIn").fadeIn();
       });
     }
@@ -246,9 +245,9 @@ function createBar(barVis) {
       timeoutAMRbar = setTimeout(function() {
         $("#AMRBarIn").removeData("temporary");
         $("#AMRBarIn").fadeOut('fast', function() {
-          $("#AMRBar").attr('style', 'text-align : left !important');
+          $("#AMRBar").css("text-align", "left");
           $("#AMRBarInLtl").fadeIn(function() {
-            $(this).attr('style', 'display : inline-block !important');
+            $(this).css("display", "inline-block");
           });
         });
       }, 2000);
@@ -258,38 +257,38 @@ function createBar(barVis) {
   divBottom.appendTo(divIn);
   
   var divInLtl = $("<div id='AMRBarInLtl'></div>");
-  divInLtl.attr('style', 'display : inline-block !important');
+  divInLtl.css("display", "inline-block");
   
-  var imgLtl = $("<img src='" + chrome.extension.getURL("img/icon-32.png") + "' width='40;' title='Display AMR ToolBar'/>");
-  imgLtl.attr('style', 'margin-top : -10 !important');
-  imgLtl.attr('style', 'margin-left : -10 !important');
-  imgLtl.attr('style', 'cursor : pointer !important');
+  var imgLtl = $("<img src='" + chrome.extension.getURL("img/icon-32.png") + "' width='40px;' title='Display AMR ToolBar'/>");
+  imgLtl.css("margin-top", "-10px");
+  imgLtl.css("margin-left", "-10px");
+  imgLtl.css("cursor", "pointer");
 
   imgLtl.appendTo(divInLtl);
   imgLtl.click(function() {
     $("#AMRBarInLtl").fadeOut('fast', function() {
-      $("#AMRBar").attr('style', 'text-align : center !important');
+      $("#AMRBar").css("text-align", "center");
       $("#AMRBarIn").fadeIn();
       chrome.extension.sendRequest({action: "showBar"}, function(response) {});
     });
   });
   
-  divIn.attr('style', 'display : inline-block !important');
+  divIn.css("display", "inline-block");
   divIn.appendTo(div);
   divInLtl.appendTo(div);
   
   div.appendTo($(document.body));
-  $(document.body).attr('style', 'border-top : 34 solid black !important');
-  $(document.body).attr('style', 'background-position-y : 34 !important');
+  $(document.body).css("border-top", "34px solid black");
+  $(document.body).css("background-position-y", "34px");
   
   
   //console.log("BARVIS : " + barVis);
   if (barVis == 0) {
-    $("#AMRBar").attr('style', 'text-align : left !important');
+    $("#AMRBar").css("text-align", "left");
     $("#AMRBarIn").hide();
     //console.log("Cas 1");
   } else {
-    $("#AMRBar").attr('style', 'text-align : center !important');
+    $("#AMRBar").css("text-align", "center");
     $("#AMRBarInLtl").hide();
     //console.log("Cas 2");
   }
@@ -404,8 +403,7 @@ function writeNavigation(where, select, res, params) {
     var selectIns;
 
     selectIns = $(select).clone();
-    $(selectIns).attr('style', 'float : none !important');
-    $(selectIns).attr('style', 'max-width : 70% !important');
+    $(selectIns).css("float", "none");
     selectIns.attr("value", $(select).children("option:selected").val());
     
     selectIns.change(function () {
@@ -602,7 +600,7 @@ function writeNavigation(where, select, res, params) {
         var linkPub = $("<div class=\"titleAMRPub\"></div>");
         var linkP2 = $("<span>You like reading your mangas this way with All Mangas Reader Extension, please donate !!&nbsp;&nbsp;</span><form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" style='display:inline-block;'><input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\"><input type=\"hidden\" name=\"hosted_button_id\" value=\"7GQN3EZ6KK5MU\"><input type=\"image\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\"><img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\"></form>");
         linkP2.css("vertical-align", "middle");
-        linkP2.attr("style", "color : red!important");
+        linkP2.css("color", "red!important");
         /*linkP2.click(function() {
           chrome.extension.sendRequest({action: "openExtensionMainPage"}, function(response) {});
         });*/
