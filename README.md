@@ -1,6 +1,6 @@
-﻿AMR
+AMR
 ===
-AllMangasReader developer branch has the lastest changes made
+All Mangas Reader developer branch has the lastest changes made
 to the AllMangasReader Chrome Extension.
 
 Get our lastest stable version from http://allmangasreader.com,
