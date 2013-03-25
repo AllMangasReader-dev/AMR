@@ -1,4 +1,4 @@
-//Manga list known from server
+﻿//Manga list known from server
 var mglstacc;
 var tsacc;
 
@@ -668,7 +668,7 @@ function bindActions() {
       
       while (n.size() != 0 && !n.is(".head") && !n.is(".single")) {
         if ($(".checker input", n).size() > 0) {
-          if ($(".checker input", n).attr("checked")) {
+          if ($(".checker input", n).is(":checked")) {
             nbchecked++;
           } else {
             nbunchecked++;
@@ -678,13 +678,13 @@ function bindActions() {
       }
 
       if (nbchecked == 0) {
-        parentChecker.removeAttr("checked");
+        parentChecker.prop("checked", false);
         parentChecker.css("opacity", "1");
       } else if (nbunchecked == 0) {
-        parentChecker.attr("checked", "checked");
+        parentChecker.prop("checked", true);
         parentChecker.css("opacity", "1");
       } else {
-        parentChecker.attr("checked", "checked");
+        parentChecker.prop("checked", true);
         parentChecker.css("opacity", "0.5");
       }
     }
@@ -705,7 +705,7 @@ function checkMain(ck) {
   var nbchecked = 0;
   var nbunchecked = 0;
   $(".mgLst tbody tr .checker input").each(function(index) {
-    if ($(this).attr("checked")) {
+    if ($(this).is(":checked")) {
       nbchecked++;
     } else {
       nbunchecked++;
@@ -714,13 +714,13 @@ function checkMain(ck) {
   
   var parCheck = $(".mgLst thead .checker input");
   if (nbchecked == 0) {
-    parCheck.removeAttr("checked");
+    parCheck.prop("checked", false);
     parCheck.css("opacity", "1");
   } else if (nbunchecked == 0) {
-    parCheck.attr("checked", "checked");
+    parCheck.prop("checked", true);
     parCheck.css("opacity", "1");
   } else {
-    parCheck.attr("checked", "checked");
+    parCheck.prop("checked", true);
     parCheck.css("opacity", "0.5");
   }
 }

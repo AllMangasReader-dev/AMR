@@ -1,146 +1,21 @@
-<!--///////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
-//                                                                           //
-////////////////////////////////////////////////////////////////////////////-->
-
+﻿<!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>All Mangas Reader Help & FAQ</title>
 <link href="css/jquery.treeview.css" rel="stylesheet" type="text/css" />
 <link href="css/amr_style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/jquery.treeview.js" type="text/javascript"></script>
-<script src="js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
 <script src="js/analytics.js" type="text/javascript"></script>
 <script src="js/innermenu.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-$(function() {
-  loadMenu("faq");
-  $("#nav").treeview({
-				collapsed: false,
-				animated: "fast"
-			});
-  
-  $(".menu").click(function() {
-    //$(".article").toggle("blind", {}, 250);
-    var pathstr = $(this).attr("rel")
-    viewArticle(pathstr);
-  });
-  
-  viewArticle("overview");
-  //createTree();
-});
-
-function viewArticle(pathstr) {
-  var elt = $(".menu[rel='" + pathstr + "']");
-  $(".menu").removeClass("selected");
-  $(elt).addClass("selected");
-  $(".menu:first", $(elt).parents("li")).addClass("selected");
-  
-  $(".article").each(function(index) {
-    var pathtmp = $(this).attr("id");
-    $(this).parents(".article").each(function (index) {
-      pathtmp = $(this).attr("id") + " " + pathtmp;
-    });
-    //console.log(pathstr + " --> " + pathtmp);
-    if (pathstr.indexOf(pathtmp) == -1) {
-      $(this).hide();
-      //console.log("hidden");
-    }
-  });
-  
-  var path = pathstr.split(" ");
-  for (var i = 0; i < path.length; i++) {
-    if (!$("#" + path[i]).is(":visible")) {
-      $("#" + path[i]).toggle("blind", {}, 250);
-    }
-    if (i == path.length -1) {
-      if (!$(".article", $("#" + path[i])).is(":visible")) {
-        $(".article", $("#" + path[i])).toggle("blind", {}, 250);
-      }
-    }
-  }
-}
-
-function createTree() {
-  var main = $("<div id=\"maincorpse\"></div>");
-  main.css("display", "none");
-  $("#nav a.menu").each(function(index) {
-    var pathstr = $(this).attr("rel");
-    var path = pathstr.split(" ");
-    if (path.length == 1) {
-      $("<div id=\"" + path[0] + "\" class=\"article\"><h2>" + $(this).text() + "</h2>").appendTo(main);
-      //TODO add content
-    } else {
-      var curdiv = $("#" + path[path.length - 2], main);
-      $("<div id=\"" + path[path.length - 1] + "\" class=\"article\"><h3>" + $(this).text() + "</h3>").appendTo(curdiv);
-      //TODO add content
-    }
-  });
-  main.appendTo($(document.body));
-  
-  //console.log(main);
-  show(main[0]);
-}
-function nodeToXML(node, indentation, out) {
-  if (node.nodeName.toLowerCase() == "#text") {
-    out += node.nodeValue;
-  } else {
-   out += indentation+"<"+node.nodeName.toLowerCase();
-   
-   if (node.attributes!=null) {
-      for (var i=0; i<node.attributes.length; i++) {
-         var item = node.attributes.item(i);
-         var value = item.nodeValue;
-         if (value==null) value = "";
-         out += " "+item.nodeName+"=\""+value+"\"";
-      }
-   }
-   if (node.nodeName.toLowerCase() == "div") {
-      out += ">\n";
-   } else {
-      out += ">";
-   }
-   for (var i=0; i<node.childNodes.length; i++) {
-      var item = node.childNodes.item(i);
-      out = nodeToXML(item, indentation+"   ", out);
-   }
-   if (node.nodeValue!=null) 
-      out += indentation+"   "+node.nodeValue+"\n";
-      if (node.nodeName.toLowerCase() == "div") {
-        out += indentation+"</"+node.nodeName.toLowerCase()+">\n";
-      } else {
-        out += "</"+node.nodeName.toLowerCase()+">\n";
-      }
-  }
-  return out;
-}
-function show(doc) {
-   var w = window.open('', 'Popup', '');
-   w.document.write('<html><head><title>Document Dump</title>');
-   w.document.write('</head><body><pre>');
-
-   var s = nodeToXML(doc, '', '');
-   s = s.replace(new RegExp('&','g'),'&amp;');
-   s = s.replace(new RegExp('<','g'),'&lt;');
-   s = s.replace(new RegExp('>','g'),'&gt;');
-   w.document.write(s);
-   w.document.write('</pre></body></html>');
-   w.document.close();
-}
-</script>
-
+<script src="js/faq.js" type="text/javascript"></script>
 </head>
-
 <body>
-
   <div id="header">
     <div id="subheader">
-      <img class="imglogo" src="img/icon-32.png" width="100px" />
+      <img class="imglogo" src="img/icon-32.png" width="100" alt="AllMangasReader"/>
       <h1>All Mangas Reader Help & FAQ</h1>
     </div>
   </div>
@@ -153,7 +28,6 @@ function show(doc) {
       </ul>
     </div>
   </div>
-  
   <div id="corpse">
     <div id="navigation">
       <ul id="nav">
@@ -239,7 +113,6 @@ function show(doc) {
         </li>
       </ul>
     </div>
-
     <div id="subcorpse">
       <div id="maincorpse">
          <div id="overview" class="article">
@@ -258,7 +131,7 @@ function show(doc) {
                </p>
                <div id="popup" class="article">
                   <h3>AMR's popup</h3>
-                  <center><img src="img/help/AMRListMode.PNG" /></center>
+                  <img class="center" src="img/help/AMRListMode.PNG" />
                   <p>The popup contains your manga list and allows you to access all AMR's functionnalities.</p>
                   <ul>
                     <li>Main buttons
@@ -343,7 +216,7 @@ function show(doc) {
                </div>
                <div id="bar" class="article">
                   <h3>AMR's manga bar</h3>
-                  <center><img src="img/help/amrbar.PNG" /></center>
+                  <img class='center' src="img/help/amrbar.PNG" />
                   <p>This bar is displayed on each web site supported in AMR when you read a chapter.</p>
                   <p>This bar can be always visible on top of the page or there can be two bars inside the page, one on the top of the chapter's scans and one below. You can choose this in the option page, "Display navigation features in one always visible bar."</p>
                   <ul>
@@ -366,7 +239,7 @@ function show(doc) {
                     </li>            
                   </ul>   
                   <p>Example of AMR's bar for a manga which is not in the list with the automatic option disabled :
-                  <center><img src="img/help/amrbaradd.PNG" /></center>
+                  <img class"center" src="img/help/amrbaradd.PNG" />
                   </p>
                </div>
                <div id="option" class="article">
@@ -421,7 +294,7 @@ function show(doc) {
                </div>
                <div id="search" class="article">
                   <h3>AMR's search tool</h3>
-                  <center><img src="img/help/AMRPopupSearch.PNG" /></center>
+                  <img class='center' src="img/help/AMRPopupSearch.PNG" />
                   <p>The search tool allows you to find a manga by searching it on all web sites supported in AMR.</p>
                   <p>This tool can be accessed in the popup by clicking on the "Search Manga" button or in a new tab by clicking on the <img src="img/find.png"/> button.
                   <p>Filters : </p>
@@ -449,7 +322,7 @@ function show(doc) {
                </div>
                <div id="bookmark" class="article">
                   <h3>AMR's bookmarks</h3>
-                  <table style="margin-left:auto;margin-right:auto;"><tr><td><center><img src="img/help/bmchap.PNG"/></center></td><td><center><img src="img/help/bmscan.PNG" /></center></td></tr></table>
+                  <table style="margin-left:auto;margin-right:auto;"><tr><td><img class='center' src="img/help/bmchap.PNG"/></td><td><img class='center' src="img/help/bmscan.PNG" /></td></tr></table>
                   <p>This tool can be accessed by clicking on the <img src="img/bookmark.png"/> button in the popup.</p>
                   <p>In this page, you can see all chapters and scans you have previously bookmarked. View <a href="#" onclick="viewArticle('manage bookmg');">bookmarks help page</a> for more information.</p>
                   <ul>
@@ -627,7 +500,7 @@ function show(doc) {
             <div id="addmanga" class="article">
               <h3>How to add a manga in AMR ?</h3>
               <p>Adding a manga in AMR is very easy. Just go read a manga on your favorite web site and this manga will appear in your mangas list !</p>
-              <p>If you don't know how to read a manga on a web site, AMR provides a search tool (View <a href="#" onclick="viewArticle('overview mainelements search');">search help page</a> for more information.)</p>
+              <p>If you don't know how to read a manga on a web site, AMR provides a search tool (View <a href="#" id='search'>search help page</a> for more information.)</p>
             </div>
             <div id="readchap" class="article">
               <h3>How to notify AMR that I have read a chapter ?</h3>
@@ -818,25 +691,25 @@ function show(doc) {
                <div id="bmchap" class="article">
                   <h3>How can I bookmark a chapter ?</h3>
                   <p>To bookmark a chapter, go read this chapter. In AMR's bar, click on the <img src="img/bookmark.png"/> icon. The following popup appears : </p>
-                  <center><img src="img/help/chappopup.PNG"/></center>
+                  <img class='center' src="img/help/chappopup.PNG"/>
                   <p>The text in the popup recalls the manga and chapter name. You can seize a personal note in the textbox and click on save.</p>
                   <p>If you are reading a chapter which has already been bookmarked, the icon in AMR's bar is <img src="img/bookmarkred.png"/>. When mouse cursor is hover, you can see the note you saved. You can update this note by clicking back on this icon.</p>
                </div>
                <div id="bmscan" class="article">
                   <h3>How can I bookmark a scan ?</h3>
                   <p>To bookmark a scan, go read the chapter where it is. Right click on the scan and click on "Bookmark in AMR".  The following popup appears : </p>
-                  <center><img src="img/help/scanpopup.PNG"/></center>
+                  <img class='center' src="img/help/scanpopup.PNG"/>
                   <p>The text in the popup recalls the manga name, chapter name and scan position. You can seize a personal note in the textbox and click on save.</p>
                   <p>If you are trying to bookmark an already bookmarked scan, the scan is bordered in red. When mouse cursor is hover, you can see the note you saved. You can update this note by clicking right back and select on "Bookmark in AMR" on this scan.</p>
                </div>
                <div id="bmview" class="article">
                   <h3>Where can I see my bookmarks ?</h3>
-                  <p>To see your bookmarks, click on the <img src="img/bookmark.png"/> icon in AMR's popup. You can search bookmarks in this tool. View <a href="#" onclick="viewArticle('overview mainelements bookmark');">bookmark page</a> for more information.</p>
+                  <p>To see your bookmarks, click on the <img src="img/bookmark.png"/> icon in AMR's popup. You can search bookmarks in this tool. View <a href="#" id='bookmarks'>bookmark page</a> for more information.</p>
                </div>
             </div>
             <div id="delmul" class="article">
                <h3>How can I delete multiple mangas ?</h3>
-               <p>In AMR's popup, in the action icons at the bottom of the popup, you can click on the <img src="img/cancel.png"/> icon to delete all mangas currently displayed in the list. To delete only a part of your list, you can display a part of your manga list by using categories (View <a href="#" onclick="viewArticle('manage category');">category page</a> for more information) and then click on this button.</p>
+               <p>In AMR's popup, in the action icons at the bottom of the popup, you can click on the <img src="img/cancel.png"/> icon to delete all mangas currently displayed in the list. To delete only a part of your list, you can display a part of your manga list by using categories (View <a href="#" id='category'>category page</a> for more information) and then click on this button.</p>
                <p>For exmaple, if you want to delete all mangas in your list that are One Shots (mangas with only one chapter), click on the <img src="img/list10.gif"/> in the "One Shots" category and then click on <img src="img/cancel.png"/> at the bottom of the popup.</p>
                <p>In the same way, you can mark all currently displayed mangas as read by clicking on the <img src="img/eye.png"/> icon at the bottom of AMR's popup.</p>
             </div>
@@ -872,7 +745,7 @@ function show(doc) {
             </div>
             <div id="share" class="article">
                <h3>Can I export my manga list to share it with a friend ?</h3>
-               <p>AMR include an import / export tool to allows you to share your manga lists. View <a href="#" onclick="viewArticle('overview mainelements impexp');">import /export page</a> for more information.</p>
+               <p>AMR include an import / export tool to allows you to share your manga lists. View <a href="#" id='impexp'>import /export page</a> for more information.</p>
                <p>I advise you to save periodically your manga and bookmark list in a file of your choice periodically. This way, you will be able to recover your data in case of problem.</p>
             </div>
          </div>
@@ -928,18 +801,18 @@ function show(doc) {
             <div id="addsite" class="article">
               <h3>My favorite web site is not supported by AMR, what can I do ?</h3>
               <p>If you are a developper, you can read the <a href="dev.html">tutorial to implement a web site</a> to add the web site you want.</p>
-              <p>If not, you can <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">request me</a> to add it. I read all your request and implement the most demanded. It will probably take some time...</p>
+              <p>If not, you can <a href="#" class='extmain'>request me</a> to add it. I read all your request and implement the most demanded. It will probably take some time...</p>
             </div>
             <div id="bugreport" class="article">
                <h3>How can I report a bug ?</h3>
-               <p>To report a bug or to suggest a new feature, you can add a create a topic in AMR's forum which can be accessed through the <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">extension main page.</a> Please note that all your suggestions are noted and will hopefully be implemented in the future.</p>
+               <p>To report a bug or to suggest a new feature, you can add a create a topic in AMR's forum which can be accessed through the <a href="#" class='extmain'>extension main page.</a> Please note that all your suggestions are noted and will hopefully be implemented in the future.</p>
             </div>
             <div id="helpme" class="article">
               <h3>How can I help the author ?</h3>
-              <p>To help the author, you can leave a thankful comment in AMR's forum which can be accessed through the <a href="#" onclick="chrome.extension.sendRequest({action: 'openExtensionMainPage'}, function(response) {});">extension main page.</a></p>
+              <p>To help the author, you can leave a thankful comment in AMR's forum which can be accessed through the <a href="#" class='extmain'>extension main page.</a></p>
               <p>AMR takes me a lot of my time. To help me continue supporting and improving it, you can donate : </p>
               <center>
-                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                <form class='center' action="https://www.paypal.com/cgi-bin/webscr" method="post">
                   <input type="hidden" name="cmd" value="_s-xclick">
                   <input type="hidden" name="hosted_button_id" value="PTFDEMDFNKQAG">
                   <input type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -958,5 +831,4 @@ function show(doc) {
     </div>
   </div>
 </body>
-
 </html>

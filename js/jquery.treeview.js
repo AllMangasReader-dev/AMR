@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Treeview 1.5pre - jQuery plugin to hide and show branches of a tree
  * 
  * http://bassistance.de/jquery-plugins/jquery-plugin-treeview/

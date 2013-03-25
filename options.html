@@ -1,1186 +1,777 @@
-<!--///////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) 2011 Pierre-Louis DUHOUX (pl.duhoux at gmail d0t com)     //
-//                                                                           //
-////////////////////////////////////////////////////////////////////////////-->
-
+﻿<!DOCTYPE html>
 <html>
-<head>
-<title>All Mangas Reader Options</title></head>
-
-<link href="css/amr_style.css" rel="stylesheet" type="text/css">
-
-<style>
-.colorPicker {
-  width:24px;
-  height:24px;
-  border-top-left-radius: 5px 5px;
-  border-top-right-radius: 5px 5px;
-  border-bottom-left-radius: 5px 5px;
-  border-bottom-right-radius: 5px 5px;
-  border: 1px solid #ABC;
-}
-.colorPicker.active {
-  border: 2px solid #777;
-}
-
-#results {
-  text-align:center;
-}
-#allmirrors {
-  margin-left:auto;
-  margin-right:auto;
-  border-spacing:0;
-  border-radius:4px;
-}
-#allmirrors img {
-  margin-right:5px;
-  vertical-align:middle;
-}
-#allmirrors, #allmirrors tr {
-  /*display:block;*/
-}
-#allmirrors tr td {
-  /*display:block;*/
-  padding:2px;
-  padding-right:10px;
-}
-#allmirrors thead td {
-  text-align:center;
-  font-weight:bold;
-  color:white;
-}
-#allmirrors thead tr {
-  background-color:grey;
-}
-tr.odd {
-  background-color:#CCCCFF;
-}
-
-tr.even {
-  background-color:#DDDDFF;
-}
-
-tr.desactivate {
-  background-color:#DDDDDD;
-}
-
-tr.lastLine {
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-}
-tr.firstLine {
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-}
-td.mirrorName {
-  /*width:500px;*/
-  vertical-align:middle;
-  /*font-weight:bold;*/
-}
-td.mirrorOpt {
-  width:50px;
-  text-align:center;
-}
-
-.paypal {
-  padding-left:10px;
-  padding-right:10px;
-  padding-top:2px;
-  padding-bottom:2px;
-  font-size:9pt;
-  text-align:center;
-  background-color: #EEEEFF;
-  border-radius:4px;
-  color:black;
-  margin-top:2px;
-  margin-right:3px;
-  -webkit-box-shadow: 0 0 15px #F4F4FF;
-}
-.paypal .payitem {
-  display:inline-block;
-  background-color:#DDDDFF;
-  padding:1px;
-  padding-left:7px;
-  padding-right:2px;
-  border-radius:4px;
-  -webkit-box-shadow: inset 0px 0px 2px 2px #AAAADD;
-} 
-.paypal p {
-  padding:0;
-  margin:0;
-}
-.paypal .payitem img, .paypal .payitem span {
-  vertical-align:middle;
-  font-weight:bold;
-}
-.paypal table {
-  font-size:8pt;
-}
-#title {
-  height:80px;
-}
-.titImg {
-  vertical-align:middle;
-  margin-top:8px;
-}
-.titTxt {
-  vertical-align:middle;
-}
-
-.bottominfo {
-  margin-top:10px;
-  font-size:10pt;
-  text-align:center;
-}
-
-#selectors {
-  display:inline-block;
-  text-align:right;
-  float:right;
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-  background-color:#CCCCFF;
-  padding-left:5px;
-  padding-right:5px;
-}
-#selectors img {
-  vertical-align:middle;
-  margin-right: 5px;
-  cursor:pointer;
-}
-#searchBox p {
-  font-size:9pt;
-}
-#selectors select {
-  border:none;
-  border-bottom-left-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px; 
-  border-top-left-radius: 4px 4px;
-  border-top-right-radius: 4px 4px; 
-  background-color:#DDDDFF;
-  font-size:9pt;
-}
-.lang {
-  width: 150px;
-}
-.ongletCont td {
-  color:black;
-  font-size:8pt;
-}
-.ongletCont {
- -webkit-transition: all .4s ease-in-out;
-}
-.article p {
-  font-size:8pt;
-}
-.discuss {
-  cursor:pointer;
-}
-.discusstd {
-  text-align:center;
-}
-</style>
-
-<script src="js/jquery.js" type="text/javascript"></script>
-<script src="js/mgEntry.js" type="text/javascript"></script>
-<script src="js/mgUtil.js" type="text/javascript"></script>
-<script src="js/analytics.js" type="text/javascript"></script>
-<script src="js/innermenu.js" type="text/javascript"></script>
-<script src="js/amrcsql.js" type="text/javascript"></script>
-    
-<script type="text/javascript">
-
-var mirrors;
-var mangas;
-var actmirrors;
-
-function getMangaMirror(mirror) {
-  for (var i = 0; i < mirrors.length; i++) {
-    if (mirrors[i].mirrorName == mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
-}
-
-//Opens an url in new tab
-function openTab(urlToOpen) {
-  chrome.extension.sendRequest({action: "opentab", url: urlToOpen}, function(response) {});
-}
-      
-// Saves options to localStorage.
-function save_options() {
-  //console.log("save options...");
-  var obj = {};
-  obj.action = "saveparameters";
-  obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
-  obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
-  if (document.getElementById("modeChap1").checked) {
-    obj.displayMode = 1;
-  } else {
-    if (document.getElementById("wideMode1").checked) {
-      obj.displayMode = 2;
-    } else {
-      obj.displayMode = 3;
-    }
-  }
-  obj.popupMode = (document.getElementById("popupMode1").checked ? 1 : 2);
-  obj.omSite = 0;
-  obj.newTab = (document.getElementById("newTab").checked ? 1 : 0);
-  obj.sync = (document.getElementById("syncMg").checked ? 1 : 0);
-  obj.displayzero = (document.getElementById("displayZero").checked ? 1 : 0);
-  obj.pub = (document.getElementById("pubAMR").checked ? 1 : 0);
-  obj.dev = (document.getElementById("devAMR").checked ? 1 : 0);
-  obj.load = (document.getElementById("loadCk").checked ? 1 : 0);
-  obj.resize = (document.getElementById("resizeCk").checked ? 1 : 0);
-  obj.imgorder = (document.getElementById("imgorderCk").checked ? 1 : 0);
-  
-  var colPicks = getElementsByClass("colorPicker", document);
-  for (var i = 0; i < colPicks.length; i++) {
-    if (colPicks[i].className.indexOf("active") != -1) {
-      obj.color = i;
-      break;
-    }
-  }
-  
-  //New options
-  obj.groupmgs = (document.getElementById("groupmgsCk").checked ? 1 : 0);
-  obj.openupdate = (document.getElementById("openupdateCk").checked ? 1 : 0);
-  obj.updatechap = parseInt(document.getElementById("updatechap").value, 10);
-  obj.updatemg = parseInt(document.getElementById("updatemg").value, 10);
-  obj.newbar = (document.getElementById("newbarCk").checked ? 1 : 0);
-  obj.addauto = (document.getElementById("addautoCk").checked ? 1 : 0);
-
-  obj.lrkeys = (document.getElementById("lrkeysCk").checked ? 1 : 0);
-  
-  obj.size = parseInt(document.getElementById("popupsize").value, 10);
-  
-  obj.autobm = (document.getElementById("autobmCk").checked ? 1 : 0);
-  obj.prefetch = (document.getElementById("prefetchCk").checked ? 1 : 0);
-  
-  obj.rightnext = (document.getElementById("rightnextCk").checked ? 1 : 0);
-  
-  //Notifications
-  obj.shownotifications = (document.getElementById("shownotificationsCk").checked ? 1 : 0);
-  obj.notificationtimer = parseInt(document.getElementById("notificationtimer").value, 10);
-  
-  obj.refreshspin = (document.getElementById("refreshspinCk").checked ? 1 : 0);
-  obj.savebandwidth = (document.getElementById("savebandwidthCk").checked ? 1 : 0);
-  obj.checkmgstart = (document.getElementById("checkmgstartCk").checked ? 1 : 0);
-  
-  obj.nocount = (document.getElementById("noCount").checked ? 1 : 0);
-  obj.displastup = (document.getElementById("displastup").checked ? 1 : 0);
-  obj.markwhendownload = (document.getElementById("markwhendownload").checked ? 1 : 0);
-  
-  obj.sendstats = (document.getElementById("sendstats").checked ? 1 : 0);
-  
-  obj.shownotifws = (document.getElementById("shownotifws").checked ? 1 : 0);
-  
-  if (isNaN(obj.notificationtimer))
-  {
-    obj.notificationtimer = 0;
-  }
-  
-  chrome.extension.sendRequest(obj, function(response) {});
-}
-
-function init() {
-  loadMenu("options");
-  $(".article").show();
-  $(".ongletCont[id!='ong1']").hide();
-  if (window.location.href.indexOf("tab=sites") != -1) {
-    switchOnglet($("#supportedWS")[0], 'ong4');
-  } 
-  restore_options();
-}
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  response = chrome.extension.getBackgroundPage().getParameters();
-
-  document.getElementById("adsCk").checked = (response.displayAdds != 1);
-  document.getElementById("chapsCk").checked = (response.displayChapters == 1);
-  document.getElementById("modeChap1").checked = (response.displayMode == 1);
-  document.getElementById("modeChap2").checked = (response.displayMode != 1);
-  document.getElementById("wideMode1").checked = (response.displayMode == 2);
-  document.getElementById("wideMode2").checked = (response.displayMode == 3);
-  document.getElementById("popupMode1").checked = (response.popupMode == 1);
-  document.getElementById("popupMode2").checked = (response.popupMode == 2);
-  document.getElementById("newTab").checked = (response.newTab != 0);
-  document.getElementById("syncMg").checked = (response.sync != 0);
-  document.getElementById("displayZero").checked = (response.displayzero != 0);
-  document.getElementById("pubAMR").checked = (response.pub != 0);
-  document.getElementById("devAMR").checked = (response.dev != 0);
-  document.getElementById("loadCk").checked = (response.load != 0);
-  document.getElementById("resizeCk").checked = (response.resize != 0);
-  document.getElementById("imgorderCk").checked = (response.imgorder != 0);
-  //COLOR
-  var colPicks = getElementsByClass("colorPicker", document);
-  colPicks[response.color].className = "colorPicker active";
-  
-  if (document.getElementById("chapsCk").checked) {
-    document.getElementById('chaptersOptions').style.display = 'table-row';
-  }
-  if (document.getElementById("modeChap2").checked) {
-    document.getElementById('wideScreenOpts').style.display = 'table-row';
-  }
-  if (!document.getElementById("wideMode1").checked && !document.getElementById("wideMode2").checked) {
-    document.getElementById("wideMode2").checked = true;
-  }
-  
-  //New options
-  document.getElementById("groupmgsCk").checked = (response.groupmgs != 0);
-  document.getElementById("openupdateCk").checked = (response.openupdate != 0);
-  document.getElementById("updatechap").value = response.updatechap;
-  document.getElementById("updatemg").value = response.updatemg;
-  document.getElementById("newbarCk").checked = (response.newbar != 0);
-  document.getElementById("addautoCk").checked = (response.addauto != 0);
-  
-  document.getElementById("lrkeysCk").checked = (response.lrkeys != 0);
-  
-  document.getElementById("popupsize").value = response.size;
-  
-  document.getElementById("autobmCk").checked = (response.autobm != 0);
-  document.getElementById("prefetchCk").checked = (response.prefetch != 0);
-
-  document.getElementById("rightnextCk").checked = (response.rightnext != 0);
-
-  //Notifications
-  document.getElementById("shownotificationsCk").checked = (response.shownotifications == 1);
-  document.getElementById("notificationtimer").value = response.notificationtimer;
-  
-  document.getElementById("refreshspinCk").checked = (response.refreshspin == 1);
-  document.getElementById("savebandwidthCk").checked = (response.savebandwidth == 1);
-  document.getElementById("checkmgstartCk").checked = (response.checkmgstart == 1);
-
-  document.getElementById("noCount").checked = (response.nocount == 1);
-  document.getElementById("displastup").checked = (response.displastup == 1);
-  document.getElementById("markwhendownload").checked = (response.markwhendownload == 1);
-
-  document.getElementById("sendstats").checked = (response.sendstats == 1);
-  
-  document.getElementById("shownotifws").checked = (response.shownotifws == 1);
-
-  restore_mirrors();
-  $("#refreshChap").click(function() {
-    chrome.extension.getBackgroundPage().refreshAllLasts(true, true);
-    $("#noteChap").show();
-  });
-  $("#refreshMg").click(function() {
-    chrome.extension.getBackgroundPage().refreshMangaLists(true, true);
-    $("#noteMg").show();
-  });
-  $("#paypalus").click(function() {
-    openTab("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MPJ2DWQP67FHJ");
-  });
-  $("#paypaleuro").click(function() {
-    openTab("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PTFDEMDFNKQAG");
-  });
-}
-
-function loadSelectors() {
-  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='Activate all visible mirrors'/>")
-  var selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>")
-
-  selAll.click(function() {
-    $("#allmirrors tr:visible input[type='checkbox']").each(function(index) {
-      if (!$(this).attr("checked")) {
-        $(this).attr("checked", true);
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendRequest({action: "activateMirror", mirror: mirrorName}, function(res) {});
-      }
-    });
-  });
-  
-  selNone.click(function() {
-    $("#allmirrors tr:visible input[type='checkbox']").each(function(index) {
-      if ($(this).attr("checked")) {
-        $(this).attr("checked", false);
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendRequest({action: "desactivateMirror", mirror: mirrorName}, function(res) {});
-      }
-    });
-  });
-  
-  selAll.appendTo($("#selectors"));
-  selNone.appendTo($("#selectors"));
-
-  var sel = MgUtil.getLanguageSelect(mirrors);
-  sel.change(function() {
-    var lang = $("option:selected", $(this)).val();
-    if (lang == "all") {
-      $("#allmirrors tr").show();
-    } else {
-      var langMirrors = MgUtil.getMirrorsFromLocale(mirrors, lang);
-
-      $("#allmirrors tr .mirrorName").each(function(index) {
-        var isFound = false;
-        for (var i = 0; i < langMirrors.length; i++) {
-          if (langMirrors[i] == $(this).attr("name")) {
-            isFound = true;
-            break;
-          }
-        }
-        if (!isFound) {
-          $(this).closest("tr").hide();
-        } else {
-          $(this).closest("tr").show();
-        }
-      });
-    }
-    pyjmirs();
-  });
-
-  var spansel = $("<span class='custom-select'></span>");
-  sel.appendTo(spansel);
-  spansel.appendTo($("#selectors"));
-}
-  
-function restore_mirrors() {
-  mirrors = chrome.extension.getBackgroundPage().mirrors;
-  mangas = chrome.extension.getBackgroundPage().mangaList;
-  actmirrors = chrome.extension.getBackgroundPage().actMirrors;
-  
-  loadSelectors();
-  mirrors.sort(function(a, b) {
-    if (a.mirrorName < b.mirrorName) {
-      return -1;
-    } else if (a.mirrorName == b.mirrorName) {
-      return 0;
-    } else {
-      return 1;
-    }
-  });
-  
-  $("#results").empty();
-  $("<table id='allmirrors'><thead><tr><td>Website name / number of mangas read</td><td>Developer</td><td>Revision</td><td>Language</td><td>Activated</td><td>Discuss</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
-
-  for (var i = 0; i < mirrors.length; i++) {
-    var trCur = $("<tr></tr>");
-
-    var nb = 0;
-    for (var j = 0; j < mangas.length; j++) {
-      if (mangas[j].mirror == mirrors[i].mirrorName) {
-        nb++;
-      }
-    }
-    var tdHead = $("<td class='mirrorName' name='" +  mirrors[i].mirrorName + "'></td>");
-    var img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />");
-    img.appendTo(tdHead);
-    $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
-    $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
-    tdHead.appendTo(trCur);
-    
-    var lang = mirrors[i].languages.split(",");
-    var langstr = "";
-    for (var j = 0; j < lang.length; j++) {
-      langstr += MgUtil.getLanguageName(lang[j]) + ", ";
-    }
-    
-    $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
-    if (mirrors[i].revision == 0) {
-      var release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
-      release.data("idext", mirrors[i].idext);
-      release.appendTo(trCur);
-    } else {
-      $("<td>" + mirrors[i].revision + "</td>").appendTo(trCur);
-    }
-    var tdLang = $("<td class='lang'>" + langstr.substr(0, langstr.length - 2) + "</td>");
-    tdLang.appendTo(trCur);
-    
-    var tdMgs = $("<td class='mirrorOpt'></td>");
-    tdMgs.appendTo(trCur);
-    
-    var discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>");
-    discuss.data("idext", mirrors[i].idext);
-    discuss.appendTo(trCur);
-    
-    if (nb > 0) {
-      trCur.addClass("desactivate");
-    } else {
-      var isfound = false;
-      for (var j = 0; j < actmirrors.length; j++) {
-        if (actmirrors[j].mirrorName == mirrors[i].mirrorName) {
-          isfound = true;
-          break;
-        }
-      }
-
-      var ck = $("<input type=\"checkbox\" />");
-      ck.attr("checked", isfound);
-      ck.appendTo(tdMgs);
-      ck.click(function() {
-        var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        if ($(this).attr("checked")) {
-          // activate the mirror
-          chrome.extension.sendRequest({action: "activateMirror", mirror: mirrorName}, function(res) {});
-        } else {
-          // desactivate the mirror
-          chrome.extension.sendRequest({action: "desactivateMirror", mirror: mirrorName}, function(res) {});
-        }
-      });
-
-    }
-    
-    trCur.appendTo($("#allmirrors tbody"));
-  }
-  $(".discuss").click(function() {
-    openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
-  });
-  $(".comebacktorelease").click(function() {
-    var req = {
-      action: "releaseimplementation",
-      id: $(this).closest("td").data("idext")
-    };
-    sendExtRequest(req, $(this), function(response) {
-      window.location.href="options.html?tab=sites";
-    }, true);
-  });
-  pyjmirs();
-}
-
-//Used to request background page action
-function sendExtRequest(request, button, callback, backsrc) {
-  //Prevent a second request
-  if (button.data("currentlyClicked")) return;
-  button.data("currentlyClicked", true);
-  
-  //Display a loading image
-  var _ancSrc;
-  if (button.is("img")) {
-    _ancSrc = button.attr("src");
-    button.attr("src", chrome.extension.getURL("img/load16.gif"));
-  } else {
-    if (button.is(".button")) {
-      _ancSrc = $("<img src='" + chrome.extension.getURL("img/ltload.gif") + "'></img>")
-      _ancSrc.appendTo(button);
-    }
-    if (button.is(".category") || button.is(".mgcategory")) {
-      _ancSrc = $("<img src='" + chrome.extension.getURL("img/load10.gif") + "'></img>")
-      _ancSrc.appendTo(button);
-    }
-  }
-  //Call the action
-  chrome.extension.sendRequest(request, function(response) {
-  //setTimeout(function() {
-    //Do the callback
-    callback(response);
-    //Removes the loading image
-    if (button.is("img")) {
-      if (backsrc) {
-        button.attr("src", _ancSrc);
-      }
-    } else {
-      if (button.is(".button") || button.is(".category") || button.is(".mgcategory")) {
-        _ancSrc.remove();
-      }
-    }
-    //Restore request
-    button.removeData("currentlyClicked");
-  //}, 1000);
-  });
-}
-
-function pyjmirs() {
-  $("#allmirrors tr:visible").removeClass("odd").removeClass("even");
-  $("#allmirrors tr:visible").each(function(index) {
-    if (index % 2 == 0) {
-      $(this).addClass("odd");
-    } else {
-      $(this).addClass("even");
-    }
-  });
-}
-function switchOnglet(ong, tab) {
-  $(".tab").removeClass("checked");
-  $(ong).addClass("checked");
-  $(".ongletCont").each(function(index) {
-    if ($(this).attr("id") == tab) {
-      $(this).show();
-    } else {
-      $(this).hide();
-    }
-  });
-}
-
-function switchColor(obj) {
-  var colPicks = getElementsByClass("colorPicker", document);
-  for (var i = 0; i < colPicks.length; i++) {
-    colPicks[i].className="colorPicker";
-  }
-  obj.className += " active";
-}
-function getElementsByClass(searchClass, obj) {
-	if (!obj) {
-		obj = document;
-	}
-	
-	var classElements = new Array();
-	var els = document.getElementsByTagName('*');
-	var elsLen = els.length
-	for (i = 0, j = 0; i < elsLen; i++)
-	{
-		var classes = els[i].className.split(' ');
-		for (k = 0; k < classes.length; k++)
-			if ( classes[k] == searchClass )
-				classElements[j++] = els[i];
-	}
-	return classElements;
-}
-
-</script>
-
-<body onload="init()">
-  <div id="header">
-    <div id="subheader">
-      <div class="paypal" style="float:right">
-        <p><b>Support All Mangas Reader</b> : AMR represents a lot of work for me,<br /> if you want to help me continue and improve it, please donate : </p>
-        <div>
-          <div class="payitem">
-            <span>US Dollar : </span>
-            <img id="paypalus" src="img/paypaldonlt.gif" title="Donate to All Mangas Reader (US Dollar)" style="cursor:pointer;" />
-          </div>
-        &nbsp;&nbsp;
-          <div class="payitem">
-            <span>Euro : </span>
-            <img id="paypaleuro" src="img/paypaldonlt.gif" title="Donate to All Mangas Reader (Euro)" style="cursor:pointer;" />
+  <head>
+    <meta charset="UTF-8">
+    <title>
+      All Mangas Reader Options
+    </title>
+    <link href="css/amr_style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/options.css">
+    <script src="js/jquery.js" type="text/javascript">
+    </script>
+    <script src="js/mgEntry.js" type="text/javascript">
+    </script>
+    <script src="js/mgUtil.js" type="text/javascript">
+    </script>
+    <script src="js/analytics.js" type="text/javascript">
+    </script>
+    <script src="js/innermenu.js" type="text/javascript">
+    </script>
+    <script src="js/amrcsql.js" type="text/javascript">
+    </script>
+    <script src="js/options.js" type="text/javascript">
+    </script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="subheader">
+        <div class="paypal" style="float:right">
+          <p>
+            <b>
+              Support All Mangas Reader
+            </b>
+            : AMR represents a lot of work for me,
+            <br />
+            if you want to help me continue and improve it, please donate : 
+          </p>
+          <div>
+            <div class="payitem">
+              <span>
+                US Dollar : 
+              </span>
+              <img id="paypalus" src="img/paypaldonlt.gif" title="Donate to All Mangas Reader (US Dollar)" style="cursor:pointer;" alt="PayPal"/>
+            </div>
+            &nbsp;&nbsp;
+            <div class="payitem">
+              <span>
+                Euro : 
+              </span>
+              <img id="paypaleuro" src="img/paypaldonlt.gif" title="Donate to All Mangas Reader (Euro)" style="cursor:pointer;" alt="PayPal"/>
+            </div>
           </div>
         </div>
+        <img class="imglogo" src="img/icon-32.png" width="100" alt="AllMangasReader"/>
+        <h1>
+          All Mangas Reader Options
+        </h1>
       </div>
-      <img class="imglogo" src="img/icon-32.png" width="100px" />
-      <h1>All Mangas Reader Options</h1>
     </div>
-  </div>
-  <div id="menunav">
-    <div id="menuitems">
-      <ul>
-        <li>&nbsp;</li>
-      </ul>
+    <div id="menunav">
+      <div id="menuitems">
+        <ul>
+          <li>
+            &nbsp;
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div id="corpseone">
-    <div id="subcorpseone">
-      <ul class="tabs">
-        <li class="tab checked" onclick="switchOnglet(this, 'ong1');">Mangas Web Sites</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong2');">All Mangas Reader</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong3');">Synchronization</li>
-        <li class="tab" onclick="switchOnglet(this, 'ong4');" id="supportedWS">Supported Web Sites</li>
-      </ul>
-      <div class="article parent ongletCont" id="ong1">
-      <div class="article main">
-      <table>
-        <tr>
-          <td>
-            <div class="article">
-              <h3>
-                Ads
-              </h3>
-                <table>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="adsCk" onchange="save_options();"/>
-                      <label for="adsCk">Remove ads in mangas web sites</label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="pubAMR" onchange="save_options();"  />
-                      <label for="pubAMR">Display a link to AMR main page in manga web sites in order for you to give me feedback (I need your opinion to improve AMR, thanks !).</label>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="article">
-              <h3>
-                Chapter display mode
-              </h3>
-                <table style="width:100%;">
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="chapsCk" onchange="save_options();" onclick="if (this.checked) {document.getElementById('chaptersOptions').style.display = 'table-row';} else {document.getElementById('chaptersOptions').style.display = 'none';}"/>
-                      <label for="chapsCk">While reading a manga, display the whole chapter instead of the current page</label>
-                    </td>
-                  </tr>
-                  <tr id="chaptersOptions" style="display: none;" >
-                    <td>
-                      <div class="article">
-                        <h3>
-                          Options for chapters
-                        </h3>
-                        <table style="width:100%;">
-                          <tr>
-                            <td>
-                              <input type="radio" name="modeChap" value="1" id="modeChap1" onchange="if (this.checked) {document.getElementById('wideScreenOpts').style.display = 'none';} else {document.getElementById('wideScreenOpts').style.display = 'table-row';}; save_options();"/>
-                              <label for="modeChap1">Display chapters in normal mode (pages of the chapter will be displayed on top of one another)</label>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input type="radio" name="modeChap" value="2" id="modeChap2" onchange="if (this.checked) {document.getElementById('wideScreenOpts').style.display = 'table-row';} else {document.getElementById('wideScreenOpts').style.display = 'none';}; save_options();"/>
-                              <label for="modeChap2">I have a wide screen !! I can display two pages in width so i want my chapter be displayed as a book !</label>
-                            </td>
-                          </tr>
-                          <tr id="wideScreenOpts" style="display: none;width:100%;">
-                            <td>
-                              <div class="article">
-                                <h3>
-                                  Options for wide screens
-                                </h3>
-                                <table>
-                                  <tr>
-                                    <td>
-                                      <input type="radio" name="wideMode" value="1" id="wideMode1" onchange="save_options();" />
-                                      <label for="wideMode1">Display the book in Occidental mode (reading left to right)</label>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <input type="radio" name="wideMode" value="2" id="wideMode2" onchange="save_options();" />
-                                      <label for="wideMode2">Display the book in Japanese mode (reading right to left)</label>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="resizeCk" onchange="save_options();"  />
-                      <label for="resizeCk">Resize scans images to fit screen if they are to wide</label>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="article">
-              <h3>
-                Loading options
-              </h3>
-              <table>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="loadCk" onchange="save_options();" />
-                    <label for="loadCk">See loading progression in the title bar</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="imgorderCk" onchange="save_options();"  />
-                    <label for="imgorderCk">Load scans in the order of the chapter (This option involve that the chapter's loading will be slower but guarantees that the first scan which will be loaded is the first of the chapter and so on...)</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="prefetchCk" onchange="save_options();"  />
-                    <label for="prefetchCk">Prefetch next chapter while reading manga. (A progress bar indicating the prefetch level of the next chapter appears inside the "Next" button)</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="markwhendownload" onchange="save_options();"  />
-                    <label for="markwhendownload">Mark chapter as read when the full chapter has been downloaded</label>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="article">
-              <h3>
-                AMR facilities
-              </h3>
-              <table>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="newbarCk" onchange="save_options();"  />
-                    <label for="newbarCk">Display navigation features in one always visible bar. (If you uncheck it, two navigation panels are included in each page, one on top of the scans and one at the bottom)</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="addautoCk" onchange="save_options();"  />
-                    <label for="addautoCk">Automatically add manga in my reading list when I read it. If you uncheck this option, you will have a button in the navigation bar to add the current manga in the list.</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="lrkeysCk" onchange="save_options();"  />
-                    <label for="lrkeysCk">Use left /right keys while reading to go previous / next scan.</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="autobmCk" onchange="save_options();"  />
-                    <label for="autobmCk">Auto Bookmark scans when double click on it.</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="rightnextCk" onchange="save_options();"  />
-                    <label for="rightnextCk">Right key goes to next chapter when at bottom of the page.</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" id="sendstats" onchange="save_options();"  />
-                    <label for="sendstats">Keep personnal statistics data.</label>
-                  </td>
-                </tr>
-                
-              </table>
-            </div>
-          </td>
-        </tr>
-      </table>
-      </div>
-      </div>
-      <div class="article parent ongletCont" id="ong2" style="display:none;">
-      <div class="article main">
-      <table>
-        <tr>
-          <td>
-            <div class="article">
-            <h3>AMR aspect</h3>
-            <table style="width:100%;">
+    <div id="corpseone">
+      <div id="subcorpseone">
+        <ul class="tabs">
+          <li class="tab checked" id="mangasWS">
+            Mangas Web Sites
+          </li>
+          <li class="tab" id="AMR_options">
+            All Mangas Reader
+          </li>
+          <li class="tab" id="sync">
+            Synchronization
+          </li>
+          <li class="tab" id="supportedWS">
+            Supported Web Sites
+          </li>
+        </ul>
+        <div class="article parent ongletCont" id="ong1">
+          <div class="article main">
+            <table>
               <tr>
                 <td>
-                  <input type="checkbox" id="newTab" onchange="save_options();"  />
-                  <label for="newTab">Open my manga reading list in a new tab when i click on the All Mangas Reader's icon</label>
+                  <div class="article">
+                    <h3>
+                      Ads
+                    </h3>
+                    <table>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="adsCk"/>
+                          <label for="adsCk">
+                            Remove ads in mangas web sites
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="pubAMR"/>
+                          <label for="pubAMR">
+                            Display a link to AMR main page in manga web sites in order for you to give me feedback (I need your opinion to improve AMR, thanks !).
+                          </label>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>
                   <div class="article">
                     <h3>
-                      Mangas Display Mode
+                      Chapter display mode
                     </h3>
                     <table style="width:100%;">
                       <tr>
                         <td>
-                          <input type="radio" name="popupMode" value="1" id="popupMode1" onchange="save_options();"  />
-                          <label for="popupMode1">Display blocks for each manga with detailed information</label>
+                          <input type="checkbox" id="chapsCk"/>
+                          <label for="chapsCk">
+                            While reading a manga, display the whole chapter instead of the current page
+                          </label>
                         </td>
+                      </tr>
+                      <tr id="chaptersOptions" style="display: none;" >
                         <td>
-                          <input type="radio" name="popupMode" value="2" id="popupMode2" onchange="save_options();"  />
-                          <label for="popupMode2">Display mangas in a list so i can see many of them</label>
+                          <div class="article">
+                            <h3>
+                              Options for chapters
+                            </h3>
+                            <table style="width:100%;">
+                              <tr>
+                                <td>
+                                  <input type="radio" name="modeChap" value="1" id="modeChap1"/>
+                                  <label for="modeChap1">
+                                    Display chapters in normal mode (pages of the chapter will be displayed on top of one another)
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <input type="radio" name="modeChap" value="2" id="modeChap2" onchange="if (this.checked) {document.getElementById('wideScreenOpts').style.display = 'table-row';} else {document.getElementById('wideScreenOpts').style.display = 'none';}; save_options();"/>
+                                  <label for="modeChap2">
+                                    I have a wide screen !! I can display two pages in width so i want my chapter be displayed as a book !
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr id="wideScreenOpts" style="display: none;width:100%;">
+                                <td>
+                                  <div class="article">
+                                    <h3>
+                                      Options for wide screens
+                                    </h3>
+                                    <table>
+                                      <tr>
+                                        <td>
+                                          <input type="radio" name="wideMode" value="1" id="wideMode1"/>
+                                          <label for="wideMode1">
+                                            Display the book in Occidental mode (reading left to right)
+                                          </label>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <input type="radio" name="wideMode" value="2" id="wideMode2"/>
+                                          <label for="wideMode2">
+                                            Display the book in Japanese mode (reading right to left)
+                                          </label>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <center>
-                            <img src="img/help/AMRBlockMode.PNG" alt="blocks" width="350px" />
-                          </center>
-                        </td>
-                        <td style="vertical-align:top">
-                          <center>
-                            <img src="img/help/AMRListMode.PNG" alt="list" width="350px"  />
-                          </center>
+                          <input type="checkbox" id="resizeCk"/>
+                          <label for="resizeCk">
+                            Resize scans images to fit screen if they are to wide
+                          </label>
                         </td>
                       </tr>
                     </table>
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <input type="checkbox" id="groupmgsCk" onchange="save_options();"  />
-                  <label for="groupmgsCk">Group mangas which have the same name on one line. When mangas are grouped, you can see all occurrences of the manga by clicking on the + icon next to the manga's name.</label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="checkbox" id="displastup" onchange="save_options();"  />
-                  <label for="displastup">Display a calendar icon representing the last time a new chapter has been published (<img src="img/day.png" title="Last time new chapter : 2 days ago" />, <img src="img/week.png" title="Last time new chapter : 3 weeks ago" /> or <img src="img/month.png" title="Last time new chapter : 4 months ago" />). If unchecked, a tooltip will appear on the manga name telling : "Last time new chapter : 2 weeks ago" for example</label>
-                </td>
-              </tr>
-              
               <tr>
                 <td>
                   <div class="article">
                     <h3>
-                      AMR's Popup Color
+                      Loading options
                     </h3>
-                    <table style="margin-left:auto;margin-right:auto;">
+                    <table>
                       <tr>
-                        <td><div class="colorPicker" style="background-color:white" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:black" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#DDDDDD" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#F0DDDD" onclick="switchColor(this);save_options();"></div></td>
-                        <td><div class="colorPicker" style="background-color:#EEEEFF" onclick="switchColor(this);save_options();"></div></td>
+                        <td>
+                          <input type="checkbox" id="loadCk"/>
+                          <label for="loadCk">
+                            See loading progression in the title bar
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="imgorderCk"/>
+                          <label for="imgorderCk">
+                            Load scans in the order of the chapter (This option involve that the chapter's loading will be slower but guarantees that the first scan which will be loaded is the first of the chapter and so on...)
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="prefetchCk"/>
+                          <label for="prefetchCk">
+                            Prefetch next chapter while reading manga. (A progress bar indicating the prefetch level of the next chapter appears inside the "Next" button)
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="markwhendownload"/>
+                          <label for="markwhendownload">
+                            Mark chapter as read when the full chapter has been downloaded
+                          </label>
+                        </td>
                       </tr>
                     </table>
                   </div>
                 </td>
-              </tr>  
+              </tr>
+              <tr>
+                <td>
+                  <div class="article">
+                    <h3>
+                      AMR facilities
+                    </h3>
+                    <table>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="newbarCk"/>
+                          <label for="newbarCk">
+                            Display navigation features in one always visible bar. (If you uncheck it, two navigation panels are included in each page, one on top of the scans and one at the bottom)
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="addautoCk"/>
+                          <label for="addautoCk">
+                            Automatically add manga in my reading list when I read it. If you uncheck this option, you will have a button in the navigation bar to add the current manga in the list.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="lrkeysCk"/>
+                          <label for="lrkeysCk">
+                            Use left /right keys while reading to go previous / next scan.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="autobmCk"/>
+                          <label for="autobmCk">
+                            Auto Bookmark scans when double click on it.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="rightnextCk"/>
+                          <label for="rightnextCk">
+                            Right key goes to next chapter when at bottom of the page.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="sendstats"/>
+                          <label for="sendstats">
+                            Keep personnal statistics data.
+                          </label>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
             </table>
-            </div>
-          </td>
-        </tr>
-
-
-        <tr>
-          <td>
-            <div class="article">
-            <h3>Updates</h3>
+          </div>
+        </div>
+        <div class="article parent ongletCont" id="ong2" style="display:none;">
+          <div class="article main">
             <table>
               <tr>
                 <td>
-                  <table>
-                    <tr>
-                      <td>
-                        <span>Update chapters list every : </span>
-                      </td>
-                      <td>
-                        <select id="updatechap" onchange="save_options();" >
-                          <option value="300000">5 minutes</option>
-                          <option value="600000">10 minutes</option>
-                          <option value="900000">15 minutes</option>
-                          <option value="1800000">30 minutes</option>
-                          <option value="3600000">hour</option>
-                          <option value="7200000">2 hours</option>
-                          <option value="21600000">6 hours</option>
-                          <option value="43200000">12 hours</option>
-                          <option value="86400000">day</option>
-                        </select>
-                      </td>
-                      <td>
-                        <a class="button" id="refreshChap" href="#">Refresh chapters lists now</a>
-                      </td>
-                    </tr>
-                    <tr id="noteChap" style="display:none">
-                      <td colspan="3" style="text-align:center">
-                        Refresh has been started and runs in background page. As it could take some time... you won't be notified that it is finished...
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Update list of manga for each web site every : </span>
-                      </td>
-                      <td>
-                        <select id="updatemg" onchange="save_options();" >
-                          <option value="86400000">day</option>
-                          <option value="172800000">2 days</option>
-                          <option value="604800000">week</option>
-                          <option value="1209600000">2 weeks</option>
-                        </select> 
-                      </td>
-                      <td>
-                        <a class="button" id="refreshMg" href="#">Refresh manga lists now</a>
-                      </td>
-                    </tr>
-                    <tr id="noteMg" style="display:none">
-                      <td colspan="3" style="text-align:center">
-                        Refresh has been started and runs in background page. As it could take some time... you won't be notified that it is finished...
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Size of popup : </span>
-                      </td>
-                      <td colspan="2">
-                        <select id="popupsize" onchange="save_options();" >
-                          <option value="1">Small</option>
-                          <option value="2">Medium</option>
-                          <option value="3">Big</option>
-                        </select> 
-                      </td>
-                    </tr>
-                  </table>
+                  <div class="article">
+                    <h3>
+                      AMR aspect
+                    </h3>
+                    <table style="width:100%;">
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="newTab"/>
+                          <label for="newTab">
+                            Open my manga reading list in a new tab when i click on the All Mangas Reader's icon
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="article">
+                            <h3>
+                              Mangas Display Mode
+                            </h3>
+                            <table style="width:100%;">
+                              <tr>
+                                <td>
+                                  <input type="radio" name="popupMode" value="1" id="popupMode1"/>
+                                  <label for="popupMode1">
+                                    Display blocks for each manga with detailed information
+                                  </label>
+                                </td>
+                                <td>
+                                  <input type="radio" name="popupMode" value="2" id="popupMode2"/>
+                                  <label for="popupMode2">
+                                    Display mangas in a list so i can see many of them
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <img class="center" src="img/help/AMRBlockMode.PNG" alt="blocks" width="350" />
+                                </td>
+                                <td style="vertical-align:top">
+                                  <img class="center" src="img/help/AMRListMode.PNG" alt="list" width="350"  />
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="groupmgsCk"/>
+                          <label for="groupmgsCk">
+                            Group mangas which have the same name on one line. When mangas are grouped, you can see all occurrences of the manga by clicking on the + icon next to the manga's name.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="displastup"/>
+                          <label for="displastup">
+                            Display a calendar icon representing the last time a new chapter has been published (
+                            <img src="img/day.png" alt="days" title="Last time new chapter : 2 days ago" />
+                            , 
+                            <img src="img/week.png" alt="week" title="Last time new chapter : 3 weeks ago" />
+                            or 
+                            <img src="img/month.png" alt="month" title="Last time new chapter : 4 months ago" />
+                            ). If unchecked, a tooltip will appear on the manga name telling : "Last time new chapter : 2 weeks ago" for example
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="article">
+                            <h3>
+                              AMR's Popup Color
+                            </h3>
+                            <table style="margin-left:auto;margin-right:auto;">
+                              <tr>
+                                <td>
+                                  <div class="colorPicker" style="background-color:white">
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="colorPicker" style="background-color:black">
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="colorPicker" style="background-color:#DDDDDD">
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="colorPicker" style="background-color:#F0DDDD">
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="colorPicker" style="background-color:#EEEEFF">
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </td>
               </tr>
-            	<tr>
-            	  <td>
-            	    <input type="checkbox" id="checkmgstartCk" onchange="save_options();" />
-            	    <label for="checkmgstartCk">Update chapters list on chrome startup</label>
-            	  </td>
-            	</tr>
-            	<tr>
-            	  <td>
-            	    <input type="checkbox" id="refreshspinCk" onchange="save_options();" />
-            	    <label for="refreshspinCk">Spin the sharingan icon when AMR is updating chapters list.</label>
-            	  </td>
-            	</tr>
-            	<tr>
-            	  <td>
-            	    <input type="checkbox" id="savebandwidthCk" onchange="save_options();" />
-            	    <label for="savebandwidthCk">Save bandwidth while loading chapter list (this options waits for one manga to be updated before updating the next one)</label>
-            	  </td>
-            	</tr>
+              <tr>
+                <td>
+                  <div class="article">
+                    <h3>
+                      Updates
+                    </h3>
+                    <table>
+                      <tr>
+                        <td>
+                          <table>
+                            <tr>
+                              <td>
+                                <span>
+                                  Update chapters list every : 
+                                </span>
+                              </td>
+                              <td>
+                                <select id="updatechap">
+                                  <option value="300000">
+                                    5 minutes
+                                  </option>
+                                  <option value="600000">
+                                    10 minutes
+                                  </option>
+                                  <option value="900000">
+                                    15 minutes
+                                  </option>
+                                  <option value="1800000">
+                                    30 minutes
+                                  </option>
+                                  <option value="3600000">
+                                    hour
+                                  </option>
+                                  <option value="7200000">
+                                    2 hours
+                                  </option>
+                                  <option value="21600000">
+                                    6 hours
+                                  </option>
+                                  <option value="43200000">
+                                    12 hours
+                                  </option>
+                                  <option value="86400000">
+                                    day
+                                  </option>
+                                </select>
+                              </td>
+                              <td>
+                                <a class="button" id="refreshChap" href="#">
+                                  Refresh chapters lists now
+                                </a>
+                              </td>
+                            </tr>
+                            <tr id="noteChap" style="display:none">
+                              <td colspan="3" style="text-align:center">
+                                Refresh has been started and runs in background page. As it could take some time... you won't be notified that it is finished...
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span>
+                                  Update list of manga for each web site every : 
+                                </span>
+                              </td>
+                              <td>
+                                <select id="updatemg">
+                                  <option value="86400000">
+                                    day
+                                  </option>
+                                  <option value="172800000">
+                                    2 days
+                                  </option>
+                                  <option value="604800000">
+                                    week
+                                  </option>
+                                  <option value="1209600000">
+                                    2 weeks
+                                  </option>
+                                </select>
+                              </td>
+                              <td>
+                                <a class="button" id="refreshMg" href="#">
+                                  Refresh manga lists now
+                                </a>
+                              </td>
+                            </tr>
+                            <tr id="noteMg" style="display:none">
+                              <td colspan="3" style="text-align:center">
+                                Refresh has been started and runs in background page. As it could take some time... you won't be notified that it is finished...
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span>
+                                  Size of popup : 
+                                </span>
+                              </td>
+                              <td colspan="2">
+                                <select id="popupsize">
+                                  <option value="1">
+                                    Small
+                                  </option>
+                                  <option value="2">
+                                    Medium
+                                  </option>
+                                  <option value="3">
+                                    Big
+                                  </option>
+                                </select>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="checkmgstartCk"/>
+                          <label for="checkmgstartCk">
+                            Update chapters list on chrome startup
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="refreshspinCk"/>
+                          <label for="refreshspinCk">
+                            Spin the sharingan icon when AMR is updating chapters list.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="savebandwidthCk"/>
+                          <label for="savebandwidthCk">
+                            Save bandwidth while loading chapter list (this options waits for one manga to be updated before updating the next one)
+                          </label>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="article">
+                    <h3>
+                      Notifications
+                    </h3>
+                    <table>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="shownotificationsCk"/>
+                          <label for="shownotificationsCk">
+                            Show browser notifications when new chapters are found.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="shownotifws"/>
+                          <label for="shownotifws">
+                            Show browser notifications when websites implementations are updated from AMR Community (this will notify you when a developer fix bugs on a website or when a new website is released).
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <table>
+                            <tr>
+                              <td>
+                                Time before the notification close itself.
+                              </td>
+                              <td>
+                                <select id="notificationtimer">
+                                  <option value="0">
+                                    Close by user action
+                                  </option>
+                                  <option value="5">
+                                    5 seconds
+                                  </option>
+                                  <option value="10">
+                                    10 seconds
+                                  </option>
+                                  <option value="15">
+                                    15 seconds
+                                  </option>
+                                  <option value="30">
+                                    30 seconds
+                                  </option>
+                                  <option value="60">
+                                    1 minute
+                                  </option>
+                                  <option value="120">
+                                    2 minutes
+                                  </option>
+                                  <option value="600">
+                                    10 minutes
+                                  </option>
+                                </select>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="article">
+                    <h3>
+                      Miscellaneous
+                    </h3>
+                    <table>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="displayZero"/>
+                          <label for="displayZero">
+                            Display a grey "0" on AMR's icon when there is no new manga.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="noCount"/>
+                          <label for="noCount">
+                            Do not display a badge with the number of unread manga but display AMR's icon in color if there are new mangas and in grey if not.
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="devAMR"/>
+                          <label for="devAMR">
+                            I am a developer (displays a direct link to the lab in the popup).
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" id="openupdateCk"/>
+                          <label for="openupdateCk">
+                            When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)
+                          </label>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
             </table>
-            </div>
-          </td>
-        </tr>
-
-      	<tr>
-      	  <td>
-            <div class="article">
-            <h3>Notifications</h3>
+          </div>
+        </div>
+        <div class="article parent ongletCont" id="ong3" style="display:none;">
+          <div class="article main">
             <table>
               <tr>
                 <td>
-            	    <input type="checkbox" id="shownotificationsCk" onchange="save_options();" />
-            	    <label for="shownotificationsCk">Show browser notifications when new chapters are found.</label>
-            	  </td>
-            	</tr>
+                  <input type="checkbox" id="syncMg"/>
+                  <label for="syncMg">
+                    Synchronize my mangas over my computers
+                  </label>
+                </td>
+              </tr>
               <tr>
                 <td>
-            	    <input type="checkbox" id="shownotifws" onchange="save_options();" />
-            	    <label for="shownotifws">Show browser notifications when websites implementations are updated from AMR Community (this will notify you when a developer fix bugs on a website or when a new website is released).</label>
-            	  </td>
-            	</tr>
-            	<tr>
-            	 <td>
-            	 <table>
-            	   <tr>
-              	  <td>
-              	    Time before the notification close itself.
-              	  </td>
-              	  <td>
-                    <select id="notificationtimer" onchange="save_options();" >
-                      <option value="0">Close by user action</option>
-                      <option value="5">5 seconds</option>
-                      <option value="10">10 seconds</option>
-                      <option value="15">15 seconds</option>
-                      <option value="30">30 seconds</option>
-                      <option value="60">1 minute</option>
-                      <option value="120">2 minutes</option>
-                      <option value="600">10 minutes</option>
-                    </select>
-              	  </td>
-              	 </tr>
-              	</table>
+                  <p>
+                    If you choose to synchronize your mangas, your list of manga and the latest chapters you read will be synchronize. Your options won't be synchronized because of the possible differences of your computers.
+                  </p>
                 </td>
-            	</tr>
+              </tr>
+              <tr>
+                <td>
+                  <p>
+                    &nbsp;
+                  </p>
+                  <p>
+                    To allow this functionality, AMR uses your bookmarks. You must enable synchronization of your bookmarks in Google Chrome to make it work. (
+                    <a href="http://www.google.com/support/chrome/bin/answer.py?hl=en&amp;answer=165139">
+                      Help here
+                    </a>
+                    )
+                    <br />
+                    To do this, you can use build in chrome synchronization with your google account (in chrome options >
+                    Personal Data, click on the synchronize button, log in your google account and choose to synchronize bookmarks)
+                    If you prefer to use another bookmark sync (like with 
+                    <a href="https://chrome.google.com/extensions/detail/ajpgkpeckebdhofmmjfgcjjiiejpodla">
+                      XMarks
+                    </a>
+                    ), you can do it.
+                  </p>
+                  <p>
+                    As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate.
+                    Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately.
+                    You can force synchronization of your data in XMarks by clicking "Synchronize Now".
+                    With chrome synchronization, you can't force sync. When you read a manga, the bookmark will be modified within five minutes but the incoming synchronization takes more time. To force it, the best way is to relaunch Google Chrome or to disable and reenable synchronization.
+                  </p>
+                  <p>
+                    Please note that google chrome is limited in bookmarks synchronization. It authorizes until 100 updates of bookmarks. So, sometimes, your bookmark won't be sync...
+                  </p>
+                  <p>
+                    To make this work, All Mangas Reader creates a folder in your "Other Bookmarks" section which is named "BSync". This functionnality has been implemented thanks to phaistonian very good code.
+                  </p>
+                  <p>
+                    <b>
+                      To Read before syncing
+                    </b>
+                  </p>
+                  <p>
+                    When syncing is enabled, a text at the bottom of the extension popup indicate when the last synchronization has been done.
+                  </p>
+                  <p>
+                    If AMR is already installed on multiple computers, when you activate synchronization, it is possible that you loose a few data.
+                    The best way is to enable synchronisation on one computer only, to wait for the AMR bookmark to appear on the other computers (Other Bookmarks >
+                    BSync >
+                    All Mangas Reader.xxxxxxx) and then to activate synchronization on other computers
+                  </p>
+                </td>
+              </tr>
             </table>
-            </div>
-          </td>
-      	</tr>
-        <tr>
-          <td>
-            <div class="article">
-            <h3>Miscellaneous</h3>
+          </div>
+        </div>
+        <div class="article parent ongletCont" id="ong4" style="display:none;">
+          <div class="article main">
             <table>
               <tr>
                 <td>
-                  <input type="checkbox" id="displayZero" onchange="save_options();"  />
-                  <label for="displayZero">Display a grey "0" on AMR's icon when there is no new manga.</label>
+                  <p>
+                    AMR provides many supported Web Sites. For each web sites, AMR stores the list of existing mangas. To prevent AMR from using too much RAM, you can deactivate web sites you don't use. Only web sites for which you don't have mangas in your reading list can be deactivated.
+                  </p>
+                  <p>
+                    You can use the selectors on the right to facilitate your deactivation. For example, if you want only English websites. Click on 
+                    <img alt="Select None" src="img/select_none.png"/>
+                    then select "English" in the language drop down list and click 
+                    <img alt="Select All" src="img/select_all.png"/>
+                    . Only english websites are activated.
+                  </p>
+                  <div id="selectors">
+                  </div>
+                  <div id="results" style="width:100%">
+                  </div>
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <input type="checkbox" id="noCount" onchange="save_options();"  />
-                  <label for="noCount">Do not display a badge with the number of unread manga but display AMR's icon in color if there are new mangas and in grey if not.</label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="checkbox" id="devAMR" onchange="save_options();"  />
-                  <label for="devAMR">I am a developer (displays a direct link to the lab in the popup).</label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="checkbox" id="openupdateCk" onchange="save_options();"  />
-                  <label for="openupdateCk">When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)</label>
-                </td>
-              </tr> 
-
             </table>
-            </div>
-          </td>
-        </tr>
-      </table>
+          </div>
+        </div>
       </div>
+      <div class='bottominfo'>
+        To report a bug, ask for help or suggest new features, please go to 
+        <a class="link b" href="#" id="forumlink">
+          All Mangas Reader's forum
+        </a>
+        , 
+        <a class="link b" href="#" id="communitylink">
+          All Mangas Reader Community
+        </a>
+        or 
+        <a class="link b" href="mailto:allmangasreader@gmail.com">
+          mail me.
+        </a>
       </div>
-      <div class="article parent ongletCont" id="ong3" style="display:none;">
-      <div class="article main">
-      <table>
-        <tr>
-          <td>
-            <input type="checkbox" id="syncMg" onchange="save_options();"  />
-            <label for="syncMg">Synchronize my mangas over my computers</label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>
-              If you choose to synchronize your mangas, your list of manga and the latest chapters you read will be synchronize. Your options won't be synchronized because of the possible differences of your computers.
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>&nbsp;</p>
-            <p>To allow this functionality, AMR uses your bookmarks. You must enable synchronization of your bookmarks in Google Chrome to make it work. (<a href="http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=165139">Help here</a>)
-            <br />To do this, you can use build in chrome synchronization with your google account (in chrome options > Personal Data, click on the synchronize button, log in your google account and choose to synchronize bookmarks)
-            If you prefer to use another bookmark sync (like with <a href="https://chrome.google.com/extensions/detail/ajpgkpeckebdhofmmjfgcjjiiejpodla">XMarks</a>), you can do it.</p>
-            <p>
-            As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate. 
-            Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately. 
-            You can force synchronization of your data in XMarks by clicking "Synchronize Now".
-            With chrome synchronization, you can't force sync. When you read a manga, the bookmark will be modified within five minutes but the incoming synchronization takes more time. To force it, the best way is to relaunch Google Chrome or to disable and reenable synchronization.
-            </p>
-            <p>
-            Please note that google chrome is limited in bookmarks synchronization. It authorizes until 100 updates of bookmarks. So, sometimes, your bookmark won't be sync...
-            </p>
-            <p>
-              To make this work, All Mangas Reader creates a folder in your "Other Bookmarks" section which is named "BSync". This functionnality has been implemented thanks to phaistonian very good code.
-            </p>
-            <p><b>To Read before syncing</b></p>
-            <p>
-            When syncing is enabled, a text at the bottom of the extension popup indicate when the last synchronization has been done.
-            </p>
-            <p>
-            If AMR is already installed on multiple computers, when you activate synchronization, it is possible that you loose a few data.
-            The best way is to enable synchronisation on one computer only, to wait for the AMR bookmark to appear on the other computers (Other Bookmarks > BSync > All Mangas Reader.xxxxxxx) and then to activate synchronization on other computers
-            </p>
-          </td>
-        </tr>
-      </table>
-      </div>
-      </div>
-      <div class="article parent ongletCont" id="ong4" style="display:none;">
-      <div class="article main">
-      <table>
-        <tr>
-          <td>
-            <p>AMR provides many supported Web Sites. For each web sites, AMR stores the list of existing mangas. To prevent AMR from using too much RAM, you can deactivate web sites you don't use. Only web sites for which you don't have mangas in your reading list can be deactivated.</p>
-            <p>You can use the selectors on the right to facilitate your deactivation. For example, if you want only English websites. Click on <img src="img/select_none.png"/> then select "English" in the language drop down list and click <img src="img/select_all.png"/>. Only english websites are activated.</p>
-            <div id="selectors"></div>
-            <div id="results" style="width:100%">
-            </div>
-          </td>
-        </tr>
-      </table>
-      </div>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      <div class='bottominfo'>To report a bug, ask for help or suggest new features, please go to <a class="link b" href="#" onclick="chrome.extension.sendRequest({action:'opentab', url:'http://www.allmangasreader.com/forum/'}, function() {});">All Mangas Reader's forum</a>, <a class="link b" href="#" onclick="chrome.extension.sendRequest({action:'opentab', url:'http://community.allmangasreader.com/'}, function() {});">All Mangas Reader Community</a> or <a class="link b" href="mailto:allmangasreader@gmail.com">mail me.</a></div>
-    </td>
-  </tr>
-</div>
-</div>
-  <div id="footer">
-    All Mangas Reader 2012.
-  </div>
-</body>
+    </div>
+    <div id="footer">
+      All Mangas Reader 2012.
+    </div>
+  </body>
 </html>

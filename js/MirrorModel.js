@@ -1,18 +1,4 @@
-/*/////////////////////////////////////////////////////////////////////////////
-//                                                                           //
-//   All Mangas Reader : Follow updates of your favorite mangas sites.       //
-//   Copyright (c) Enter here your copyright mention...                      //
-//                                                                           //
-/////////////////////////////////////////////////////////////////////////////*/
-
-//This class is an example of manga site following implementation for All Manga Reader.
-//To test this class, just modify the json variable in mgEntry.js.
-//If your implementation works and has been fully tested, send it to me with an 
-//icon (png with transparency file, 16x16) for your mirror
-//at pl dot duhoux (at) gmail dot com. I will add it in the extension.
-//If you have problems implementing your mirror, send me a mail... i will be glad to help you...
-
-//CHANGE here the classname
+﻿//CHANGE here the classname
 var MirrorClassName = {
   //CHANGE : Name of the mirror
   mirrorName : "",

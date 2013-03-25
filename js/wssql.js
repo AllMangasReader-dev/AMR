@@ -1,4 +1,4 @@
-/*
+﻿/*
 Usage : 
  - background request actmirrors : enrich each mirror with list of mangas
  - background request getListManga : return list of mangas for a website

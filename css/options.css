@@ -1,0 +1,144 @@
+﻿.colorPicker {
+  width:24px;
+  height:24px;
+  border-top-left-radius: 5px 5px;
+  border-top-right-radius: 5px 5px;
+  border-bottom-left-radius: 5px 5px;
+  border-bottom-right-radius: 5px 5px;
+  border: 1px solid #ABC;
+}
+.colorPicker.active {
+  border: 2px solid #777;
+}
+#results {
+  text-align:center;
+}
+#allmirrors {
+  margin-left:auto;
+  margin-right:auto;
+  border-spacing:0;
+  border-radius:4px;
+}
+#allmirrors img {
+  margin-right:5px;
+  vertical-align:middle;
+}
+#allmirrors, #allmirrors tr {
+  /*display:block;*/
+}
+#allmirrors tr td {
+  /*display:block;*/
+  padding:2px;
+  padding-right:10px;
+}
+#allmirrors thead td {
+  text-align:center;
+  font-weight:bold;
+  color:white;
+}
+#allmirrors thead tr {
+  background-color:grey;
+}
+tr.odd {
+  background-color:#CCCCFF;
+}
+tr.even {
+  background-color:#DDDDFF;
+}
+tr.desactivate {
+  background-color:#DDDDDD;
+}
+td.mirrorName {
+  /*width:500px;*/
+  vertical-align:middle;
+  /*font-weight:bold;*/
+}
+td.mirrorOpt {
+  width:50px;
+  text-align:center;
+}
+.paypal {
+  padding-left:10px;
+  padding-right:10px;
+  padding-top:2px;
+  padding-bottom:2px;
+  font-size:9pt;
+  text-align:center;
+  background-color: #EEEEFF;
+  border-radius:4px;
+  color:black;
+  margin-top:2px;
+  margin-right:3px;
+  box-shadow: 0 0 15px #F4F4FF;
+}
+.paypal .payitem {
+  display:inline-block;
+  background-color:#DDDDFF;
+  padding:1px;
+  padding-left:7px;
+  padding-right:2px;
+  border-radius:4px;
+  box-shadow: inset 0px 0px 2px 2px #AAAADD;
+}
+.paypal p {
+  padding:0;
+  margin:0;
+}
+.paypal .payitem img, .paypal .payitem span {
+  vertical-align:middle;
+  font-weight:bold;
+}
+.bottominfo {
+  margin-top:10px;
+  font-size:10pt;
+  text-align:center;
+}
+#selectors {
+  display:inline-block;
+  text-align:right;
+  float:right;
+  border-bottom-left-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px;
+  border-top-left-radius: 4px 4px;
+  border-top-right-radius: 4px 4px;
+  background-color:#CCCCFF;
+  padding-left:5px;
+  padding-right:5px;
+}
+#selectors img {
+  vertical-align:middle;
+  margin-right: 5px;
+  cursor:pointer;
+}
+#selectors select {
+  border:none;
+  border-bottom-left-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px;
+  border-top-left-radius: 4px 4px;
+  border-top-right-radius: 4px 4px;
+  background-color:#DDDDFF;
+  font-size:9pt;
+}
+.lang {
+  width: 150px;
+}
+.ongletCont td {
+  color:black;
+  font-size:8pt;
+}
+.ongletCont {
+ -webkit-transition: all .4s ease-in-out;
+ margin-top:-3px;
+}
+.article p {
+  font-size:8pt;
+}
+.discuss {
+  cursor:pointer;
+}
+.discusstd {
+  text-align:center;
+}
+.mirrorName {
+  text-align: left;
+}

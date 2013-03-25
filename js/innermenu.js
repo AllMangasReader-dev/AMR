@@ -1,4 +1,4 @@
-var menusAMR = [
+﻿var menusAMR = [
   {name: "options", link: "options.html", title: "Options", icon: "options.png"},
   {name: "search", link: "search.html", title: "Search", icon: "find.png"},
   {name: "bookmarks", link: "bookmarks.html", title: "Bookmarks", icon: "bookmark.png"},

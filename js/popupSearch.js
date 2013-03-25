@@ -1,4 +1,4 @@
-var tempMirrorListAll,
+﻿var tempMirrorListAll,
     nbToLoad,
     ancNbToLoad,
     curSearch,

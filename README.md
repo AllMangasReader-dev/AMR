@@ -1,20 +1,42 @@
-AMR
+﻿AMR
 ===
+AllMangasReader developer branch has the lastest changes made
+to the AllMangasReader Chrome Extension.
 
-AllMangasReader developer branch has the lastest changes made to the AllMangasReader Chrome Extension.
+Get our lastest stable version from http://allmangasreader.com,
+also get support on our forums in http://allmangasreader.com/forum
 
-Get our lastest stable version from http://allmangasreader.com
+PLUGINS
+-------------
+* jQuery UI
+* jQuery
+* prettyPhoto
+* SimpleModal
+* Treeview
+  
+INSTALLATION
+-------------
+We require Chrome version 18.0 or up to work.
+Download http://www.allmangasreader.com/versions/AllMangasReader_V1_5_0_BETA.crx using right-click "save as...",
+go to the extension page and drag-n-drop the file. The extension will autoupdate.
 
-If you would like to test this, just clone the repo, go to Chrome Extension page, activate "Developer Mode",
-click "Load unpacked extension...", look for the folder where you cloned the repository and load it.
+Manual installation
 
-More info:
+1. Download the zip file or clone the git repository
+2. Go to the extension list.
+3. Activate "Developers Mode"
+4. Click "Load unpacked extension…"
+5. Look for the folder with the extension and enjoy
 
-  1) Plugins used:
-  * jQuery UI
-  * jQuery
-  * prettyPhoto
-  * SimpleModal
-  * Treeview
-  * Prototype
+BUGS
+-------------
+All bugs from the current developing version should be
+reported under GitHub.
+
+KNOW BUGS
+----------
+No chart generation in the Personal Statistics page,
+due using Google Visualization API hasn't changed to
+comply with manifest v2 rules as can be seen here:
+https://code.google.com/p/google-visualization-api-issues/issues/detail?id=978
 

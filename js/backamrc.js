@@ -1,4 +1,4 @@
-$(function() {
+﻿$(function() {
   $(".importamrhead").show();
   $(".importamr").show();
   $(".labamr").show();
