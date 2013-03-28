@@ -43,3 +43,4 @@ due using Google Visualization API hasn't changed to
 comply with manifest v2 rules as can be seen here:
 https://code.google.com/p/google-visualization-api-issues/issues/detail?id=978
 
+See COPYING and file headers for license info
