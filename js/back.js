@@ -423,6 +423,7 @@ function writeNavigation(where, select, res, params) {
 
     selectIns = $(select).clone();
     $(selectIns).css("float", "none");
+	$(selectIns).css("max-width", "600px");
     selectIns.attr("value", $(select).children("option:selected").val());
     
     selectIns.change(function () {
