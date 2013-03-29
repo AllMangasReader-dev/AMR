@@ -5,6 +5,12 @@
     "description": "Description of the extension."
   },
   
+  // General
+  "licence": {
+    "message": "AllMangasReader is under the licence of GLPv3"
+    "description": "This is the licencing info"
+  },
+  
   // options
   "options_title": {
     "message": "All Mangas Reader Options",
