@@ -171,8 +171,8 @@ function pyjmirs() {
 
 function loadSelectors() {
   "use strict";
-  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='Activate all visible mirrors'/>"),
-    selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>"),
+  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='" + translate("options_act_all") + "'/>"),
+    selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='" + translate("options_deact_all") + "'/>"),
     sel = MgUtil.getLanguageSelect(mirrors),
     spansel = $("<span class='custom-select'></span>");
 
@@ -309,7 +309,7 @@ function restore_mirrors() {
   });
 
   $("#results").empty();
-  $("<table id='allmirrors'><thead><tr><td>Website name / number of mangas read</td><td>Developer</td><td>Revision</td><td>Language</td><td>Activated</td><td>Discuss</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
+  $("<table id='allmirrors'><thead><tr><td>" + translate("options_ws_name") + "</td><td>" + translate("options_ws_developer") + "</td><td>" + translate("options_ws_revision") + "</td><td>" + translate("options_ws_language") + "</td><td>" + translate("options_ws_activated") + "</td><td>" + translate("options_ws_discuss") + "</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
 
   for (i = 0; i < mirrors.length; i += 1) {
     if (mirrors[i].mirrorName !== undefined) {
@@ -318,7 +318,7 @@ function restore_mirrors() {
         img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
         langstr = "",
         tdMgs = $("<td class='mirrorOpt'></td>"),
-        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
+        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='" + translate("options_ws_discuss_tit") + "'/></td>"),
         lang = mirrors[i].languages.split(","),
         nb = 0,
         j = 0,
@@ -333,14 +333,14 @@ function restore_mirrors() {
       }
       img.appendTo(tdHead);
       $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
-      $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
+      $("<span> (" + translate("options_ws_number_mg") + " : <b>" + nb + "</b>)</span>").appendTo(tdHead);
       tdHead.appendTo(trCur);
       for (j = 0; j < lang.length; j += 1) {
         langstr += MgUtil.getLanguageName(lang[j]) + ", ";
       }
       $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
       if (mirrors[i].revision === 0) {
-        release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
+        release = $("<td><a class='comebacktorelease button' title='" + translate("options_ws_temp") + "'>Release</a></td>");
         release.data("idext", mirrors[i].idext);
         release.appendTo(trCur);
       } else {

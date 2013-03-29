@@ -11,7 +11,11 @@ function localizePage() {
   "use strict";
   //translate a page into the users language
   $("[i18n]:not(.i18n-replaced)").each(function () {
-    $(this).html(translate($(this).attr("i18n")));
+	if ($(this).is("[i18n_args]")) {
+		$(this).html(translate($(this).attr("i18n"), JSON.parse($(this).attr("i18n_args"))));
+	} else {
+		$(this).html(translate($(this).attr("i18n")));
+	}
   });
   $("[i18n_value]:not(.i18n-replaced)").each(function () {
     $(this).val(translate($(this).attr("i18n_value")));
@@ -34,3 +38,7 @@ function localizePage() {
     $(this).addClass("i18n-replaced");
   });
 }
+
+$(function() {
+  localizePage();
+});
