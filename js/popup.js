@@ -1806,7 +1806,7 @@ function bindActions() {
     } else {
         chrome.extension.sendRequest({
             action : "opentab",
-            url : "/release.html"
+            url : "http://wiki.allmangasreader.com/changelog"
         }, function (response) {
         localStorage["versionViewRelease"] = localStorage["version"];
         });

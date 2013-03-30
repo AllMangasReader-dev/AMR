@@ -213,27 +213,29 @@ function init() {
       ancVersion = null;
     }
     var curVersion = chrome.extension.getVersion();
-    if (ancVersion == null || curVersion != ancVersion) {
-      localStorage["version"] = curVersion;
-      if (pars.openupdate === 1) {
-        chrome.tabs.create({
-          if (chrome.extension.isBeta()) {
-            "url" : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
-          } else {
-            "url" : "/release.html"
-          }
-        });
-        localStorage["versionViewRelease"] = localStorage["version"];
-      }
-      try {
+    if (ancVersion === null || curVersion !== ancVersion) {
+    localStorage.version = curVersion;
+    if (pars.openupdate === 1) {
         if (chrome.extension.isBeta()) {
-          _gaq.push(['_trackEvent', 'Install', 'Beta Channel', curVersion]);
+            chrome.tabs.create({
+                "url" : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
+            });
         } else {
-          _gaq.push(['_trackEvent', 'Install', curVersion]);
+            chrome.tabs.create({
+                "url" : "http://wiki.allmangasreader.com/changelog"
+            });
+        }
+    }
+    localStorage.versionViewRelease = localStorage.version;
+    }
+    try {
+        if (chrome.extension.isBeta()) {
+            _gaq.push(['_trackEvent', 'Install', 'Beta Channel', curVersion]);
+        } else {
+            _gaq.push(['_trackEvent', 'Install', curVersion]);
         }
         //pageTracker._trackEvent('Install', curVersion);
-      } catch (e) {}
-    }
+    } catch (e) {}
 
     //IsBeta returns true if homepage_url (in manifest) contains github.com. homepage_url is changed by auto release tool... if it's beta channel, contains the link to github latest commit.
     if (chrome.extension.isBeta()) {
