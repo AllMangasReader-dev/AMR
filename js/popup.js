@@ -1798,12 +1798,19 @@ function bindActions() {
   });
   $("#release").unbind();
   $("#release").click(function () {
-    chrome.extension.sendRequest({
-      action : "opentab",
-      url : "/release.html"
-    }, function (response) {
-      localStorage["versionViewRelease"] = localStorage["version"];
-    });
+    if (chrome.extension.isBeta()) {
+        chrome.extension.sendRequest({
+            action : "opentab",
+            url : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
+        })
+    } else {
+        chrome.extension.sendRequest({
+            action : "opentab",
+            url : "/release.html"
+        }, function (response) {
+        localStorage["versionViewRelease"] = localStorage["version"];
+        });
+    }
   });
   bindMultipleMgs();
   $(".clipoths").unbind();
