@@ -382,11 +382,11 @@
   
   // common messages
   "common_support": {
-    "message": "Support All Mangas Reader",
+    "message": "Support All Mangas Reader:",
     "description": "Support message title"
   },
   "common_donate": {
-    "message": "AMR represents a lot of work, if you want to help us continue and improve it, please donate",
+    "message": "AMR represents a lot of work,<br/>if you want to help us continue and improve it, please donate",
     "description": "Donation message"
   },
   "common_donate_to_us": {
