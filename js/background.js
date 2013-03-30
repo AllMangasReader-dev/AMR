@@ -215,9 +215,13 @@ function init() {
     var curVersion = chrome.extension.getVersion();
     if (ancVersion == null || curVersion != ancVersion) {
       localStorage["version"] = curVersion;
-      if (pars.openupdate == 1) {
+      if (pars.openupdate === 1) {
         chrome.tabs.create({
-          "url" : "/release.html"
+          if (chrome.extension.isBeta()) {
+            "url" : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
+          } else {
+            "url" : "/release.html"
+          }
         });
         localStorage["versionViewRelease"] = localStorage["version"];
       }
