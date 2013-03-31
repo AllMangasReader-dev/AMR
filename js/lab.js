@@ -54,6 +54,8 @@ function testnotif() {
   notif.url = mangaData.url;
   notif.onclick = function() {
     var _url = this.url;
+    // notif.cancel() should hide the notif once clicked
+    notif.cancel();
     chrome.tabs.create({
       "url" : _url
     });
