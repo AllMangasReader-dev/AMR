@@ -24,7 +24,7 @@ var menusAMR = [
   {name: "stats", link: "pstat.html", title: "My stats", icon: "pstat.png"},
   {name: "impexp", link: "importexport.html", title: "Import/Export", icon: "importexport.png"},
   {name: "faq", link: "faq.html", title: "Help", icon: "infos.png"},
-  {name: "release", link: "release.html", title: "Release note", icon: "release.png"},
+  {name: "release", link: "http://wiki.allmangasreader.com/changelog", title: "Changelog", icon: "release.png"},
   {name: "dev", link: "dev.html", title: "Development", icon: "code.png"},
   {name: "lab", link: "lab.html", title: "Lab", cond: "lab", icon: "dev.png"},
   {name: "home", link: "http://allmangasreader.com/", title: "Home", icon: "home.png"}

@@ -293,9 +293,9 @@ function dummy(res) {
 
 function restore_mirrors() {
   "use strict";
-  mirrors = chrome.extension.getBackgroundPage().mirrors;
-  mangas = chrome.extension.getBackgroundPage().mangaList;
-  actmirrors = chrome.extension.getBackgroundPage().actMirrors;
+  mirrors = chrome.extension.getBackgroundPage().mirrors || [];
+  mangas = chrome.extension.getBackgroundPage().mangaList || [];
+  actmirrors = chrome.extension.getBackgroundPage().actMirrors || [];
 
   loadSelectors();
   mirrors.sort(function (a, b) {
