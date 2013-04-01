@@ -1,37 +1,37 @@
 ï»¿/**
 
   This file is part of All Mangas Reader.
-  
+
   All Mangas Reader is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   All Mangas Reader is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
-  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>. 
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /*
   This js needs jquery.
-  His goal is to load all different mangas mirror specifics js and to create 
+  His goal is to load all different mangas mirror specifics js and to create
   the manga array.
 */
 //For local tests
 //var amrc_repository = "http://amrroot/community/latest/";
 //For remote tests in http (manifest 1.0)
 //var amrc_repository = "http://community.allmangasreader.com/latest/";
-//To be compatible with manifest 2.0 CSPs : 
+//To be compatible with manifest 2.0 CSPs :
 var amrc_repository = "https://ssl10.ovh.net/~allmanga/community/latest_v2/";
 
 //var amrc_root = "http://amrroot/community/";
 //var amrc_root = "http://community.allmangasreader.com/";
-//To be compatible with manifest 2.0 CSPs : 
+//To be compatible with manifest 2.0 CSPs :
 var amrc_root = "https://ssl10.ovh.net/~allmanga/community/";
 
 //##############################################################################
@@ -132,7 +132,7 @@ function updateWebsitesFromRepository(callback) {
     success: function(resp) {
       //distant descriptions
       var wsdist = resp;
-      
+
       //local description
       amrcsql.webdb.getWebsites(function(list) {
         var wsloc = list;
@@ -175,9 +175,9 @@ function updateWebsitesFromRepository(callback) {
               changes[changes.length] = change;
             }
           }
-          
+
           //Check for deletion ?? --> not yet --> can't delete websites yet on AMRC.
-          
+
           //If changes --> Reload implementations...
           if (changes.length > 0) {
             waitForFinishUpdatingRepository(changes, function() {
@@ -286,7 +286,7 @@ function importImplentationFromId(id, callback) {
               finishImportAfterInsert(description, callback, isNew);
             });
           } else {
-            //Mise à jour de l'implem
+            //Mise ? jour de l'implem
             console.log("update " + description.mirrorName + " in database");
             amrcsql.webdb.updateWebsite(description, function() {
               finishImportAfterInsert(description, callback, isNew);
@@ -332,7 +332,7 @@ function releaseImplentationFromId(id, callback) {
     success: function(resp) {
       //distant description
       var description = JSON.parse(resp);
-      
+
       //local description
       getMirrorsDescription(function(list) {
         var wsloc = list;
@@ -353,7 +353,7 @@ function releaseImplentationFromId(id, callback) {
             isNew = true;
             amrcsql.webdb.storeWebsite(description, function() {callback(description.mirrorName);});
           } else {
-            //Mise à jour de l'implem
+            //Mise ? jour de l'implem
             console.log("update " + description.mirrorName + " in database");
             amrcsql.webdb.updateWebsite(description, function() {callback(description.mirrorName);});
           }
@@ -449,7 +449,7 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
         list[pos] = {loadedscript: true, error: "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode};
       }
     }, function() {
-      // error managing 
+      // error managing
       console.log("Script " + input.mirrorName + " failed to be loaded...");
       console.log(input);
       list[pos] = {loadedscript: true, error: "Script " + input.mirrorName + " failed to be loaded..."};
@@ -558,7 +558,7 @@ function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
         list[pos] = {loadedscript: true, listLoaded: true, error: "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode};
       }
     }, function() {
-      // error managing 
+      // error managing
       console.log("Script " + input.mirrorName + " failed to be loaded...");
       console.log(input);
       list[pos] = {loadedscript: true, listLoaded: true, error: "Script " + input.mirrorName + " failed to be loaded..."};
@@ -597,6 +597,8 @@ function displayNotification(wsData, params) {
   notif.url = "http://community.allmangasreader.com/comments.php?type=1&id=" + wsData.idext;
   notif.onclick = function() {
     var _url = this.url;
+    // notif.cancel() should hide the notif once clicked
+    notif.cancel();
     chrome.tabs.create({
       "url" : _url
     });
@@ -604,7 +606,7 @@ function displayNotification(wsData, params) {
   notif.show();
   if (params['notificationtimer'] > 0) {
     setTimeout(function() {
-		  notif.cancel();
+      notif.cancel();
 		}, params['notificationtimer'] * 1000);
   }
 }
