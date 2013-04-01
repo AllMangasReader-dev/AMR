@@ -1,19 +1,19 @@
 ﻿/**
 
   This file is part of All Mangas Reader.
-  
+
   All Mangas Reader is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   All Mangas Reader is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
-  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>. 
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -226,7 +226,7 @@ function init() {
 				});
 			}
 		}
-		
+
 		try {
 			if (chrome.extension.isBeta()) {
 				_gaq.push(['_trackEvent', 'Install', 'Beta Channel', curVersion]);
@@ -904,6 +904,11 @@ chrome.extension.onRequest.addListener(
     doesCurrentPageMatchManga(request.url, activatedMirrors(), function (_isOk, _mirrorName, _implementationURL) {
       //Load remote script implementation corresponding to current website
       var docache = true;
+      // if the url isn't ok send false and exit function
+      if(!_isOk) {
+        sendResponse({ isOk: false});
+        return;
+      }
       if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
         docache = false;
       }
@@ -920,11 +925,9 @@ chrome.extension.onRequest.addListener(
           });
         });
       }, function() {
-        // error managing 
+        // error managing
         console.log("Script " + _mirrorName + " failed to be loaded in page...");
-        sendResponse({
-            isOk : false
-          });
+        sendResponse({ isOk : false });
       }, 'text');
     });
   }
@@ -1303,7 +1306,7 @@ function activateMirror(mirrorName) {
           activated : true
         };
         localStorage["mirrorStates"] = JSON.stringify(lstTmp);
-        
+
         // Load refreshMirror
         try {
           for (var i = 0; i < mirrors.length; i++) {
@@ -1340,7 +1343,7 @@ function desactivateMirror(mirrorName) {
             activated : false
           };
           localStorage["mirrorStates"] = JSON.stringify(lstTmp);
-          
+
           // Delete from localStorage
           wssql.webdb.empty(mirrorName, function () {});
           break;
