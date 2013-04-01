@@ -17,7 +17,8 @@
 
 */
 
-var mirrors;
+var mirrors,
+  params = chrome.extension.getBackgroundPage().getParameters();
 amrcsql.init();
 
 $(function() {
@@ -61,9 +62,11 @@ function testnotif() {
     });
   };
   notif.show();
-  /*setTimeout(function () {
-    notif.cancel();
-  }, 1000);*/
+  if(params.notificationtimer > 0) {
+    setTimeout(function() {
+      notif.cancel();
+    }, 1000 * params.notificationtimer);
+  }
 }
 function testwsnot() {
   var wsData = {ws: "TestMirror", developer: "testdev", revision: 0, idext: 1, isnew: false};
@@ -96,15 +99,18 @@ function displayNotification(wsData) {
   notif.url = "http://community.allmangasreader.com/comments.php?type=1&id=" + wsData.idext;
   notif.onclick = function() {
     var _url = this.url;
+    // notif.cancel() should hide the notif once clicked
     notif.cancel();
     chrome.tabs.create({
       "url" : _url
     });
   };
   notif.show();
-  /*setTimeout(function () {
-    notif.cancel();
-  }, 1000);*/
+  if(params.notificationtimer > 0) {
+    setTimeout(function() {
+      notif.cancel();
+    }, 1000 * params.notificationtimer);
+  }
 }
 
 function getElementsByClass(searchClass, obj) {
