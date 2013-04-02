@@ -94,22 +94,6 @@
     "message": "Bookmark already exist, update note..",
     "description": "Message in import export to merge a bookmark"
   },
-  "background_impexp_": {
-    "message": "",
-    "description": "Message in import export to"
-  },
-  "background_impexp_": {
-    "message": "",
-    "description": "Message in import export to"
-  },
-  "background_impexp_": {
-    "message": "",
-    "description": "Message in import export to"
-  },
-  "background_impexp_": {
-    "message": "",
-    "description": "Message in import export to"
-  },
   
   
   // options
