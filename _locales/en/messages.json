@@ -11,6 +11,107 @@
     "description": "This is the licencing info"
   },
   
+  // Background
+  "background_bookmark_menu": {
+    "message": "Bookmark in AMR",
+    "description": "context menu on a scan to bookmark it"
+  },
+  "background_impexp_del": {
+    "message": "Deleting all mangas...",
+    "description": "Message in import export to delete all mangas"
+  },
+  "background_impexp_del_ent": {
+    "message": "Deleting manga entry in current list : $mgname$ on website : $mirror$",
+    "description": "Message in import export to delete an entry",
+	"placeholders": {
+		"mgname": {
+		  "content": "$1",
+		  "example": "One piece"
+		},
+		"mirror": {
+		  "content": "$2",
+		  "example": "Manga reader"
+		}
+	}
+  },
+  "background_impexp_add": {
+    "message": "Adding mangas...",
+    "description": "Message in import export to add mangas"
+  },
+  "background_impexp_read": {
+    "message": "Reading manga entry : $mgname$ on website $mirror$",
+    "description": "Message in import export to read an entry",
+	"placeholders": {
+		"mgname": {
+		  "content": "$1",
+		  "example": "One piece"
+		},
+		"mirror": {
+		  "content": "$2",
+		  "example": "Manga reader"
+		}
+	}
+  },
+  "background_impexp_mg_notfound": {
+    "message": "Manga not found in current list, adding manga...",
+    "description": "Message in import export to tell that manga is new"
+  },
+  "background_impexp_mg_syncchap": {
+    "message": "Manga found in current list, verify last chapter read. incoming : $lastchap$; current : $curchap$",
+    "description": "Message in import export to tell manga sync",
+	"placeholders": {
+		"lastchap": {
+		  "content": "$1",
+		  "example": "Last chapter"
+		},
+		"curchap": {
+		  "content": "$2",
+		  "example": "Current chapter"
+		}
+	}
+  },
+  "background_impexp_del_bm": {
+    "message": "Deleting all bookmarks...",
+    "description": "Message in import export to delete all bookmarks"
+  },
+  "background_impexp_del_onebm": {
+    "message": "Deleting bookmark entry in current list",
+    "description": "Message in import export to delete a bookmark"
+  },
+  "background_impexp_add_bm": {
+    "message": "Adding bookmarks...",
+    "description": "Message in import export to add bookmarks"
+  },
+  "background_impexp_read_entry": {
+    "message": "Reading bookmark entry",
+    "description": "Message in import export to read a bookmark entry"
+  },
+  "background_impexp_new_bm": {
+    "message": "Bookmark not found in current list, adding bookmark...",
+    "description": "Message in import export to tell bookmark is new"
+  },
+  "background_impexp_bm_merge": {
+    "message": "Bookmark already exist, update note..",
+    "description": "Message in import export to merge a bookmark"
+  },
+  "background_impexp_": {
+    "message": "",
+    "description": "Message in import export to"
+  },
+  "background_impexp_": {
+    "message": "",
+    "description": "Message in import export to"
+  },
+  "background_impexp_": {
+    "message": "",
+    "description": "Message in import export to"
+  },
+  "background_impexp_": {
+    "message": "",
+    "description": "Message in import export to"
+  },
+  
+  
   // options
   "options_title": {
     "message": "All Mangas Reader Options",

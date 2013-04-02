@@ -34,10 +34,6 @@ var animationSpeed = 30;
 var rotation = 0;
 var sharinganImage;
 
-pstat.init();
-wssql.init();
-amrcsql.init();
-
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -1034,7 +1030,7 @@ chrome.extension.onRequest.addListener(
     if (!isFound) {
       ctxIds[ctxIds.length] = request.lstUrls[0];
       var id = chrome.contextMenus.create({
-          title : "Bookmark in AMR",
+          title : translate("background_bookmark_menu"),
           contexts : ["image"],
           onclick : function (info, tab) {
             chrome.tabs.executeScript(tab.id, {
@@ -2096,10 +2092,10 @@ function deleteMangas(mangasToDel) {
 function importMangas(mangas, merge) {
   var textOut = "";
   if (!merge) {
-    textOut += 'Deleting all mangas...\n';
+    textOut += translate("background_impexp_del") + '\n';
     var deleteAr = [];
     for (var i = 0; i < mangaList.length; i++) {
-      textOut += "\t - Deleting manga entry in current list : " + mangaList[i].name + " in mirror : " + mangaList[i].mirror + "\n";
+      textOut += "\t - " + translate("background_impexp_del_ent", [mangaList[i].name, mangaList[i].mirror]) + "\n";
       deleteAr[deleteAr.length] = i;
       try {
         _gaq.push(['_trackEvent', 'DeleteManga', mangaList[i].mirror, mangaList[i].name]);
@@ -2110,14 +2106,14 @@ function importMangas(mangas, merge) {
     }
   }
 
-  textOut += 'Adding mangas...\n';
+  textOut += translate("background_impexp_add") + '\n';
   var lstTmp = mangas;
   for (var i = 0; i < lstTmp.length; i++) {
     var tmpManga = new MangaElt(lstTmp[i]);
-    textOut += "\t - Reading manga entry : " + tmpManga.name + " in mirror : " + tmpManga.mirror + "\n";
+    textOut += "\t - " + translate("background_impexp_read", [tmpManga.name, tmpManga.mirror]) + "\n";
     var mangaExist = isInMangaList(tmpManga.url);
     if (mangaExist == null) {
-      textOut += "\t  --> Manga not found in current list, adding manga... " + "\n";
+      textOut += "\t  --> " + translate("background_impexp_mg_notfound") + "\n";
       if (!isMirrorActivated(tmpManga.mirror)) {
         activateMirror(tmpManga.mirror);
       }
@@ -2128,7 +2124,7 @@ function importMangas(mangas, merge) {
       } catch (e) {}
     } else {
       //Verify chapter last
-      textOut += "\t  --> Manga found in current list, verify last chapter read. incoming : " + tmpManga.lastChapterReadURL + "; current : " + mangaExist.lastChapterReadURL + "\n";
+      textOut += "\t  --> " +translate("background_impexp_mg_syncchap", [tmpManga.lastChapterReadURL, mangaExist.lastChapterReadURL]) + "\n";
       mangaExist.consult(tmpManga);
       try {
         _gaq.push(['_trackEvent', 'ReadManga', tmpManga.mirror, tmpManga.name]);
@@ -2194,11 +2190,11 @@ function updateFromSite(mangas, merge) {
 function importBookmarks(bms, merge) {
   var textOut = "";
   if (!merge) {
-    textOut += 'Deleting all bookmarks...\n';
+    textOut += translate("background_impexp_del_bm") + '\n';
     var deleteAr = [];
     if (bookmarks !== null) {
       for (var i = 0; i < bookmarks.length; i++) {
-        textOut += "\t - Deleting bookmark entry in current list : (type: " + bookmarks[i].type + ", url: " + bookmarks[i].url + ", chapter url: " + bookmarks[i].chapUrl + ", mirror: " + bookmarks[i].mirror + ((bookmarks[i].type == "chapter") ? "" : ", scanName: " + bookmarks[i].scanName) + ", note: " + bookmarks[i].note + ")" + "\n";
+        textOut += "\t - " + translate("background_impexp_del_onebm") + " : (type: " + bookmarks[i].type + ", url: " + bookmarks[i].url + ", chapter url: " + bookmarks[i].chapUrl + ", mirror: " + bookmarks[i].mirror + ((bookmarks[i].type == "chapter") ? "" : ", scanName: " + bookmarks[i].scanName) + ", note: " + bookmarks[i].note + ")" + "\n";
         deleteAr[deleteAr.length] = i;
       }
       for (var i = deleteAr.length - 1; i >= 0; i--) {
@@ -2207,10 +2203,10 @@ function importBookmarks(bms, merge) {
     }
   }
 
-  textOut += 'Adding bookmarks...\n';
+  textOut += translate("background_impexp_add_bm") + '\n';
   var lstTmp = bms;
   for (var i = 0; i < lstTmp.length; i++) {
-    textOut += "\t - Reading bookmark entry : (type: " + lstTmp[i].type + ", url: " + lstTmp[i].url + ", chapter url: " + lstTmp[i].chapUrl + ", mirror: " + lstTmp[i].mirror + ((lstTmp[i].type == "chapter") ? "" : ", scanName: " + lstTmp[i].scanName) + ", note: " + lstTmp[i].note + ")" + "\n"
+    textOut += "\t - " + translate("background_impexp_read_entry") + " : (type: " + lstTmp[i].type + ", url: " + lstTmp[i].url + ", chapter url: " + lstTmp[i].chapUrl + ", mirror: " + lstTmp[i].mirror + ((lstTmp[i].type == "chapter") ? "" : ", scanName: " + lstTmp[i].scanName) + ", note: " + lstTmp[i].note + ")" + "\n"
     var isFound = false;
     var posFound;
     var obj = lstTmp[i];
@@ -2235,7 +2231,7 @@ function importBookmarks(bms, merge) {
       }
     }
     if (!isFound) {
-      textOut += "\t  --> Bookmark not found in current list, adding bookmark... " + "\n";
+      textOut += "\t  --> " + translate("background_impexp_new_bm") + "\n";
       bookmarks[bookmarks.length] = {
         mirror : obj.mirror,
         url : obj.url,
@@ -2248,11 +2244,18 @@ function importBookmarks(bms, merge) {
         note : obj.note
       };
     } else {
-      textOut += "\t  --> Bookmark already exist, update note.. " + "\n";
+      textOut += "\t  --> " + translate("background_impexp_bm_merge") + "\n";
       bookmarks[posFound].note = obj.note;
     }
   }
   localStorage["bookmarks"] = JSON.stringify(bookmarks);
   return textOut;
 }
-init();
+
+$(function() {
+  pstat.init();
+  wssql.init();
+  amrcsql.init();
+
+  init();
+});
