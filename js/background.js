@@ -33,7 +33,8 @@ var animationFrames = 20;
 var animationSpeed = 30;
 var rotation = 0;
 var sharinganImage;
-
+var status_ready = true;
+var reason;
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -141,7 +142,34 @@ var sync = new BSync({
       refreshSync();
     }
   });
-
+function isReady(status_readyT, reasonT) {
+    "use strict";
+    if (status_readyT === false) {
+        chrome.browserAction.setIcon({
+            path : "img/blue-sharingan.png"
+        });
+        status_ready = status_readyT;
+        if (reason !== undefined) {
+            reason = reasonT;
+            return;
+        }
+        return;
+    }
+    if (status_readyT === true && status_ready === false) {
+        chrome.browserAction.setIcon({
+            path : "img/icon-32.png"
+        });
+        status_ready = status_readyT;
+        reason = null;
+        return;
+    }
+    if (status_readyT === undefined && reasonT === undefined) {
+        return {
+            'status_ready' : status_ready,
+            'reason' : reason
+        };
+    }
+}
 function replaceInUrls(url, find, rep) {
   var res = url;
   if (url != undefined && url != null && url.indexOf(find) != -1) {
@@ -908,7 +936,7 @@ chrome.extension.onRequest.addListener(
       if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
         docache = false;
       }
-      $.loadScript(_implementationURL, docache, function (sScriptBody, textStatus, jsXHR) {
+      $.loadScript(_implementationURL, docache, function (sScriptBody, textstatus_ready, jsXHR) {
         //Execute it in the concerned tab context
         chrome.tabs.executeScript(sender.tab.id, {
           code : sScriptBody
