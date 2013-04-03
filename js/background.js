@@ -164,7 +164,7 @@ function set_isReady(status, reason) {
             path : "img/icon-32.png"
         });
     } else {
-        return return {
+        return {
             'status' : status,
             'reason' : reason
         };
