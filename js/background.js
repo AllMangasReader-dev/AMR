@@ -157,7 +157,7 @@ function isReady(status_readyT, reasonT) {
     }
     if (status_readyT === true && status_ready === false) {
         chrome.browserAction.setIcon({
-            path : "img/icon-32.png"
+            path : "img/amrlittle.png"
         });
         status_ready = status_readyT;
         reason = null;
