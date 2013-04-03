@@ -33,7 +33,7 @@ var animationFrames = 20;
 var animationSpeed = 30;
 var rotation = 0;
 var sharinganImage;
-
+var status;
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -141,7 +141,35 @@ var sync = new BSync({
       refreshSync();
     }
   });
-
+function set_isReady(status, reason) {
+    "use strict";
+    status = status;
+    reason = reason;
+    if (!status) {
+        chrome.browserAction.setIcon({
+            path : "img/blue-sharingan.png"
+        });
+        if (reason !== undefined) {
+            console.log(reason);
+            return {
+                'status' : status,
+                'reason' : reason
+            };
+        }
+        console.log("No reason given");
+        return status;
+    }
+    if (status) {
+        chrome.browserAction.setIcon({
+            path : "img/icon-32.png"
+        });
+    } else {
+        return return {
+            'status' : status,
+            'reason' : reason
+        };
+    }
+}
 function replaceInUrls(url, find, rep) {
   var res = url;
   if (url != undefined && url != null && url.indexOf(find) != -1) {
