@@ -33,7 +33,8 @@ var animationFrames = 20;
 var animationSpeed = 30;
 var rotation = 0;
 var sharinganImage;
-var status;
+var status_ready = true;
+var reason;
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -141,31 +142,30 @@ var sync = new BSync({
       refreshSync();
     }
   });
-function set_isReady(status, reason) {
+function isReady(status_readyT, reasonT) {
     "use strict";
-    status = status;
-    reason = reason;
-    if (!status) {
+    if (status_readyT === false) {
         chrome.browserAction.setIcon({
             path : "img/blue-sharingan.png"
         });
+        status_ready = status_readyT;
         if (reason !== undefined) {
-            console.log(reason);
-            return {
-                'status' : status,
-                'reason' : reason
-            };
+            reason = reasonT;
+            return;
         }
-        console.log("No reason given");
-        return status;
+        return;
     }
-    if (status) {
+    if (status_readyT === true && status_ready === false) {
         chrome.browserAction.setIcon({
             path : "img/icon-32.png"
         });
-    } else {
+        status_ready = status_readyT;
+        reason = null;
+        return;
+    }
+    if (status_readyT === undefined && reasonT === undefined) {
         return {
-            'status' : status,
+            'status_ready' : status_ready,
             'reason' : reason
         };
     }
@@ -936,7 +936,7 @@ chrome.extension.onRequest.addListener(
       if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
         docache = false;
       }
-      $.loadScript(_implementationURL, docache, function (sScriptBody, textStatus, jsXHR) {
+      $.loadScript(_implementationURL, docache, function (sScriptBody, textstatus_ready, jsXHR) {
         //Execute it in the concerned tab context
         chrome.tabs.executeScript(sender.tab.id, {
           code : sScriptBody
