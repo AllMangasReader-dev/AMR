@@ -446,7 +446,6 @@ function writeNavigation(where, select, res, params) {
       jQuery.data(document.body, "nexturltoload", nextUrl);
     }
 
-
     //Add bookmark functionality
     var book = $("<img class='bookAMR' src='" + chrome.extension.getURL("img/bookmark.png") + "'/>");
     book.appendTo(this);
@@ -461,13 +460,6 @@ function writeNavigation(where, select, res, params) {
 
       $("#bookmarkPop").modal({focus:false, onShow: showDialog, zIndex: 10000000});
 
-      /* $("#noteAMR").keydown(function(event) {
-        if(event.which == 110 || event.which==188 || event.which==190){
-          //console.log(event.which);
-          //event.preventDefault();
-          //event.stopPropagation();
-        }
-       });*/
     });
     if (index === 0) {
       var objBM = {
@@ -606,15 +598,6 @@ function writeNavigation(where, select, res, params) {
       }
 
       $(_self).addClass("amrbarlayout");
-      /*
-      var down=$("<a id='downButAMR' class='buttonAMR' href='#'>Download</a>");
-      down.click(function() {
-        download();
-        return false;
-      });
-
-      down.appendTo(this);
-      */
 
       //TODO : change pub !!! (facebook + donate)...
       if (params.pub == 1) {
@@ -701,8 +684,6 @@ function callbackListChaps(list, select) {
   }
 
   chrome.extension.sendRequest({"action": "parameters"}, function(response) {
-    //console.log("loading chap");
-    //getMangaMirror().getInformationsFromCurrentPage(document, window.location.href, function(res) {
       var whereNav;
       if (response.newbar == 1) {
         chrome.extension.sendRequest({action: "barState"}, function(barState) {
@@ -713,8 +694,6 @@ function callbackListChaps(list, select) {
         whereNav = getMangaMirror().whereDoIWriteNavigation(document, window.location.href);
         writeNavigation(whereNav, select, jQuery.data(document.body, "curpageinformations"), response);
       }
-      //console.log(jQuery.data(document.body, "curpageinformations"));
-    //});
   });
 }
 
@@ -758,20 +737,6 @@ function onLoadImage() {
       width = ancCan.width();
     }
     height = (width / ancCan.width()) * ancCan.height();
-    //console.log($(this).data("canvasId") + " --> (" + ancCan.width() + "; " + ancCan.height() + ") --> (" + width + "; " + height + ")");
-    /*
-    //CANVAS VERSION
-    var canvasCpy = $("<canvas width='" + width + "px' height='" + height + "px'/>");
-    $(this).after(canvasCpy);
-    var copyContext = canvasCpy[0].getContext("2d");
-    copyContext.drawImage(ancCan[0], 0, 0, ancCan.width(), ancCan.height() , 0, 0, width, height);
-    ancCan.remove();
-    canvasCpy.attr("id", $(this).data("canvasId"));
-    $("#" + $(this).data("divLoad")).css("display", "none");
-    $(this).data("finish", "1");
-    $(this).css("display", "none");
-    canvasCpy.css("margin-bottom", "50px");
-    */
 
     //DIV VERSION
     $("div", ancCan).add($("div > img", ancCan)).each(function(index) {
@@ -892,64 +857,17 @@ function onLoadImage() {
       });
     }
   }
-  /*
-  $("#" + $(this).data("divLoad")).css("display", "none");
-  $(this).data("finish", "1");
-  $(this).css("margin-right", "10px");
-  if ($(this).attr("src") != chrome.extension.getURL("img/imgerror.png")) {
-    $(this).css("border", "10px solid white");
-    $(this).css("margin-bottom", "50px");
-    }*/
-
   var divNum = $("<div class='pagenumberAMR'><div class='number'>" + ($(this).data("idScan") + 1) + "</div></div>");
   divNum.appendTo($(this).closest(".spanForImg"));
 }
 
-/*
-function download() {
-  var list = [];
-  $(".spanForImg img").each(function(index) {
-    list[list.length] = $(this).attr("src");
-  });
 
-  chrome.extension.sendRequest({action: "createZipFile", lst: list}, function(res) {
-    console.log("download");
-    //console.log(content);
-    var localServer = google.gears.factory.create('beta.localserver');
-    var blobBuilder = google.gears.factory.create('beta.blobbuilder');
-    var zipStore = localServer.openStore('amr');
-    if (zipStore == null){
-        zipStore = localServer.createStore('amr');
-    }
-    console.log("before append");
-    //blobBuilder.append(content);
-    //var cont = JSZipBase64.decode(content);
-    for (var c = 0; c < res.content.length; c++){
-        blobBuilder.append(res.content.charCodeAt(c));
-    }
-    //blobBuilder.append(res.content);
-    //blobBuilder.append(cont);
-    var now = new Date();
-    var zipUrl = 'AMR' + now.getTime() + '.zip';
-    //console.log(zipUrl);
-    zipStore.captureBlob(blobBuilder.getAsBlob(), zipUrl, 'application/zip');
-    //chrome.tabs.create({"url": zipUrl});
-    //console.log(zipUrl);
-    window.location.href=zipUrl;//"data:application/zip;base64,"+content;
-  });
-}
-*/
 
 function clickOnBM(src) {
   var imgScan = $(".spanForImg img[src='" + src + "']");
   if (imgScan.size() === 0) {
     imgScan = $(".spanForImg img[src='" + decodeURI(src) + "']");
   }
-
-  /*imgScan.css("border-top-color", "#84b8d9");
-  imgScan.css("border-right-color", "#84b8d9");
-  imgScan.css("border-bottom-color", "#84b8d9");
-  imgScan.css("border-left-color", "#84b8d9");*/
 
   $("#bookmarkData").data("type", "scan");
   $("#bookmarkData").data("scanUrl", src);
@@ -968,12 +886,6 @@ function clickOnBM(src) {
 
   $("#bookmarkPop").modal({focus:false, onShow: showDialog, zIndex:10000000});
 
-   /*$("#noteAMR").keydown(function(event) {
-    if(event.which == 110 || event.which==188 || event.which==190){
-      //event.preventDefault();
-      //event.stopImmediatePropagation();
-    }
-   });*/
 }
 
 function onErrorImage() {
