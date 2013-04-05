@@ -1004,7 +1004,7 @@ function onErrorImage() {
           var spanner = $(this).parent();
           spanner.empty();
 
-          var img = new Image();
+          var img = $("<img>"); //new Image();
           //== loadImage
           $(img).data("urlToLoad", url);
           $(img).css("border", "5px solid white");
@@ -1014,7 +1014,7 @@ function onErrorImage() {
 
           $(img).appendTo(spanner);
 
-          var div = $("<div id=\"" + divLoadId + "\" class=\"divLoading\"></div>");
+          var div = $("<div id='" + divLoadId + "' class='divLoading'></div>");
           div.css("background", "url(" + chrome.extension.getURL("img/loading.gif") + ") no-repeat center center");
           $(img).data("divLoad", divLoadId);
           $(img).data("idScan", idScan);
@@ -1023,7 +1023,7 @@ function onErrorImage() {
 
     } else {
       //console.log("An image has encountered a problem while loading... All Mangas Reader is trying to recover it...");
-      var imgSave = new Image();
+      var imgSave = $("<img>"); //new Image();
 
       if ($(this).data("hasErrors") != "1") {
         $(imgSave).data("hasErrors", "1");
@@ -1090,7 +1090,7 @@ function writeImages(where, list, mode, res) {
     td.css("text-align", "center");
     td.appendTo(tr);
 
-    var spanner = $("<div class=\"spanForImg\"></div>");
+    var spanner = $("<div class='spanForImg'></div>");
     $(spanner).css("vertical-align", "middle");
     $(spanner).css("text-align", "center");
     $(spanner).data("order", i);
@@ -1102,14 +1102,14 @@ function writeImages(where, list, mode, res) {
     //on the website and when the extension creates image from DOM and container
     //from website's jQuery. We can't have both of them interract (DOM restriction)
     //It might be a Canary issue more than an AMR issue... Here it is fixed...
-    var img = $("<img></img>");//new Image();
+    var img = $("<img>");//new Image();
 
     $(img).addClass("imageAMR");
     //$(img).attr("title", i+1);
     loadImageAMR(where, list[i], img, i, res, mode);
     $(img).appendTo(spanner);
 
-    var div = $("<div id=\"loader" + i + "\" class=\"divLoading\"></div>");
+    var div = $("<div id='loader" + i + "' class='divLoading'></div>");
     div.css("background", "url(" + chrome.extension.getURL("img/loading.gif") + ") no-repeat center center");
     $(img).data("divLoad", "loader" + i);
     $(img).data("idScan", i);
@@ -1350,7 +1350,7 @@ function loadNextChapter(urlNext) {
      var lst = resp.images;
      if (lst !== null) {
        for (var i = 0; i < lst.length; i++) {
-        var img = new Image();
+        var img = $("<img>") //new Image();
         $(img).data("attempts", 0);
         $(img).data("id", i);
         $(img).data("urltoload", lst[i]);
