@@ -434,14 +434,14 @@ function actionRead() {
 }
 function fillActions(mg, where, hasdown) {
   "use strict";
-  var acts = "<img src='img/backward.png' class='actback' title='View previous chapter'/><img src='img/play.png' class='actplay' title='View latest chapter read'/><img src='img/foward.png' class='actfor' title='View next chapter'/><img src='img/toend.png' class='actend' title='View latest published chapter'/><img src='img/cancel.png' class='deletemg' title='Delete this manga from reading list'/>";
+  var acts = "<img src='img/backward.png' class='actback' title='" + translate('prev_chapter') + "'/><img src='img/play.png' class='actplay' title='" + translate('current_chapter') + "'/><img src='img/foward.png' class='actfor' title='" + translate('next_chapter') + "'/><img src='img/toend.png' class='actend' title='" + translate('last_chapter') + "'/><img src='img/cancel.png' class='deletemg' title='" + translate('delete_manga') + "'/>";
   if (isNew(mg)) {
-    acts = "<img src='img/eye.png' class='actread' title='Mark latest published chapter as read' />" + acts;
+    acts = "<img src='img/eye.png' class='actread' title='" + translate('mark_read') + "' />" + acts;
   } else {
     acts = "<img src='img/blank.png' class='actblank' />" + acts;
   }
   if (hasdown) {
-    acts += "<img src='img/down_der.png' class='clipoths' title='View other informations and actions for this manga'/>";
+    acts += "<img src='img/down_der.png' class='clipoths' title='" + translate('view_more') + "'/>";
   }
   $(acts).appendTo(where);
 }
@@ -459,14 +459,14 @@ function fillChapters(mg, sel) {
         }
         tmp.appendTo(sel);
       });
-      sel.attr("title", "Latest published chapter : " + mg.listChaps[0][0]);
+      sel.attr("title", translate('last_pub_ch') + mg.listChaps[0][0]);
       sel.change(function () {
         openTab($(this).val());
       });
       sel.parent().prev().remove();
       sel.parent().show();
     } else {
-      $("<span>No chapters found yet...</span>").appendTo(sel.parent().parent());
+      $("<span>" + translate('no_chapter') + "</span>").appendTo(sel.parent().parent());
       sel.parent().prev().remove();
       sel.parent().remove();
     }
@@ -548,7 +548,7 @@ function bindCatsButtons() {
     inp.blur(function () {
       var _par = $(this).parent();
       _par.text(_par.data("anccat"));
-      var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
+      var imgs = $("<img src='img/list10.gif' class='actcatview' title='" + translate('only_cat') + "'/><img src='img/edit10.png' class='actcatedit' title='" + translate('edit_cat') + "'/><img src='img/delete10.png' class='actcatdelete' title='" + translate('del_cat') + "'/>");
       imgs.appendTo(_par);
       bindCatsButtons();
       $(this).remove();
@@ -567,13 +567,13 @@ function bindCatsButtons() {
           var newcat = $(myself).val();
           var anccat = $(_par).data("anccat");
           _par.text(newcat);
-          var imgs = $("<img src='img/list10.gif' class='actcatview' title='View only mangas from this category'/><img src='img/edit10.png' class='actcatedit' title='Edit this category'/><img src='img/delete10.png' class='actcatdelete' title='Delete this category'/>");
+          var imgs = $("<img src='img/list10.gif' class='actcatview' title='" + translate('only_cat') + "'/><img src='img/edit10.png' class='actcatedit' title='" + translate('edit_cat') + "'/><img src='img/delete10.png' class='actcatdelete' title='" + translate('del_cat') + "'/>");
           imgs.appendTo(_par);
           $(myself).remove();
           $(".mgcategory").each(function (index) {
             if ($(this).text().trim() === anccat.trim()) {
               $(this).text(newcat.trim());
-              $("<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' />").appendTo($(this));
+              $("<img class='actcatmgdel' src='img/delete10.png' title='" + translate('del_cat_manga') + "' />").appendTo($(this));
             }
           });
           bindCatsButtons();
@@ -592,7 +592,7 @@ function bindCatsButtons() {
       if ($(this).text().trim() === catTxt.trim())
         nbmgs++;
     });
-    $(".actdeleteglobcat span").text("Are you sure to delete this category (" + catTxt + ", " + nbmgs + " mangas affected) ?");
+    $(".actdeleteglobcat span").text( translate('confirm_cat_del') + catTxt + ", " + nbmgs + translate('confirm_cat_del_number'));
     $(".actdeleteglobcat .yes").data("catdel", catTxt);
     $(".actdeleteglobcat .yes").data("catbtn", $(this));
     $(".actdeleteglobcat").toggle("blind", {}, 250);
@@ -613,7 +613,7 @@ function bindCatsButtons() {
           var _mg = $(this).closest(".manga");
           $(this).remove();
           if ($(".mgcategory", _mg).size() === 0) {
-            $(".mginfos .cats", _mg).text("No category for this manga");
+            $(".mginfos .cats", _mg).text(translate('no_cat'));
           }
         }
       });
@@ -655,7 +655,7 @@ function bindCatsButtons() {
         var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
         $(_par).remove();
         if ($(".mgcategory", _cats).size() === 0) {
-          _cats.text("No category for this manga");
+          _cats.text(translate('no_cat'));
         }
         displayMangasByCat();
       });
@@ -670,7 +670,7 @@ function bindCatsButtons() {
         var _cats = $(".mginfos .cats", $(_par).closest(".manga"));
         $(_par).remove();
         if ($(".mgcategory", _cats).size() === 0) {
-          _cats.text("No category for this manga");
+          _cats.text(translate('no_cat'));
         }
         displayMangasByCat();
       });
@@ -694,7 +694,7 @@ function fillCategories(mg, where) {
             where.empty();
           }
           categs[categs.length] = cat.trim();
-          $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
+          $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='" + translate('del_cat_manga') + "' /></div>").appendTo(where);
         }
       });
     });
@@ -704,7 +704,7 @@ function fillCategories(mg, where) {
       where.empty();
     }
     $.each(mg.cats, function (index, cat) {
-      $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='Delete this category from this manga' /></div>").appendTo(where);
+      $("<div class='mgcategory'>" + cat.trim() + "<img class='actcatmgdel' src='img/delete10.png' title='" + translate('del_cat_manga') + "' /></div>").appendTo(where);
     });
     bindCatsButtons();
   }
@@ -767,6 +767,29 @@ function addBookmarkInSel(bm, sel) {
   var opt = $("<option value='" + bm.chapUrl + "' title='" + (broken ? escape(bm.note) : "") + "'>" + txt + "</option>");
   opt.data("bmmirror", bm.mirror);
   opt.appendTo(optgrp);
+}
+function addLastUpdate(mg, where, wheretit) {
+  "use strict";
+  var ts;
+  if (mg.length) {
+    ts = 0;
+    for (var i = 0; i < mg.length; i++) {
+      if (mg[i].upts > ts) {
+        ts = mg[i].upts;
+      }
+    }
+  } else {
+    ts = mg.upts;
+  }
+  if (ts !== 0) {
+    if (parameters.displastup === 1) {
+      $("<img class=\"lastupdatedate\" src=\"" + chrome.extension.getURL(getPicTs(ts)) + "\" title=\"" + translate('last_time_ch') + "" + prettyDate(ts) + "\" />").appendTo(where);
+    } else {
+      wheretit && wheretit.attr("title", translate('last_time_ch') + prettyDate(ts));
+    }
+  } else {
+    wheretit && wheretit.attr("title", translate('last_time_ch') + translate('never'));
+  }
 }
 function addLastUpdate(mg, where, wheretit) {
   "use strict";
