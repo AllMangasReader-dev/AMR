@@ -302,14 +302,12 @@ function createBar(barVis) {
 
 
   //console.log("BARVIS : " + barVis);
-  if (barVis === 0) {
+  if (barVis == 0) {
     $("#AMRBar").css("text-align", "left");
     $("#AMRBarIn").hide();
-    //console.log("Cas 1");
   } else {
     $("#AMRBar").css("text-align", "center");
     $("#AMRBarInLtl").hide();
-    //console.log("Cas 2");
   }
   return divContent;
 }

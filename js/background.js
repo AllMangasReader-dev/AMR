@@ -1084,27 +1084,32 @@ chrome.extension.onRequest.addListener(
     });
   }
   if (request.action == "hideBar") {
-    if (localStorage["isBarVisible"] == 1) {
-      localStorage["isBarVisible"] = 0;
+    if (localStorage.isBarVisible == 1) {
+      localStorage.isBarVisible = 0;
+      console.log("hiding bar")
     } else {
-      localStorage["isBarVisible"] = 1;
+      localStorage.isBarVisible = 1;
+      console.log("showing bar")
     }
     sendResponse({
-      res : localStorage["isBarVisible"]
+      res : localStorage.isBarVisible
     });
   }
   if (request.action == "showBar") {
-    localStorage["isBarVisible"] = 1;
+    localStorage.isBarVisible = 1;
+    console.log("showing bar 2")
     sendResponse({});
   }
   if (request.action == "barState") {
-    if (localStorage["isBarVisible"] == undefined) {
+    if (localStorage.isBarVisible === undefined) {
+    console.log("showing bar 3")
       sendResponse({
         barVis : 1
       });
     } else {
+    console.log("showing bar 4")
       sendResponse({
-        barVis : localStorage["isBarVisible"]
+        barVis : localStorage.isBarVisible
       });
     }
   }
