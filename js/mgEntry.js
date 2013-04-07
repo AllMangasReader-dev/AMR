@@ -90,6 +90,7 @@ function loadJSFromRepository(description) {
 
 function waitForFinishRepository(websites, callback) {
   "use strict";
+  chrome.extension.getBackgroundPage().isReady(false, "Waiting for mirrors to be loaded");
   var done = true,
     i;
   for (i = 0; i < websites.length; i += 1) {
@@ -100,8 +101,8 @@ function waitForFinishRepository(websites, callback) {
   }
   if (done) {
     console.log("All websites loaded");
-    console.log(websites);
     callback(websites);
+    chrome.extension.getBackgroundPage().isReady(true);
   } else {
     setTimeout(function () {
       waitForFinishRepository(websites, callback);
@@ -445,6 +446,7 @@ function getMirrors(callback) {
 //Instantiate a returned mirror and load the script...
 function loadJSFromRepositoryForMirrors(list, pos, input) {
   "use strict";
+  chrome.extension.getBackgroundPage().isReady(false, "Downloading mirrors from repository");
   var docache = true;
   if (input.jsCode.indexOf(".php") !== -1) {
     docache = false;
@@ -466,6 +468,7 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
         error : "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode
       };
     }
+    chrome.extension.getBackgroundPage().isReady(true);
   }, function () {
     // error managing
     console.log("Script " + input.mirrorName + " failed to be loaded...");
@@ -480,6 +483,7 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
 //Wait for all mirrors to be loaded
 function waitForFinishgetMirrors(mirrors, callback) {
   "use strict";
+  chrome.extension.getBackgroundPage().isReady(false, "Waiting for mirrors to be get");
   var done = true,
     i;
   for (i = 0; i < mirrors.length; i += 1) {
@@ -490,6 +494,7 @@ function waitForFinishgetMirrors(mirrors, callback) {
   }
   if (done) {
     callback(mirrors);
+    chrome.extension.getBackgroundPage().isReady(true);
   } else {
     setTimeout(function () {
       waitForFinishgetMirrors(mirrors, callback);
@@ -565,6 +570,7 @@ function getActivatedMirrorsWithList(res, callback) {
 //Instantiate a returned activated mirror and load the script...
 function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
   "use strict";
+  chrome.extension.getBackgroundPage().isReady(false, "Downloading activated mirrors from repository");
   var docache = true;
   if (input.jsCode.indexOf(".php") !== -1) {
     docache = false;
@@ -606,6 +612,7 @@ function loadJSFromRepositoryForActivatedMirrors(list, pos, input) {
       error : "Script " + input.mirrorName + " failed to be loaded..."
     };
   });
+  chrome.extension.getBackgroundPage().isReady(true)
 }
 
 function waitForActivatedAndListFinish(mirrorsT, callback) {
