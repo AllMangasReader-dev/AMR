@@ -428,6 +428,7 @@ function registerMangaObject(mirrorName, object) {
 //Returns mirror with implementation
 function getMirrors(callback) {
   "use strict";
+  chrome.extension.getBackgroundPage().isReady(false, "Downloading mirrors from repository");
   getMirrorsDescription(function (list) {
     var wsloc = list;
     var mirrorsTmp = [],
@@ -437,6 +438,7 @@ function getMirrors(callback) {
       mirrorsTmp[cur] = {}; //Keep this place for the object...
       loadJSFromRepositoryForMirrors(mirrorsTmp, cur, wsloc[i]);
     }
+    chrome.extension.getBackgroundPage().isReady(true);
     waitForFinishgetMirrors(mirrorsTmp, function () {
       callback(mirrorsTmp);
     });
@@ -446,7 +448,7 @@ function getMirrors(callback) {
 //Instantiate a returned mirror and load the script...
 function loadJSFromRepositoryForMirrors(list, pos, input) {
   "use strict";
-  chrome.extension.getBackgroundPage().isReady(false, "Downloading mirrors from repository");
+
   var docache = true;
   if (input.jsCode.indexOf(".php") !== -1) {
     docache = false;
@@ -468,7 +470,6 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
         error : "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode
       };
     }
-    chrome.extension.getBackgroundPage().isReady(true);
   }, function () {
     // error managing
     console.log("Script " + input.mirrorName + " failed to be loaded...");
@@ -483,7 +484,6 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
 //Wait for all mirrors to be loaded
 function waitForFinishgetMirrors(mirrors, callback) {
   "use strict";
-  chrome.extension.getBackgroundPage().isReady(false, "Waiting for mirrors to be get");
   var done = true,
     i;
   for (i = 0; i < mirrors.length; i += 1) {
