@@ -1,6 +1,564 @@
 ﻿{
+  // manifest 
   "description": {
     "message": "Follow updates of online manga readers. Beautify reading, with full chapters scans.",
     "description": "Description of the extension."
+  },
+  
+  // General
+  "licence": {
+    "message": "All Mangas Reader is under the licence of GLPv3",
+    "description": "This is the licencing info"
+  },
+  
+  // Background
+  "background_bookmark_menu": {
+    "message": "Bookmark in AMR",
+    "description": "context menu on a scan to bookmark it"
+  },
+  "background_impexp_del": {
+    "message": "Deleting all mangas...",
+    "description": "Message in import export to delete all mangas"
+  },
+  "background_impexp_del_ent": {
+    "message": "Deleting manga entry in current list : $mgname$ on website : $mirror$",
+    "description": "Message in import export to delete an entry",
+	"placeholders": {
+		"mgname": {
+		  "content": "$1",
+		  "example": "One piece"
+		},
+		"mirror": {
+		  "content": "$2",
+		  "example": "Manga reader"
+		}
+	}
+  },
+  "background_impexp_add": {
+    "message": "Adding mangas...",
+    "description": "Message in import export to add mangas"
+  },
+  "background_impexp_read": {
+    "message": "Reading manga entry : $mgname$ on website $mirror$",
+    "description": "Message in import export to read an entry",
+	"placeholders": {
+		"mgname": {
+		  "content": "$1",
+		  "example": "One piece"
+		},
+		"mirror": {
+		  "content": "$2",
+		  "example": "Manga reader"
+		}
+	}
+  },
+  "background_impexp_mg_notfound": {
+    "message": "Manga not found in current list, adding manga...",
+    "description": "Message in import export to tell that manga is new"
+  },
+  "background_impexp_mg_syncchap": {
+    "message": "Manga found in current list, verify last chapter read. incoming : $lastchap$; current : $curchap$",
+    "description": "Message in import export to tell manga sync",
+	"placeholders": {
+		"lastchap": {
+		  "content": "$1",
+		  "example": "Last chapter"
+		},
+		"curchap": {
+		  "content": "$2",
+		  "example": "Current chapter"
+		}
+	}
+  },
+  "background_impexp_del_bm": {
+    "message": "Deleting all bookmarks...",
+    "description": "Message in import export to delete all bookmarks"
+  },
+  "background_impexp_del_onebm": {
+    "message": "Deleting bookmark entry in current list",
+    "description": "Message in import export to delete a bookmark"
+  },
+  "background_impexp_add_bm": {
+    "message": "Adding bookmarks...",
+    "description": "Message in import export to add bookmarks"
+  },
+  "background_impexp_read_entry": {
+    "message": "Reading bookmark entry",
+    "description": "Message in import export to read a bookmark entry"
+  },
+  "background_impexp_new_bm": {
+    "message": "Bookmark not found in current list, adding bookmark...",
+    "description": "Message in import export to tell bookmark is new"
+  },
+  "background_impexp_bm_merge": {
+    "message": "Bookmark already exist, update note..",
+    "description": "Message in import export to merge a bookmark"
+  },
+  
+  
+  // options
+  "options_title": {
+    "message": "All Mangas Reader Options",
+    "description": "Title of the options page"
+  },
+  "options_tab_manga": {
+    "message": "Mangas Web Sites",
+    "description": "First tab : options about manga web sites"
+  },
+  "options_tab_amr": {
+    "message": "All Mangas Reader",
+    "description": "Second tab : options about the extension itself"
+  },
+  "options_tab_sync": {
+    "message": "Synchronization",
+    "description": "Third tab : options about synchronization"
+  },
+  "options_tab_supported": {
+    "message": "Supported Web Sites",
+    "description": "Fourth tab : options about supported websites"
+  },
+  "options_ads": {
+    "message": "Ads",
+    "description": "Title of a section about ads"
+  },
+  "options_remove_ads": {
+    "message": "Remove ads in mangas web sites",
+    "description": "Option to remove ads"
+  },
+  "options_ad_amr": {
+    "message": "Display a link to AMR main page in manga web sites in order for you to give me feedback (I need your opinion to improve AMR, thanks !).",
+    "description": "option to add a link in manga web page to AMR's home page"
+  },
+  "options_chap_disp": {
+    "message": "Chapter display mode",
+    "description": "Title of a section about chapter displaying"
+  },
+  "options_chap_whole": {
+    "message": "While reading a manga, display the whole chapter instead of the current page",
+    "description": "Option on chapter display mode"
+  },
+  "options_chap_opts": {
+    "message": "Options for chapters",
+    "description": "Title of a section for chapter display mode"
+  },
+  "options_chap_ontop": {
+    "message": "Display chapters in normal mode (pages of the chapter will be displayed on top of one another)",
+    "description": "option to display scans on top of one another"
+  },
+  "options_chap_twopages": {
+    "message": "I have a wide screen !! I can display two pages in width so i want my chapter be displayed as a book !",
+    "description": "option to display scans for wide screens"
+  },
+  "options_chap_wide_opts": {
+    "message": "Options for wide screens",
+    "description": "Title of a section for wide screens"
+  },
+  "options_chap_occ": {
+    "message": "Display the book in Occidental mode (reading left to right)",
+    "description": "Option to display book occidentally"
+  },
+  "options_chap_jap": {
+    "message": "Display the book in Japanese mode (reading right to left)",
+    "description": "Option to display book japanesly"
+  },
+  "options_resize": {
+    "message": "Resize scans images to fit screen if they are to wide",
+    "description": "Option to resize scans image"
+  },
+  "options_load_opts": {
+    "message": "Loading options",
+    "description": "Title of a section on how to load chapters"
+  },
+  "options_loading_prog": {
+    "message": "See loading progression in the title bar",
+    "description": "Option to see the loading progession"
+  },
+  "options_load_order": {
+    "message": "Load scans in the order of the chapter (This option involve that the chapter's loading will be slower but guarantees that the first scan which will be loaded is the first of the chapter and so on...)",
+    "description": "Option to load scans in the order"
+  },
+  "options_prefetch": {
+    "message": "Prefetch next chapter while reading manga. (A progress bar indicating the prefetch level of the next chapter appears inside the \"Next\" button)",
+    "description": "Option to prefetch scnas for next chapter"
+  },
+  "options_wait_to_mark": {
+    "message": "Mark chapter as read when the full chapter has been downloaded",
+    "description": "Option to mark chapter as read once its really loaded"
+  },
+  "options_facilities": {
+    "message": "AMR facilities",
+    "description": "Title of a section on other options related to websites"
+  },
+  "options_amr_bar": {
+    "message": "Display navigation features in one always visible bar. (If you uncheck it, two navigation panels are included in each page, one on top of the scans and one at the bottom)",
+    "description": "Option to display AMR's bar"
+  },
+  "options_auto_add": {
+    "message": "Automatically add manga in my reading list when I read it. If you uncheck this option, you will have a button in the navigation bar to add the current manga in the list.",
+    "description": "Option to add manga in list automatically / manually"
+  },
+  "options_use_keys": {
+    "message": "Use left /right keys while reading to go previous / next scan.",
+    "description": "Option to use keys to read"
+  },
+  "options_auto_bookmark": {
+    "message": "Auto Bookmark scans when double click on it.",
+    "description": "Option to associate double click scan = bookmark it"
+  },
+  "options_right_key_next": {
+    "message": "Right key goes to next chapter when at bottom of the page.",
+    "description": "Option to set if right key can open next chapter at the end"
+  },
+  "options_perso_stat": {
+    "message": "Keep personnal statistics data.",
+    "description": "Option to enable personal statistics"
+  },
+  "options_popup_aspect": {
+    "message": "AMR aspect",
+    "description": "Title of a section on popup aspect"
+  },
+  "options_popup_in_tab": {
+    "message": "Open my manga reading list in a new tab when i click on the All Mangas Reader's icon",
+    "description": "Option to open popup in a tab"
+  },
+  "options_popup_mg_disp": {
+    "message": "Mangas Display Mode",
+    "description": "Title of a section on manga display mode in popup"
+  },
+  "options_mode_block": {
+    "message": "Display blocks for each manga with detailed information",
+    "description": "Option to display a block for each manga"
+  },
+  "options_mode_line": {
+    "message": "Display mangas in a list so i can see many of them",
+    "description": "Option to display a line for each manga"
+  },
+  "options_group_mg": {
+    "message": "Group mangas which have the same name on one line. When mangas are grouped, you can see all occurrences of the manga by clicking on the + icon next to the manga's name.",
+    "description": "Option to group manga by name in the popup"
+  },
+  "options_calendar_1": {
+    "message": "Display a calendar icon representing the last time a new chapter has been published",
+    "description": "Option to display calendar part 1"
+  },
+  "options_calendar_2": {
+    "message": "If unchecked, a tooltip will appear on the manga name telling : \"Last time new chapter : 2 weeks ago\" for example",
+    "description": "Option to display calendar part 2"
+  },
+  "options_titcal_day": {
+    "message": "Last time new chapter : 2 days ago",
+    "description": "Title for calendar day"
+  },
+  "options_titcal_week": {
+    "message": "Last time new chapter : 3 weeks ago",
+    "description": "Title for calendar week"
+  },
+  "options_titcal_month": {
+    "message": "Last time new chapter : 4 months ago",
+    "description": "Title for calendar month"
+  },
+  "options_popup_color": {
+    "message": "AMR's Popup Color",
+    "description": "Title of a section on popup back color"
+  },
+  "options_updt": {
+    "message": "Updates",
+    "description": "Title of a section concerning updates frequency"
+  },
+  "options_updt_chap": {
+    "message": "Update chapters list every : ",
+    "description": "Option on update chapter lists frequency"
+  },
+  "options_refresh_chap_now": {
+    "message": "Refresh chapters lists now",
+    "description": "Button to refresh chapters lists now"
+  },
+  "options_refresh_message": {
+    "message": "Refresh has been started and runs in background page. As it could take some time... you won't be notified that it is finished...",
+    "description": "Message saying that refresh has been launched"
+  },
+  "options_updt_list": {
+    "message": "Update list of manga for each web site every : ",
+    "description": "Option for update manga list frequency"
+  },
+  "options_refresh_mg_now": {
+    "message": "Refresh manga lists now",
+    "description": "Button to refresh manga lists now"
+  },
+  "options_popup_size": {
+    "message": "Size of popup : ",
+    "description": "Option to set popup size"
+  },
+  "options_small": {
+    "message": "Small",
+    "description": "Small size"
+  },
+  "options_medium": {
+    "message": "Medium",
+    "description": "Medium size"
+  },
+  "options_big": {
+    "message": "Big",
+    "description": "Big size"
+  },
+  "options_updt_on_startup": {
+    "message": "Update chapters list on chrome startup",
+    "description": "Option to update chapters when chrome starts"
+  },
+  "options_spin_sharingan": {
+    "message": "Spin the sharingan icon when AMR is updating chapters list.",
+    "description": "Option to show when AMR is updating by spinning icon"
+  },
+  "options_save_bandwidth": {
+    "message": "Save bandwidth while loading chapter list (this options waits for one manga to be updated before updating the next one)",
+    "description": "Option to save bandwidth by not loading all requests at the same time"
+  },
+  "options_notifs": {
+    "message": "Notifications",
+    "description": "Title of a section about notifications"
+  },
+  "options_notif_chap": {
+    "message": "Show browser notifications when new chapters are found.",
+    "description": "Option to show browser notifications on new chapter"
+  },
+  "options_notif_impl": {
+    "message": "Show browser notifications when websites implementations are updated from AMR Community (this will notify you when a developer fix bugs on a website or when a new website is released).",
+    "description": "Option to show browser notifications on implementation change"
+  },
+  "options_notif_timeout": {
+    "message": "Time before the notification close itself.",
+    "description": "Option to set a timeout for notifications"
+  },
+  "options_notif_close_manual": {
+    "message": "Close by user action",
+    "description": "Indicate the notification must be closed manually"
+  },
+  "options_misc": {
+    "message": "Miscellaneous",
+    "description": "Title of the section concerning misc options in AMR"
+  },
+  "options_grey_zero": {
+    "message": "Display a grey \"0\" on AMR's icon when there is no new manga.",
+    "description": "Option to have a grey 0 on the icon when nothing to read"
+  },
+  "options_nobadge": {
+    "message": "Do not display a badge with the number of unread manga but display AMR's icon in color if there are new mangas and in grey if not.",
+    "description": "Option to not display a badge on icon"
+  },
+  "options_dev": {
+    "message": "I am a developer (displays a direct link to the lab in the popup).",
+    "description": "Option for developers"
+  },
+  "options_release_note": {
+    "message": "When AMR is updated to a new version, automatically load the release note page. (If not, an icon in the popup will warn you that your version has been updated)",
+    "description": "Option to open release note on new release"
+  },
+  "options_sync": {
+    "message": "Synchronize my mangas over my computers",
+    "description": "Option to synchronize manga list"
+  },
+  "options_sync_expl": {
+    "message": "If you choose to synchronize your mangas, your list of manga and the latest chapters you read will be synchronize. Your options won't be synchronized because of the possible differences of your computers.",
+    "description": "Sync explanation"
+  },
+  "options_sync_help_1": {
+    "message": "To allow this functionality, AMR uses your bookmarks. You must enable synchronization of your bookmarks in Google Chrome to make it work.",
+    "description": "Sync help text 1"
+  },
+  "options_sync_help_2": {
+    "message": "Help here",
+    "description": "Sync help text 2"
+  },
+  "options_sync_help_3": {
+    "message": "To do this, you can use build in chrome synchronization with your google account (in chrome options > Personal Data, click on the synchronize button, log in your google account and choose to synchronize bookmarks) If you prefer to use another bookmark sync (like with XMarks), you can do it.",
+    "description": "Sync help text 3"
+  },
+  "options_sync_help_4": {
+    "message": "As All Mangas Reader synchronizes its data every five minutes, the synchronization is not immediate. Chrome synchronization and XMarks both synchronizes incoming data every few hours, so don't expect your changes to appear immediately. You can force synchronization of your data in XMarks by clicking \"Synchronize Now\". With chrome synchronization, you can't force sync. When you read a manga, the bookmark will be modified within five minutes but the incoming synchronization takes more time. To force it, the best way is to relaunch Google Chrome or to disable and reenable synchronization.",
+    "description": "Sync help text 4"
+  },
+  "options_sync_help_5": {
+    "message": "Please note that google chrome is limited in bookmarks synchronization. It authorizes until 100 updates of bookmarks. So, sometimes, your bookmark won't be sync...",
+    "description": "Sync help text 5"
+  },
+  "options_sync_help_6": {
+    "message": "To make this work, All Mangas Reader creates a folder in your \"Other Bookmarks\" section which is named \"BSync\". This functionnality has been implemented thanks to phaistonian very good code.",
+    "description": "Sync help text 6"
+  },
+  "options_sync_help_7": {
+    "message": "To Read before syncing",
+    "description": "Sync help text 7"
+  },
+  "options_sync_help_8": {
+    "message": "When syncing is enabled, a text at the bottom of the extension popup indicate when the last synchronization has been done.",
+    "description": "Sync help text 8"
+  },
+  "options_sync_help_9": {
+    "message": "If AMR is already installed on multiple computers, when you activate synchronization, it is possible that you loose a few data. The best way is to enable synchronisation on one computer only, to wait for the AMR bookmark to appear on the other computers (Other Bookmarks > BSync > All Mangas Reader.xxxxxxx) and then to activate synchronization on other computers",
+    "description": "Sync help text 9"
+  },
+  "options_website_sup": {
+    "message": "AMR provides many supported Web Sites. For each web sites, AMR stores the list of existing mangas. To prevent AMR from using too much RAM, you can deactivate web sites you don't use. Only web sites for which you don't have mangas in your reading list can be deactivated.",
+    "description": "Web site support explanation"
+  },
+  "options_ws_activation": {
+    "message": "You can use the selectors on the right to facilitate your deactivation. For example, if you want only English websites. Click on $img_none$ then select \"English\" in the language drop down list and click $img_all$. Only english websites are activated.",
+    "description": "Explain website activation",
+	"placeholders": {
+		"img_none": {
+		  "content": "$1",
+		  "example": "<img... />"
+		},
+		"img_all": {
+		  "content": "$2",
+		  "example": "<img... />"
+		}
+	}
+  },
+  "options_bottom_text_1": {
+    "message": "To report a bug, ask for help or suggest new features, please go to ",
+    "description": "Bottom text to obtain support"
+  },
+  "options_act_all": {
+    "message": "Activate all visible mirrors",
+    "description": "Title of button to activate all websites"
+  },
+  "options_deact_all": {
+    "message": "Deactivate all visible mirrors",
+    "description": "Title of button to deactivate all website"
+  },
+  "options_ws_name": {
+    "message": "Website name / number of mangas read",
+    "description": "Website table > website name column header"
+  },
+  "options_ws_developer": {
+    "message": "Developer",
+    "description": "Website table > developer column header"
+  },
+  "options_ws_revision": {
+    "message": "Revision",
+    "description": "Website table > Revision column header"
+  },
+  "options_ws_language": {
+    "message": "Language",
+    "description": "Website table > Language column header"
+  },
+  "options_ws_activated": {
+    "message": "Activated",
+    "description": "Website table > Activated column header"
+  },
+  "options_ws_discuss": {
+    "message": "Discuss",
+    "description": "Website table > Discuss column header"
+  },
+  "options_ws_discuss_tit": {
+    "message": "Discuss this implementation with the community (must be logged on the forum)",
+    "description": "Title of the discuss implementation button"
+  },
+  "options_ws_number_mg": {
+    "message": "Mangas read on this site",
+    "description": "How many manga read on a website message"
+  },
+  "options_ws_temp": {
+    "message": "This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.",
+    "description": "temporary implementation message for developers"
+  },
+  
+  
+  // common messages
+  "common_support": {
+    "message": "Support All Mangas Reader:",
+    "description": "Support message title"
+  },
+  "common_donate": {
+    "message": "AMR represents a lot of work,<br/>if you want to help us continue and improve it, please donate",
+    "description": "Donation message"
+  },
+  "common_donate_to_us": {
+    "message": "Donate to All Mangas Reader (US Dollar)",
+    "description": "Second donation message is us dollars"
+  },
+  "common_donate_to_eu": {
+    "message": "Donate to All Mangas Reader (Euro)",
+    "description": "Second donation message is euro"
+  },
+  "common_or": {
+    "message": "or",
+    "description": "Just 'or' message"
+  },
+  "common_minutes": {
+    "message": "$number$ minutes",
+    "description": "Just 'x minutes' message",
+	"placeholders": {
+		"number": {
+		  "content": "$1",
+		  "example": "2"
+		}
+	}
+  },
+  "common_hour": {
+    "message": "hour",
+    "description": "Just 'hour' message"
+  },
+  "common_hours": {
+    "message": "$number$ hours",
+    "description": "Just 'x hours' message",
+	"placeholders": {
+		"number": {
+		  "content": "$1",
+		  "example": "2"
+		}
+	}
+  },
+  "common_day": {
+    "message": "day",
+    "description": "Just 'day' message"
+  },
+  "common_days": {
+    "message": "$number$ days",
+    "description": "Just 'x days' message",
+	"placeholders": {
+		"number": {
+		  "content": "$1",
+		  "example": "2"
+		}
+	}
+  },
+  "common_week": {
+    "message": "week",
+    "description": "Just 'week' message"
+  },
+  "common_weeks": {
+    "message": "$number$ weeks",
+    "description": "Just 'x weeks' message",
+	"placeholders": {
+		"number": {
+		  "content": "$1",
+		  "example": "2"
+		}
+	}
+  },
+  "common_seconds": {
+    "message": "$number$ seconds",
+    "description": "Just 'x seconds' message",
+	"placeholders": {
+		"number": {
+		  "content": "$1",
+		  "example": "2"
+		}
+	}
+  },
+  "common_one_minute": {
+    "message": "1 minute",
+    "description": "Just '1 minute' message"
+  },
+  "common_forum": {
+    "message": "All Mangas Reader's forum",
+    "description": "forum title"
+  },
+  "common_mail_me": {
+    "message": "mail me",
+    "description": "Expression to say 'send me a mail'"
   }
+  
 }

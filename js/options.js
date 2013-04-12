@@ -1,4 +1,23 @@
-﻿var mirrors;
+﻿/**
+
+  This file is part of All Mangas Reader.
+  
+  All Mangas Reader is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  All Mangas Reader is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>. 
+
+*/
+
+var mirrors;
 var mangas;
 var actmirrors;
 var i = 0;
@@ -152,8 +171,8 @@ function pyjmirs() {
 
 function loadSelectors() {
   "use strict";
-  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='Activate all visible mirrors'/>"),
-    selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='Deactivate all visible mirrors'/>"),
+  var selAll = $("<img src='" + chrome.extension.getURL("img/select_all.png") + "' title='" + translate("options_act_all") + "'/>"),
+    selNone = $("<img src='" + chrome.extension.getURL("img/select_none.png") + "' title='" + translate("options_deact_all") + "'/>"),
     sel = MgUtil.getLanguageSelect(mirrors),
     spansel = $("<span class='custom-select'></span>");
 
@@ -274,9 +293,9 @@ function dummy(res) {
 
 function restore_mirrors() {
   "use strict";
-  mirrors = chrome.extension.getBackgroundPage().mirrors;
-  mangas = chrome.extension.getBackgroundPage().mangaList;
-  actmirrors = chrome.extension.getBackgroundPage().actMirrors;
+  mirrors = chrome.extension.getBackgroundPage().mirrors || [];
+  mangas = chrome.extension.getBackgroundPage().mangaList || [];
+  actmirrors = chrome.extension.getBackgroundPage().actMirrors || [];
 
   loadSelectors();
   mirrors.sort(function (a, b) {
@@ -290,7 +309,7 @@ function restore_mirrors() {
   });
 
   $("#results").empty();
-  $("<table id='allmirrors'><thead><tr><td>Website name / number of mangas read</td><td>Developer</td><td>Revision</td><td>Language</td><td>Activated</td><td>Discuss</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
+  $("<table id='allmirrors'><thead><tr><td>" + translate("options_ws_name") + "</td><td>" + translate("options_ws_developer") + "</td><td>" + translate("options_ws_revision") + "</td><td>" + translate("options_ws_language") + "</td><td>" + translate("options_ws_activated") + "</td><td>" + translate("options_ws_discuss") + "</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
 
   for (i = 0; i < mirrors.length; i += 1) {
     if (mirrors[i].mirrorName !== undefined) {
@@ -299,7 +318,7 @@ function restore_mirrors() {
         img = $("<img src='" + mirrors[i].mirrorIcon + "' title='" + mirrors[i].mirrorName + "' />"),
         langstr = "",
         tdMgs = $("<td class='mirrorOpt'></td>"),
-        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='Discuss this implementation with the community (must be logged on the forum)'/></td>"),
+        discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='" + translate("options_ws_discuss_tit") + "'/></td>"),
         lang = mirrors[i].languages.split(","),
         nb = 0,
         j = 0,
@@ -314,14 +333,14 @@ function restore_mirrors() {
       }
       img.appendTo(tdHead);
       $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
-      $("<span> (Mangas read on this site : <b>" + nb + "</b>)</span>").appendTo(tdHead);
+      $("<span> (" + translate("options_ws_number_mg") + " : <b>" + nb + "</b>)</span>").appendTo(tdHead);
       tdHead.appendTo(trCur);
       for (j = 0; j < lang.length; j += 1) {
         langstr += MgUtil.getLanguageName(lang[j]) + ", ";
       }
       $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
       if (mirrors[i].revision === 0) {
-        release = $("<td><a class='comebacktorelease button' title='This implementation is a temporary one imported directly from AMR Community. Click here to get the latest release for this website and come back in release process.'>Release</a></td>");
+        release = $("<td><a class='comebacktorelease button' title='" + translate("options_ws_temp") + "'>Release</a></td>");
         release.data("idext", mirrors[i].idext);
         release.appendTo(trCur);
       } else {

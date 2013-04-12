@@ -1,4 +1,23 @@
-﻿/* Object manga */
+﻿/**
+
+  This file is part of All Mangas Reader.
+
+  All Mangas Reader is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  All Mangas Reader is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+/* Object manga */
 XMLHttpRequest.prototype.mangaEltRef = null;
 XMLHttpRequest.prototype.extensionRef = null;
 HTMLLinkElement.prototype.mangaEltRef = null;
@@ -191,12 +210,14 @@ function MangaElt(obj) {
                       notification.cancel();
                     }, parameters.notificationtimer * 1000);
                   }*/
-                  var description = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter."
+                  var description = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter.";
                   var notif = window.webkitNotifications.createNotification(
                         chrome.extension.getURL('img/icon-32.png'), mangaData.name, description);
                   notif.url = mangaData.url;
                   notif.onclick = function() {
                     var _url = this.url;
+                    // notif.cancel() should hide the notif once clicked
+                    notif.cancel();
                     chrome.tabs.create({
                       "url" : _url
                     });

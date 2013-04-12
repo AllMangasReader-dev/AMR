@@ -1,4 +1,23 @@
-﻿var mirrors;
+﻿/**
+
+  This file is part of All Mangas Reader.
+  
+  All Mangas Reader is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  All Mangas Reader is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>. 
+
+*/
+
+var mirrors;
 var mangas;
 var parameters;
 var bookmarks;
@@ -1779,12 +1798,19 @@ function bindActions() {
   });
   $("#release").unbind();
   $("#release").click(function () {
-    chrome.extension.sendRequest({
-      action : "opentab",
-      url : "/release.html"
-    }, function (response) {
-      localStorage["versionViewRelease"] = localStorage["version"];
-    });
+    if (chrome.extension.isBeta()) {
+        chrome.extension.sendRequest({
+            action : "opentab",
+            url : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
+        })
+    } else {
+        chrome.extension.sendRequest({
+            action : "opentab",
+            url : "http://wiki.allmangasreader.com/changelog"
+        }, function (response) {
+        localStorage["versionViewRelease"] = localStorage["version"];
+        });
+    }
   });
   bindMultipleMgs();
   $(".clipoths").unbind();
@@ -2593,8 +2619,10 @@ $(function () {
   $("#butFind").click(function (e) {
     search();
   });
-  $('img').each( function() {
+  $('img').each(function () {
     var o = $(this);
-    if( ! o.attr('title') && o.attr('alt') ) o.attr('title', o.attr('alt') );
+    if (!o.attr('title') && o.attr('alt')) {
+      o.attr('title', o.attr('alt'))
+    };
   });
 });

@@ -1,49 +1,72 @@
-﻿
-var mirrors;
+﻿/**
+
+  This file is part of All Mangas Reader.
+
+  All Mangas Reader is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  All Mangas Reader is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+var mirrors,
+  params = chrome.extension.getBackgroundPage().getParameters();
 amrcsql.init();
 
 $(function() {
   load();
-  
+
   $("#mirrorList").change(function() {
     changeMirror();
   });
-  
+
   $(".loadtest").click(function() {
     loadTestForMirror();
   });
   $(".reload").click(function() {
     reload();
   });
-  
+
   $("#searchBoxInput").keypress(function(event) {
-    if(event.keyCode==13) 
+    if(event.keyCode==13)
       loadTestForMirror();
   });
-  
+
   $("#testnotif").click(testnotif);
   $("#testwsnot").click(testwsnot);
   $("#testwsnot2").click(testwsnot2);
   $("#testwsnot3").click(testwsnot3);
-  
+
 });
 
 function testnotif() {
   var mangaData = {name: "Test Manga", mirror: "TestMirror", url: "http://test.allmangasreader.com/"};
-  var title = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter."
+  var title = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter.";
   var notif = window.webkitNotifications.createNotification(
-        chrome.extension.getURL('img/icon-32.png'), mangaData.name, title)
+        chrome.extension.getURL('img/icon-32.png'), mangaData.name, title);
   notif.url = mangaData.url;
   notif.onclick = function() {
     var _url = this.url;
+    // notif.cancel() should hide the notif once clicked
+    notif.cancel();
     chrome.tabs.create({
       "url" : _url
     });
   };
   notif.show();
-  /*setTimeout(function () {
-    notif.cancel();
-  }, 1000);*/
+  if(params.notificationtimer > 0) {
+    setTimeout(function() {
+      notif.cancel();
+    }, 1000 * params.notificationtimer);
+  }
 }
 function testwsnot() {
   var wsData = {ws: "TestMirror", developer: "testdev", revision: 0, idext: 1, isnew: false};
@@ -76,14 +99,18 @@ function displayNotification(wsData) {
   notif.url = "http://community.allmangasreader.com/comments.php?type=1&id=" + wsData.idext;
   notif.onclick = function() {
     var _url = this.url;
+    // notif.cancel() should hide the notif once clicked
+    notif.cancel();
     chrome.tabs.create({
       "url" : _url
     });
   };
   notif.show();
-  /*setTimeout(function () {
-    notif.cancel();
-  }, 1000);*/
+  if(params.notificationtimer > 0) {
+    setTimeout(function() {
+      notif.cancel();
+    }, 1000 * params.notificationtimer);
+  }
 }
 
 function getElementsByClass(searchClass, obj) {
@@ -91,9 +118,9 @@ function getElementsByClass(searchClass, obj) {
 		obj = document;
 	}
 
-	var classElements = new Array();
+	var classElements = [];
 	var els = document.getElementsByTagName('*');
-	var elsLen = els.length
+	var elsLen = els.length;
 	for (i = 0, j = 0; i < elsLen; i++)
 	{
 		var classes = els[i].className.split(' ');
@@ -122,7 +149,7 @@ function load() {
         $(".globerrors").show();
       }
     }
-    
+
     //var icons = [];
     mirrors.sort(function(a, b) {
       return (a.mirrorName.toUpperCase() < b.mirrorName.toUpperCase()) ? - 1 : ((a.mirrorName.toUpperCase() == b.mirrorName.toUpperCase()) ? 0 : 1);
@@ -131,7 +158,7 @@ function load() {
     if (decodeURI(window.location.href).indexOf("mirror=") > 0) {
       curmir = decodeURI(window.location.href).substr(window.location.href.indexOf("mirror=") + 7);
     }
-    for (var i = 0; i < mirrors.length; i++) {
+    for (i = 0; i < mirrors.length; i++) {
       if ( mirrors[i].mirrorName == curmir) {
         $("<option value=\"" + mirrors[i].mirrorName + "\" selected=\"selected\">" + mirrors[i].mirrorName + "</option>").appendTo($("#mirrorList"));
       } else {
@@ -141,14 +168,14 @@ function load() {
     }
     //console.log(JSON.stringify(icons));
     changeMirror();
-    if (curmir != "") {
+    if (curmir !== "") {
       loadTestForMirror();
     }
   });
 }
 
 function changeMirror() {
-  if (getMangaMirror($("#mirrorList").val()) != null)  {
+  if (getMangaMirror($("#mirrorList").val()) !== null)  {
     $("#searchBox").css("display",  ($("#mirrorList").val()).canListFullMangas ? "none" : "table-row");
   }
 }
@@ -188,8 +215,8 @@ function testListMgs() {
       $("<span>Mirror name returned by callback is wrong : Mirror name returned is : " + mirName + " and must be " + $("#mirrorList").val() + "</span>").appendTo(res);
       isOk = false;
     }
-    $("<br />").appendTo(res)
-    if (lst.length == 0) {
+    $("<br />").appendTo(res);
+    if (lst.length === 0) {
       $("<span>ERROR : List of manga is empty (check your code and your connection)</span>").appendTo(res);
       modifyComment("listmgs", "Error while loading list of mangas");
     } else {
@@ -200,7 +227,7 @@ function testListMgs() {
         $("<option value=\"" + lst[i][1] + "\">" + lst[i][0] + "</option>").appendTo(sel);
         $("<option value=\"" + lst[i][1] + "\">" + lst[i][1] + "</option>").appendTo(selUrls);
       }
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
 
       sel.css("max-width", "300px");
       sel.appendTo(res);
@@ -214,7 +241,7 @@ function testListMgs() {
         window.open("view-source:" + $(this).prev().prev().val());
       });
       als.appendTo(res);
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
 
       selUrls.css("max-width", "300px");
       selUrls.appendTo(res);
@@ -228,7 +255,7 @@ function testListMgs() {
         window.open("view-source:" + $(this).prev().prev().val());
       });
       alsu.appendTo(res);
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
       //Add a button
       $("<span>Select a manga in the first list and click on the test button to load tests for this manga :</span>").appendTo(res);
       var but = $("<input type=\"button\" value=\"Test\"/>");
@@ -241,8 +268,8 @@ function testListMgs() {
     if (isOk) {
       modifyStatut("listmgs", "O");
       if ($("#auto").is(':checked')) {
-        var i = Math.floor(Math.random()*$("option", $("#lstMangas")).size());
-        $("option:nth-child(" + i + ")", $("#lstMangas")).attr("selected", "selected");
+        var index = Math.floor(Math.random()*$("option", $("#lstMangas")).size());
+        $("option:nth-child(" + index + ")", $("#lstMangas")).attr("selected", "selected");
         testChapters();
       }
     } else {
@@ -258,7 +285,7 @@ function testChapters() {
   getMangaMirror($("#mirrorList").val()).getListChaps($("#lstMangas").val(), $("#lstMangas option:selected").text(), null, function(lst, obj) {
     var res = $("<div></div>");
     var isOk = true;
-    if (lst.length == 0) {
+    if (lst.length === 0) {
       $("<span>ERROR : List of chapters is empty (check your code and your connection). Verify that this manga </span><a href=\"" + $("#lstMangas").val() + "\">" + $("#lstMangas").val() + "</a><span>) contains chapter on the manga site.</span>").appendTo(res);
       modifyComment("listchaps", "Error while loading list of chapters");
       isOk = false;
@@ -270,7 +297,7 @@ function testChapters() {
         $("<option value=\"" + lst[i][1] + "\">" + lst[i][0] + "</option>").appendTo(sel);
         $("<option value=\"" + lst[i][1] + "\">" + lst[i][1] + "</option>").appendTo(selUrls);
       }
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
       sel.css("max-width", "300px");
       sel.appendTo(res);
       var al = $("<input type='button' value='Go'/>");
@@ -283,7 +310,7 @@ function testChapters() {
         window.open("view-source:" + $(this).prev().prev().val());
       });
       als.appendTo(res);
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
       selUrls.css("max-width", "300px");
       selUrls.appendTo(res);
       var alu = $("<input type='button' value='Go'/>");
@@ -296,7 +323,7 @@ function testChapters() {
         window.open("view-source:" + $(this).prev().prev().val());
       });
       alsu.appendTo(res);
-      $("<br />").appendTo(res)
+      $("<br />").appendTo(res);
       //Add a button
       $("<span>Select a chapter in the first list and click on the test button to load tests for this chapter :</span>").appendTo(res);
       var but = $("<input type=\"button\" value=\"Test\"/>");
@@ -309,8 +336,8 @@ function testChapters() {
     if (isOk) {
       modifyStatut("listchaps", "O");
       if ($("#auto").is(':checked')) {
-        var i = Math.floor(Math.random()*$("option", $("#lstChaps")).size());
-        $("option:nth-child(" + i + ")", $("#lstChaps")).attr("selected", "selected");
+        var index = Math.floor(Math.random()*$("option", $("#lstChaps")).size());
+        $("option:nth-child(" + index + ")", $("#lstChaps")).attr("selected", "selected");
         testMirrorForChap();
       }
     } else {
@@ -348,7 +375,7 @@ function testMirrorForOtherChap() {
     }
   }
 
-  if (nbFalse == 0) {
+  if (nbFalse === 0) {
     modifyResult("testmirrorotchap", $("<span>Other mirrors won't find this chapter as to be treated by them</span>"));
     modifyComment("testmirrorotchap", "OK");
     modifyStatut("testmirrorotchap", "O");
@@ -425,7 +452,7 @@ function testInfos(div, callback) {
     var isWarn = false;
     $("<span>Informations retrieved from mirror : </span><br/><span>" + JSON.stringify(res) + "</span><br/>").appendTo(result);
 
-    if (res.name == undefined || res.name == null) {
+    if (res.name === undefined || res.name === null) {
       $("<br/><span>Manga name is not returned by your mirror !</span>").appendTo(result);
       isOk = false;
     } else {
@@ -436,7 +463,7 @@ function testInfos(div, callback) {
         isWarn = true;
       }
     }
-    if (res.currentMangaURL == undefined || res.currentMangaURL == null) {
+    if (res.currentMangaURL === undefined || res.currentMangaURL === null) {
       $("<br/><span>Manga url is not returned by your mirror !</span>").appendTo(result);
       isOk = false;
     } else {
@@ -447,7 +474,7 @@ function testInfos(div, callback) {
         isOk = false;
       }
     }
-    if (res.currentChapter == undefined || res.currentChapter == null) {
+    if (res.currentChapter === undefined || res.currentChapter === null) {
       $("<br/><span>Manga chapter name is not returned by your mirror !</span>").appendTo(result);
       isOk = false;
     } else {
@@ -458,7 +485,7 @@ function testInfos(div, callback) {
         isWarn = true;
       }
     }
-    if (res.currentChapterURL == undefined || res.currentChapterURL == null) {
+    if (res.currentChapterURL === undefined || res.currentChapterURL === null) {
       $("<br/><span>Manga chapter url is not returned by your mirror !</span>").appendTo(result);
       isOk = false;
     } else {
@@ -494,7 +521,7 @@ function testImages(div) {
 
   var res = $("<div></div>");
   var isOk = true;
-  if (lst.length == 0) {
+  if (lst.length === 0) {
     $("<span>ERROR : List of images is empty for the selected chapter</span>").appendTo(res);
     modifyComment("testimgs", "Error while retrieving list of images");
     isOk = false;
@@ -505,11 +532,11 @@ function testImages(div) {
     for (var i = 0; i < lst.length; i++) {
       $("<option value=\"" + lst[i] + "\">" + lst[i] + "</option>").appendTo(sel);
     }
-    $("<br />").appendTo(res)
+    $("<br />").appendTo(res);
     sel.css("max-width", "300px");
     sel.appendTo(res);
 
-    $("<br />").appendTo(res)
+    $("<br />").appendTo(res);
 
     //Add a button
     $("<span>Select an image in the list and click on the test button to load tests for this image :</span>").appendTo(res);
@@ -523,8 +550,8 @@ function testImages(div) {
   if (isOk) {
     modifyStatut("testimgs", "O");
     if ($("#auto").is(':checked')) {
-      var i = Math.floor(Math.random()*$("option", $("#lstImgs")).size());
-      $("option:nth-child(" + i + ")", $("#lstImgs")).attr("selected", "selected");
+      var index = Math.floor(Math.random()*$("option", $("#lstImgs")).size());
+      $("option:nth-child(" + index + ")", $("#lstImgs")).attr("selected", "selected");
       testImage();
     }
   } else {
@@ -555,7 +582,7 @@ function testImage() {
 function testNav(div) {
   var select = getMangaMirror($("#mirrorList").val()).getMangaSelectFromPage($(div), $("#lstChaps").val());
   //console.log(select);
-  if (select == null) {
+  if (select === null) {
     select = $("<select></select>");
     $("option", $("#lstChaps")).each(function(index) {
       var optTmp = $("<option value=\"" + $(this).val() + "\">" + $(this).text() + "</option>");
@@ -573,7 +600,7 @@ function testNav(div) {
   addResult("testnavplace", "L", "Test if the mirror returns a place to write navigation.", $("<span>Loading...</span>"), "");
 
   var where = $(getMangaMirror($("#mirrorList").val()).whereDoIWriteNavigation($(div), $("#lstChaps").val()));
-  if (where == null || where == undefined || where.size() == 0) {
+  if (where === null || where === undefined || where.size() === 0) {
     modifyResult("testnavplace", $("<span>Your mirror does not return a place to write navigation</span>"));
     modifyComment("testnavplace", "KO");
     modifyStatut("testnavplace", "K");
@@ -592,7 +619,7 @@ function testNav(div) {
   addResult("testscansplace", "L", "Test if the mirror returns a place to write scans.", $("<span>Loading...</span>"), "");
 
   where = $(getMangaMirror($("#mirrorList").val()).whereDoIWriteScans($(div), $("#lstChaps").val()));
-  if (where == null || where == undefined || where.size() == 0) {
+  if (where === null || where === undefined || where.size() === 0) {
     modifyResult("testscansplace", $("<span>Your mirror does not return a place to write scans</span>"));
     modifyComment("testscansplace", "KO");
     modifyStatut("testscansplace", "K");
@@ -616,7 +643,7 @@ function testNav(div) {
 
 function testNavNext(div, select) {
   var nextUrl = getMangaMirror($("#mirrorList").val()).nextChapterUrl(select, $(div), $("#lstChaps").val());
-  if (nextUrl == null || nextUrl == undefined || nextUrl.trim().length == 0) {
+  if (nextUrl === null || nextUrl === undefined || nextUrl.trim().length === 0) {
     modifyResult("testnavnext", $("<span>Next URL is empty, the current chapter must be the last chapter published. If not, check your code.</span>"));
     modifyComment("testnavnext", "Verify that the selected chapter is the latest published.");
     modifyStatut("testnavnext", "O");
@@ -642,7 +669,7 @@ function testNavNext(div, select) {
 }
 function testNavPrev(div, select) {
   var prevUrl = getMangaMirror($("#mirrorList").val()).previousChapterUrl(select, $(div), $("#lstChaps").val());
-  if (prevUrl == null || prevUrl == undefined || prevUrl.trim().length == 0) {
+  if (prevUrl === null || prevUrl === undefined || prevUrl.trim().length === 0) {
     modifyResult("testnavprev", $("<span>Previous URL is empty, the current chapter must be the first chapter published. If not, check your code.</span>"));
     modifyComment("testnavprev", "Verify that the selected chapter is the first published.");
     modifyStatut("testnavprev", "O");
@@ -716,7 +743,7 @@ function testNPRetURL(urlLoad, libNP, idTestBefore) {
     var isOk = true;
     $("<span>Informations retrieved from mirror for the " + libNP + " chapter : </span><br/><span>" + JSON.stringify(res) + "</span><br/>").appendTo(result);
 
-    if (res.currentMangaURL == undefined || res.currentMangaURL == null) {
+    if (res.currentMangaURL === undefined || res.currentMangaURL === null) {
       $("<br/><span>Manga url is not returned by your mirror for the " + libNP + " chapter !</span>").appendTo(result);
       isOk = false;
     } else {
@@ -727,7 +754,7 @@ function testNPRetURL(urlLoad, libNP, idTestBefore) {
         isOk = false;
       }
     }
-    if (res.currentChapterURL == undefined || res.currentChapterURL == null) {
+    if (res.currentChapterURL === undefined || res.currentChapterURL === null) {
       $("<br/><span>Manga chapter url is not returned by your mirror for the " + libNP + " chapter!</span>").appendTo(result);
       isOk = false;
     } else {
@@ -827,7 +854,11 @@ function pyjama() {
   $("tr", $("#resZone")).each(function(index) {
     $(this).removeClass("even");
     $(this).removeClass("odd");
-    (index%2 == 0) ? $(this).addClass("even") : $(this).addClass("odd");
+    if (index % 2 === 0) {
+      $(this).addClass("even");
+    } else {
+      $(this).addClass("odd");
+    }
   });
 }
 function modifyStatut(idTest, statut) {
@@ -857,7 +888,7 @@ function modifyComment(idTest, comment) {
 
 function resetAfter(idTest) {
   var nxt = $("#" + idTest).next();
-  while (nxt.size() != 0) {
+  while (nxt.size() !== 0) {
     nxt.remove();
     nxt = $("#" + idTest).next();
   }
