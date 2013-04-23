@@ -17,7 +17,19 @@
   },
   "background" : {
     "persistent" : true,
-    "page" : "background.html"
+    "scripts" : [
+        "js/jquery.js",
+        "js/jQuery.loadScript.js",
+        "js/i18n.js",
+        "js/MangaElt.js",
+        "js/mgEntry.js",
+        "js/BSync.js",
+        "js/analytics.js",
+        "js/personalstat.js",
+        "js/wssql.js",
+        "js/amrcsql.js",
+        "js/background.js"
+    ]
   },
   "content_scripts" : [{
       "matches" : [
