@@ -27,12 +27,15 @@ var timeoutChap;
 var timeoutMg;
 var timeoutWs;
 var updatews = 86400 * 1000;
-var canvas;
-var canvasContext;
+var canvas = document.createElement('canvas');
+canvas.width = '19';
+canvas.height = '19';
+var canvasContext = canvas.getContext('2d');
 var animationFrames = 20;
 var animationSpeed = 30;
 var rotation = 0;
-var sharinganImage;
+var sharinganImage = document.createElement('img');
+sharinganImage.src = 'img/amrlittle.png';
 var status_ready = true;
 var reason;
 /**
@@ -1509,11 +1512,6 @@ function grayscale(cnv, w, h) {
     cnv.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
 }
 function drawIcon(isgrey) {
-    if (canvas == undefined) {
-        canvas = document.getElementById('canvas');
-        sharinganImage = document.getElementById('sharingan');
-        canvasContext = canvas.getContext('2d');
-    }
     canvasContext.save();
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
     canvasContext.translate(canvas.width / 2, canvas.height / 2);
@@ -1556,11 +1554,6 @@ WaitForAllLists.prototype.incMade = function () {
 };
 WaitForAllLists.prototype.wait = function () {
     if (!this.hasStart) {
-        if (this.doSpin) {
-            canvas = document.getElementById('canvas');
-            sharinganImage = document.getElementById('sharingan');
-            canvasContext = canvas.getContext('2d');
-        }
         this.hasStart = true;
     }
     if (this.sizeAll <= this.nbMade) {
