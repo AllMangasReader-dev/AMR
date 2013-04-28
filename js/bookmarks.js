@@ -1,5 +1,12 @@
 ﻿var mirrors;
 var bmsAll;
+function openTab(urlToOpen) {
+  "use strict";
+  chrome.extension.sendRequest({
+    action : "opentab",
+    url : urlToOpen
+  }, function (response) {});
+}
 function compareTo(a, b) {
     "use strict";
     if (a < b) {
@@ -211,7 +218,9 @@ function loadBookmarks() {
     bmsAll = removeUnknown(lstTmp);
     if (bmsAll.length > 0) {
         sortBms(bmsAll);
-        valMg = localStorage.bookmarkMangasSelect;
+        if (localStorage.bookmarkMangasSelect !== undefined) {
+            valMg = localStorage.bookmarkMangasSelect;
+        }
         $("#mangas").empty();
         $("<option value='' " + ((valMg === "") ? "selected='selected'" : "") + ">All mangas</option>").appendTo($("#mangas"));
         for (i = 0; i < bmsAll.length; i += 1) {
@@ -314,8 +323,11 @@ function createScan(obj, where) {
     });
     img.appendTo(divImgImg);
     divImgImg.appendTo(divImg);
-    var chap = $("<div class='scanChap'><a href='#' onclick=\"chrome.extension.sendRequest({action: 'opentab', url: '" + obj.chapUrl + "'}, function(){});\"><span>" + obj.chapName + "</span></a>" + (($("#mangas option:selected").val() === "") ? "&nbsp;(" + obj.name + ")" : "") + "</div>");
-    chap.appendTo(divImg);
+    var chap = $("<div class='scanChap'><a href='#'\"><span>" + obj.chapName + "</span></a>" + (($("#mangas option:selected").val() === "") ? "&nbsp;(" + obj.name + ")" : "") + "</div>");
+    chap.unbind();
+    chap.click(function () {
+        openTab(obj.scanUrl)
+    });
     var note = $("<div class='scanNote'><span>" + obj.note + "</span></div>");
     note.appendTo(divImg);
     divImg.appendTo(where);
@@ -354,7 +366,11 @@ function renderManga(lstBms) {
                 tr.addClass("odd");
             }
             tr.appendTo($("table", divChaps));
-            var tdChap = $("<td class='chapName'><img src='" + getMangaMirror(lstBms[i].mirror).mirrorIcon + "' title='" + getMangaMirror(lstBms[i].mirror).mirrorName + "'/><a href='#' onclick=\"chrome.extension.sendRequest({action: 'opentab', url: '" + lstBms[i].chapUrl + "'}, function(){});\">" + lstBms[i].chapName + "</a>" + (($("#mangas option:selected").val() === "") ? "&nbsp;(" + lstBms[i].name + ")" : "") + "</td>");
+            var tdChap = $("<td class='chapName'><img src='" + getMangaMirror(lstBms[i].mirror).mirrorIcon + "' title='" + getMangaMirror(lstBms[i].mirror).mirrorName + "'/><a href='#'\">" + lstBms[i].chapName + "</a>" + (($("#mangas option:selected").val() === "") ? "&nbsp;(" + lstBms[i].name + ")" : "") + "</td>");
+            chap.unbind();
+            chap.click(function () {
+                openTab(lstBms[i].scanUrl)
+            });
             tdChap.appendTo(tr);
             var tdNote = $("<td class='chapNote'>" + lstBms[i].note + "</td>");
             tdNote.appendTo(tr);
