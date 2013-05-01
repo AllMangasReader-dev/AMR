@@ -417,7 +417,9 @@ body.big .list .manga .mgtitle {
   background-color: #DDDDDD;
   color: #555555;
 }
-
+.manga {
+  position: relative;
+}
 .block .manga .mgtitle {
   display:block;
   background-color: #CCCCFF;
