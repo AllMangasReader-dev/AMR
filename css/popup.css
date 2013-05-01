@@ -789,7 +789,7 @@ body.big .manga select {
 ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-thumb:horizontal {
     height: 50px !important;
     background-color: #9a9a9a !important;
-    -webkit-border-radius: 5px !important;
+    border-radius: 5px !important;
 }
 
 ::-webkit-scrollbar-thumb:vertical:hover, ::-webkit-scrollbar-thumb:horizontal:hover {

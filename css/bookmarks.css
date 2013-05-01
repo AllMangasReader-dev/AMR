@@ -208,7 +208,7 @@ a.buttonAMR {
     border:1px solid #DDD;
     text-align:center;
   background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
-    -webkit-border-radius:5px;
+    border-radius:5px;
     -webkit-transition: all .4s ease-in-out;
     margin:5px;
     cursor:pointer;
