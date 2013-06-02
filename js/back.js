@@ -1006,6 +1006,13 @@ function writeImages(where, list, mode, res) {
     $(spanner).data("order", i);
     spanner.appendTo(td);
 
+    var div = $("<div id='loader" + i + "' class='divLoading'></div>");
+    div.css("background", "url(" + chrome.extension.getURL("img/loading.gif") + ") no-repeat center center");
+    $(img).data("divLoad", "loader" + i);
+    $(img).data("idScan", i);
+    $(img).data("owidth", img.offsetWidth);
+    div.appendTo(spanner);
+    
     // Using jQuery to create this image instead of DOM native method fix a
     //weird bug on canary and only some websites.
     //My thought is that a version of canary was mistaking the embedded jQuery
@@ -1018,13 +1025,6 @@ function writeImages(where, list, mode, res) {
     //$(img).attr("title", i+1);
     loadImageAMR(where, list[i], img, i, res, mode);
     $(img).appendTo(spanner);
-
-    var div = $("<div id='loader" + i + "' class='divLoading'></div>");
-    div.css("background", "url(" + chrome.extension.getURL("img/loading.gif") + ") no-repeat center center");
-    $(img).data("divLoad", "loader" + i);
-    $(img).data("idScan", i);
-    $(img).data("owidth", img.offsetWidth);
-    div.appendTo(spanner);
    }
 
    var title = $("title").text();
