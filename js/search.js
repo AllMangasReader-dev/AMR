@@ -41,7 +41,7 @@ function load() {
     loadSearch();
     if (getQueryVariable("s") !== false) {
         searchInput = getQueryVariable("s");
-        document.getElementById("searchBoxInput").value = searchInput;
+        document.getElementById("searchBoxInput").value = unescape(searchInput);
         search();
     }
 }
