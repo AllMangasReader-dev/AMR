@@ -144,7 +144,22 @@ var sync = new BSync({
       });
       refreshSync();
     }
-  });
+});
+function sendSearch(selectedText) {
+    "use strict";
+    var serviceCall = chrome.extension.getURL("search.html") + '?s=' + selectedText;
+    chrome.tabs.create({
+        url : serviceCall
+    });
+}
+chrome.contextMenus.create({
+    title : "Search %s on AllMangasReader",
+    contexts : ["selection"],
+    onclick : function (info, tab) {
+        "use strict";
+        sendSearch(info.selectionText);
+    }
+});
 function isReady(status_readyT, reasonT) {
     "use strict";
     if (status_readyT === false) {
