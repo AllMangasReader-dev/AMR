@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.2",
+  "version" : "1.5.3",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
@@ -35,6 +35,9 @@
       "matches" : [
         "http://*/*"
       ],
+      "exclude_matches" : [
+        "http://*.allmangasreader.com/*"
+      ],
       "css" : [
         "css/back.css"
       ],
@@ -47,6 +50,9 @@
     }, {
       "matches" : [
         "http://*.allmangasreader.com/*"
+      ],
+      "exclude_matches" : [
+        "http://wiki.allmangasreader.com/*"
       ],
       "css" : [
         "css/backsite.css"
