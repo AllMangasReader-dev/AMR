@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.2",
+  "version" : "1.5.3",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
@@ -11,17 +11,32 @@
   },
 
   "browser_action" : {
-    "default_icon" : "img/icon-32.png",
+    "default_icon" : "img/amrlittle.png",
     "default_title" : "AllMangasReader",
     "default_popup" : "popup.html"
   },
   "background" : {
     "persistent" : true,
-    "page" : "background.html"
+    "scripts" : [
+        "js/jquery.js",
+        "js/jQuery.loadScript.js",
+        "js/i18n.js",
+        "js/MangaElt.js",
+        "js/mgEntry.js",
+        "js/BSync.js",
+        "js/analytics.js",
+        "js/personalstat.js",
+        "js/wssql.js",
+        "js/amrcsql.js",
+        "js/background.js"
+    ]
   },
   "content_scripts" : [{
       "matches" : [
         "http://*/*"
+      ],
+      "exclude_matches" : [
+        "http://*.allmangasreader.com/*"
       ],
       "css" : [
         "css/back.css"
@@ -35,6 +50,9 @@
     }, {
       "matches" : [
         "http://*.allmangasreader.com/*"
+      ],
+      "exclude_matches" : [
+        "http://wiki.allmangasreader.com/*"
       ],
       "css" : [
         "css/backsite.css"
@@ -57,7 +75,7 @@
       ]
     }
   ],
-  "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net https://www.google.com/; object-src 'self'",
+  "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net https://www.google.com/ https://platform.twitter.com/ https://www.facebook.com/; object-src 'self'",
   "homepage_url" : "http://www.allmangasreader.com/",
   "key" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFE73kwUiPfxcBtTkkkboktSCXCrDxMWvYSO72IabK3Q9pqvkEcViyFcuj6mpztx55kYhwFT+ntasZZiNgzhxkjc9zEuHopyrg+/S2tgGa7ueZ+P8s3IMOeEWj9Mqw2qyvPoZ508Q6FwrGjU6rZAhBtS5dzhibkFxRQc9Yej2ppQIDAQAB",
   "minimum_chrome_version" : "18.0",
@@ -94,7 +112,7 @@
     "img/amrlittle.png",
     "img/dev.png",
     "img/ltload.gif",
-    "img/imgerror.jpg",
+    "img/imgerror.png",
     "img/load10.gif"
   ]
 }

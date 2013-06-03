@@ -27,12 +27,15 @@ var timeoutChap;
 var timeoutMg;
 var timeoutWs;
 var updatews = 86400 * 1000;
-var canvas;
-var canvasContext;
+var canvas = document.createElement('canvas');
+canvas.width = '19';
+canvas.height = '19';
+var canvasContext = canvas.getContext('2d');
 var animationFrames = 20;
 var animationSpeed = 30;
 var rotation = 0;
-var sharinganImage;
+var sharinganImage = document.createElement('img');
+sharinganImage.src = 'img/amrlittle.png';
 var status_ready = true;
 var reason;
 /**
@@ -141,7 +144,22 @@ var sync = new BSync({
       });
       refreshSync();
     }
-  });
+});
+function sendSearch(selectedText) {
+    "use strict";
+    var serviceCall = chrome.extension.getURL("search.html") + '?s=' + selectedText;
+    chrome.tabs.create({
+        url : serviceCall
+    });
+}
+chrome.contextMenus.create({
+    title : "Search %s on AllMangasReader",
+    contexts : ["selection"],
+    onclick : function (info, tab) {
+        "use strict";
+        sendSearch(info.selectionText);
+    }
+});
 function isReady(status_readyT, reasonT) {
     "use strict";
     if (status_readyT === false) {
@@ -1038,7 +1056,6 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
             console.log("hiding bar")
         } else {
             localStorage.isBarVisible = 1;
-            console.log("showing bar")
         }
         sendResponse({
             res : localStorage.isBarVisible
@@ -1046,17 +1063,14 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
     }
     if (request.action == "showBar") {
         localStorage.isBarVisible = 1;
-        console.log("showing bar 2")
         sendResponse({});
     }
     if (request.action == "barState") {
         if (localStorage.isBarVisible === undefined) {
-            console.log("showing bar 3")
             sendResponse({
                 barVis : 1
             });
         } else {
-            console.log("showing bar 4")
             sendResponse({
                 barVis : localStorage.isBarVisible
             });
@@ -1513,11 +1527,6 @@ function grayscale(cnv, w, h) {
     cnv.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
 }
 function drawIcon(isgrey) {
-    if (canvas == undefined) {
-        canvas = document.getElementById('canvas');
-        sharinganImage = document.getElementById('sharingan');
-        canvasContext = canvas.getContext('2d');
-    }
     canvasContext.save();
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
     canvasContext.translate(canvas.width / 2, canvas.height / 2);
@@ -1560,11 +1569,6 @@ WaitForAllLists.prototype.incMade = function () {
 };
 WaitForAllLists.prototype.wait = function () {
     if (!this.hasStart) {
-        if (this.doSpin) {
-            canvas = document.getElementById('canvas');
-            sharinganImage = document.getElementById('sharingan');
-            canvasContext = canvas.getContext('2d');
-        }
         this.hasStart = true;
     }
     if (this.sizeAll <= this.nbMade) {
