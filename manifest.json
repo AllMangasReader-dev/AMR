@@ -35,6 +35,9 @@
       "matches" : [
         "http://*/*"
       ],
+      "exclude_matches" : [
+        "http://*.allmangasreader.com/*"
+      ],
       "css" : [
         "css/back.css"
       ],
@@ -47,6 +50,9 @@
     }, {
       "matches" : [
         "http://*.allmangasreader.com/*"
+      ],
+      "exclude_matches" : [
+        "http://wiki.allmangasreader.com/*"
       ],
       "css" : [
         "css/backsite.css"
