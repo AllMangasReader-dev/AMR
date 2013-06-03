@@ -1008,9 +1008,6 @@ function writeImages(where, list, mode, res) {
 
     var div = $("<div id='loader" + i + "' class='divLoading'></div>");
     div.css("background", "url(" + chrome.extension.getURL("img/loading.gif") + ") no-repeat center center");
-    $(img).data("divLoad", "loader" + i);
-    $(img).data("idScan", i);
-    $(img).data("owidth", img.offsetWidth);
     div.appendTo(spanner);
     
     // Using jQuery to create this image instead of DOM native method fix a
@@ -1022,7 +1019,9 @@ function writeImages(where, list, mode, res) {
     var img = $("<img>");//new Image();
 
     $(img).addClass("imageAMR");
-    //$(img).attr("title", i+1);
+    $(img).data("owidth", img.offsetWidth);
+    $(img).data("divLoad", "loader" + i);
+    $(img).data("idScan", i);
     loadImageAMR(where, list[i], img, i, res, mode);
     $(img).appendTo(spanner);
    }
