@@ -39,7 +39,7 @@ function load() {
     $(".article:not(#resTr)").show();
     mirrors = chrome.extension.getBackgroundPage().actMirrors;
     loadSearch();
-    if (getQueryVariable("s") !== false) {
+    if (window.location.href.indexOf("?") !== -1) {
         searchInput = getQueryVariable("s");
         document.getElementById("searchBoxInput").value = unescape(searchInput).trim();
         search();
