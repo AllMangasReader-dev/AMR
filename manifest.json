@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.3",
+  "version" : "1.5.4",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
