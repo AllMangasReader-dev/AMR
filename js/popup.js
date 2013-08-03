@@ -452,6 +452,10 @@ function fillChapters(mg, sel) {
   setTimeout(function () {
     var opt = $("<option value=''></option>");
     if (mg.listChaps.length > 0) {
+      // For some reason, some mangas are stored as strings
+      if (typeof mg.listChaps === "string") {
+        mg.listChaps = JSON.parse(mg.listChaps);
+      }
       $.each(mg.listChaps, function (index, val) {
         var tmp = opt.clone().val(val[1]).text(val[0]);
         if (val[1].trim() === mg.lastChapterReadURL.trim()) {
