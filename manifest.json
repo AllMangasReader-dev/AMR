@@ -42,10 +42,7 @@
         "css/back.css"
       ],
       "js" : [
-        "js/jquery.js",
-        "js/jquery.scrollTo-1.4.3.1-min.js",
-        "js/jquery.simplemodal-1.4.4.js",
-        "js/back.js"
+        "js/testPage.js"
       ]
     }, {
       "matches" : [
