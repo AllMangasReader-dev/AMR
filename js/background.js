@@ -38,6 +38,7 @@ var sharinganImage = document.createElement('img');
 sharinganImage.src = 'img/amrlittle.png';
 var status_ready = true;
 var reason;
+var contentScripts = ['js/jquery.js', 'js/jquery.scrollTo-1.4.3.1-min.js', 'js/jquery.simplemodal-1.4.4.js', 'js/back.js'];
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -904,11 +905,10 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
             if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
                 docache = false;
             }
-
             $.loadScript(_implementationURL, docache, function (sScriptBody, textstatus_ready, jsXHR) {
-                var tabId = sender.tab.id,
-                    scripts = ['js/jquery.js', 'js/jquery.scrollTo-1.4.3.1-min.js', 'js/jquery.simplemodal-1.4.4.js', 'js/back.js'];
-                batchInjectScripts(tabId, scripts, function() {
+                var tabId = sender.tab.id;
+                // inject all the scripts defined in the contentScript array (at the top of this file)
+                batchInjectScripts(tabId, contentScripts, function() {
                     chrome.tabs.executeScript(tabId, {code: sScriptBody}, function() {
                         console.log('injected ' + _implementationURL);
                         sendResponse({
