@@ -168,7 +168,7 @@ function downloadExportFile() {
   // set the download attribute
   this.download = [year, month, day].join('-') + '.txt';
   // set the href with the base64 encoded data
-  this.href = 'data:text/plain;base64,' + btoa($('#exportBox').val());
+  this.href = 'data:text;charset=utf-8,' + encodeURIComponent($('#exportBox').val());
 }
 
 $(function () {
