@@ -1690,10 +1690,3 @@ function topVisible(el) {
 function registerMangaObject(mirrorName, object) {
   currentMirror = object;
 }
-
-chrome.extension.sendRequest({action: "pagematchurls", url: window.location.href }, function(response) {
-  if (response.isOk) {
-    removeBanner();
-    initPage();
-  }
-});

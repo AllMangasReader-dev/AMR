@@ -38,6 +38,7 @@ var sharinganImage = document.createElement('img');
 sharinganImage.src = 'img/amrlittle.png';
 var status_ready = true;
 var reason;
+var contentScripts = ['js/jquery.js', 'js/jquery.scrollTo-1.4.3.1-min.js', 'js/jquery.simplemodal-1.4.4.js', 'js/back.js'];
 /**
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
@@ -905,13 +906,16 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
                 docache = false;
             }
             $.loadScript(_implementationURL, docache, function (sScriptBody, textstatus_ready, jsXHR) {
-                chrome.tabs.executeScript(sender.tab.id, {
-                    code : sScriptBody
-                }, function () {
-                    sendResponse({
-                        isOk : _isOk,
-                        mirrorName : _mirrorName,
-                        implURL : _implementationURL
+                var tabId = sender.tab.id;
+                // inject all the scripts defined in the contentScript array (at the top of this file)
+                batchInjectScripts(tabId, contentScripts, function() {
+                    chrome.tabs.executeScript(tabId, {code: sScriptBody}, function() {
+                        console.log('injected ' + _implementationURL);
+                        sendResponse({
+                            isOk: _isOk,
+                            mirrorName: _mirrorName,
+                            implURL: _implementationURL
+                        });
                     });
                 });
             }, function () {
@@ -2112,6 +2116,16 @@ function importBookmarks(bms, merge) {
     }
     localStorage["bookmarks"] = JSON.stringify(bookmarks);
     return textOut;
+}
+function batchInjectScripts(tabId, scripts, callback) {
+    var injectScript = function(scripts, index) {
+        if(!scripts[index]) return callback();
+        chrome.tabs.executeScript(tabId, {file: scripts[index]}, function() {
+            console.log('injected script ' + scripts[index]); // TESTING
+            injectScript(scripts, ++index);
+        });
+    };
+    injectScript(scripts, 0);
 }
 $(function () {
     pstat.init();
