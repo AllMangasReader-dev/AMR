@@ -455,21 +455,19 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
   }
   $.loadScript(input.jsCode, docache, function () {
     list[pos] = loadedImplementations[input.mirrorName];
-    if (list[pos] !== undefined) {
-      list[pos].mirrorName = input.mirrorName;
-      list[pos].mirrorIcon = input.mirrorIcon;
-      list[pos].revision = input.revision;
-      list[pos].developer = input.developer;
-      list[pos].idext = input.idext;
-      console.log("Script " + list[pos].mirrorName + " loaded and executed.");
-      list[pos].loadedscript = true;
+    if (list[pos] === undefined) {
+      list[pos]={};
+      list[pos].error = "Script " + input.mirrorName + " failed to be loaded... Error compiling JS code... Link : " + input.jsCode;
+      console.log("Error compiling JS code: " + input.jsCode);
     } else {
-      console.log("Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode);
-      list[pos] = {
-        loadedscript : true,
-        error : "Script " + input.mirrorName + " failed to be loaded... Error while compiling JS code... Link : " + input.jsCode
-      };
+      console.log("Script " + list[pos].mirrorName + " loaded and executed.");
     }
+    list[pos].mirrorName = input.mirrorName;
+    list[pos].mirrorIcon = input.mirrorIcon;
+    list[pos].revision = input.revision;
+    list[pos].developer = input.developer;
+    list[pos].idext = input.idext;
+    list[pos].loadedscript = true;
   }, function () {
     // error managing
     console.log("Script " + input.mirrorName + " failed to be loaded...");

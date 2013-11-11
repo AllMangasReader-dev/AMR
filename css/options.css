@@ -67,6 +67,9 @@ tr.even {
 tr.desactivate {
   background-color:#DDDDDD;
 }
+tr.desactivateError {
+  background-color:#FF0000;
+}
 td.mirrorName {
   /*width:500px;*/
   vertical-align:middle;
