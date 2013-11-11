@@ -274,7 +274,7 @@ function refreshSearchAll(toSearch) {
                     });
                     nbToLoad--;
                 });
-            } else {
+            } else if (mirrors[i].getMangaList) {
                 curSearch = toSearch;
                 mirrors[i].getMangaList(toSearch, mangaListAllLoaded);
             }
