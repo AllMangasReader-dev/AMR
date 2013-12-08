@@ -110,19 +110,19 @@ function MangaElt(obj) {
 
     //This happens when incoming updates comes from sync
     //if obj.display, obj.read, obj.cats, MAJ this....
-    if (!obj.display) {
+    if (obj.display) {
       this.display = obj.display;
     }
-    if (!obj.read) {
+    if (obj.read) {
       this.read = obj.read;
     }
-    if (!obj.update) {
+    if (obj.update) {
       this.update = obj.update;
     }
     if (obj.cats !== undefined && obj.cats !== null) {
         this.cats = JSON.parse(obj.cats) || obj.cats || [];
     }
-    if (!obj.ts && fromSite) {
+    if (obj.ts && fromSite) {
       this.ts = obj.ts;
     }
   };
