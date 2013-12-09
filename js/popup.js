@@ -409,7 +409,8 @@ function actionRead() {
   var obj = {
     action : "readManga",
     url : closestEltData($(this)).data("mgurl"),
-    lastChapterReadURL : closestEltData($(this)).data("mglatesturl")
+    lastChapterReadURL : closestEltData($(this)).data("mglatesturl"),
+    lastChapterReadName : closestEltData($(this)).data("mglatestname")
   },
     myself = this;
   sendExtRequest(obj, $(this), function () {
@@ -1024,8 +1025,10 @@ function setData(elt, mg) {
   elt.data("mgplay", mg.lastChapterReadURL);
   if (mg.listChaps.length > 0) {
     elt.data("mglatesturl", mg.listChaps[0][1]);
+    elt.data("mglatestname", mg.listChaps[0][0]);
   } else {
     elt.data("mglatesturl", "");
+    elt.data("mglatestname", "");
   }
   if (mg.listChaps.length === 1) {
     elt.data("mgoneshot", true);
