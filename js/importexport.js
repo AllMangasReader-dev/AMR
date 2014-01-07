@@ -157,6 +157,20 @@ function importData() {
   resImp.show();
 }
 
+function downloadExportFile() {
+  var today = new Date(),
+    year = today.getFullYear(),
+    month = today.getMonth() + 1,
+    day = today.getDate();
+  // pad day and month with 0s as necessary
+  month = ("0" + month).slice(-2);
+  day = ("0" + day).slice(-2);
+  // set the download attribute
+  this.download = [year, month, day].join('-') + '.txt';
+  // set the href with the base64 encoded data
+  this.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent($('#exportBox').val());
+}
+
 $(function () {
   "use strict";
   loadMenu("impexp");
@@ -169,5 +183,6 @@ $(function () {
   $('#importdata').on('click', importData);
   $('#exportdata').on('click', exportData);
   $('#copytoclip').on('click', copy);
+  $('#downloadtxt').on('click', downloadExportFile);
 });
 

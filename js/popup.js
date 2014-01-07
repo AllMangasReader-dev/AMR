@@ -409,7 +409,8 @@ function actionRead() {
   var obj = {
     action : "readManga",
     url : closestEltData($(this)).data("mgurl"),
-    lastChapterReadURL : closestEltData($(this)).data("mglatesturl")
+    lastChapterReadURL : closestEltData($(this)).data("mglatesturl"),
+    lastChapterReadName : closestEltData($(this)).data("mglatestname")
   },
     myself = this;
   sendExtRequest(obj, $(this), function () {
@@ -452,6 +453,10 @@ function fillChapters(mg, sel) {
   setTimeout(function () {
     var opt = $("<option value=''></option>");
     if (mg.listChaps.length > 0) {
+      // For some reason, some mangas are stored as strings
+      if (typeof mg.listChaps === "string") {
+        mg.listChaps = JSON.parse(mg.listChaps);
+      }
       $.each(mg.listChaps, function (index, val) {
         var tmp = opt.clone().val(val[1]).text(val[0]);
         if (val[1].trim() === mg.lastChapterReadURL.trim()) {
@@ -1020,8 +1025,10 @@ function setData(elt, mg) {
   elt.data("mgplay", mg.lastChapterReadURL);
   if (mg.listChaps.length > 0) {
     elt.data("mglatesturl", mg.listChaps[0][1]);
+    elt.data("mglatestname", mg.listChaps[0][0]);
   } else {
     elt.data("mglatesturl", "");
+    elt.data("mglatestname", "");
   }
   if (mg.listChaps.length === 1) {
     elt.data("mgoneshot", true);

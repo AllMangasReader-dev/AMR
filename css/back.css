@@ -221,13 +221,15 @@ a.buttonAMR:active {
 #AMRBarIn .buttonAMR, .amrbarlayout .buttonAMR {
   vertical-align:middle!important;
 }
+.buttonAMR.progress{
+  margin-button: auto !important;
+}
 #AMRBarIn select, .amrbarlayout select {
   vertical-align:middle!important;
 }
 #AMRBarIn a, .amrbarlayout a {
   vertical-align:middle!important;
 }
-
 #AMRBarInLtl {
   padding:0!important;
   margin:0!important;

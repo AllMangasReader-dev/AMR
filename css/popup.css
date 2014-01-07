@@ -163,9 +163,13 @@ body.big {
   width:800px;
 }
 /* Selects */
+.list .manga .mgmirroricon + .custom-select {
+    width: 92.5% !important
+}
 .custom-select {
   position: relative;
   display: inline-block;
+  width: 95%;
 }
 
 select {
@@ -638,7 +642,7 @@ body.big .list .manga .mgtitle {
   background-color:#EEEEFF;
   font-size:8pt;
   height:18px;
-  max-width:230px;
+  width: 100%;
   /*word-wrap:break-word;*/
 }
 body.medium .manga select {

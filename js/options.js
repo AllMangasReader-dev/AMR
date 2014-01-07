@@ -36,11 +36,11 @@ var i = 0;
     i = 0,
     k = 0,
     classes;
-    for (i = 0, j = 0; i < elsLen; i += 1) {
+    for (i = 0, j = 0; i < elsLen; ++i) {
         classes = els[i].className.split(' ');
-        for (k = 0; k < classes.length; k += 1) {
+        for (k = 0; k < classes.length; ++k) {
             if (classes[k] === searchClass) {
-                classElements[j += 1] = els[i];
+                classElements[++j] = els[i];
             }
         }
     }
@@ -49,7 +49,7 @@ var i = 0;
 
 function getMangaMirror(mirror) {
   "use strict";
-  for (i = 0; i < mirrors.length; i += 1) {
+  for (i = 0; i < mirrors.length; ++i) {
     if (mirrors[i].mirrorName === mirror) {
       return mirrors[i];
     }
@@ -97,7 +97,7 @@ function save_options() {
   obj.resize = (document.getElementById("resizeCk").checked ? 1 : 0);
   obj.imgorder = (document.getElementById("imgorderCk").checked ? 1 : 0);
 
-  for (i = 0; i < colPicks.length; i += 1) {
+  for (i = 0; i < colPicks.length; ++i) {
     if (colPicks[i].className.indexOf("active") !== -1) {
       obj.color = i;
       break;
@@ -219,7 +219,7 @@ function loadSelectors() {
 
       $("#allmirrors tr .mirrorName").each(function (index) {
         var isFound = false;
-        for (i = 0; i < langMirrors.length; i += 1) {
+        for (i = 0; i < langMirrors.length; ++i) {
           if (langMirrors[i] === $(this).attr("name")) {
             isFound = true;
             break;
@@ -311,7 +311,7 @@ function restore_mirrors() {
   $("#results").empty();
   $("<table id='allmirrors'><thead><tr><td>" + translate("options_ws_name") + "</td><td>" + translate("options_ws_developer") + "</td><td>" + translate("options_ws_revision") + "</td><td>" + translate("options_ws_language") + "</td><td>" + translate("options_ws_activated") + "</td><td>" + translate("options_ws_discuss") + "</td></tr></thead><tbody></tbody></table>").appendTo($("#results"));
 
-  for (i = 0; i < mirrors.length; i += 1) {
+  for (i = 0; i < mirrors.length; ++i) {
     if (mirrors[i].mirrorName !== undefined) {
       var trCur = $("<tr></tr>"),
         tdHead = $("<td class='mirrorName' name='" + mirrors[i].mirrorName + "'></td>"),
@@ -319,24 +319,28 @@ function restore_mirrors() {
         langstr = "",
         tdMgs = $("<td class='mirrorOpt'></td>"),
         discuss = $("<td class='discusstd'><img class='discuss' src='" + chrome.extension.getURL("img/comment.png") + "' title='" + translate("options_ws_discuss_tit") + "'/></td>"),
-        lang = mirrors[i].languages.split(","),
+        lang = mirrors[i].languages ? mirrors[i].languages.split(",") : undefined,
         nb = 0,
         j = 0,
         tdLang,
         release,
         isfound,
         ck;
-      for (j = 0; j < mangas.length; j += 1) {
+      for (j = 0; j < mangas.length; ++j) {
         if (mangas[j].mirror === mirrors[i].mirrorName) {
-          nb += 1;
+          ++nb;
         }
       }
       img.appendTo(tdHead);
       $("<span><b>" + mirrors[i].mirrorName + "</b></span>").appendTo(tdHead);
       $("<span> (" + translate("options_ws_number_mg") + " : <b>" + nb + "</b>)</span>").appendTo(tdHead);
       tdHead.appendTo(trCur);
-      for (j = 0; j < lang.length; j += 1) {
-        langstr += MgUtil.getLanguageName(lang[j]) + ", ";
+      if (lang) {
+        for (j = 0; j < lang.length; ++j) {
+          langstr += MgUtil.getLanguageName(lang[j]) + ", ";
+        }
+      } else {
+        langstr = "<b>ERROR</b>, ";
       }
       $("<td>" + mirrors[i].developer + "</td>").appendTo(trCur);
       if (mirrors[i].revision === 0) {
@@ -353,11 +357,18 @@ function restore_mirrors() {
       discuss.appendTo(trCur);
       if (nb > 0) {
         trCur.addClass("desactivate");
+      } else if (mirrors[i].error) {
+        // desactivate the mirror
+        chrome.extension.sendRequest({
+          action: "desactivateMirror",
+          mirror: mirrors[i].mirrorName
+        }, function () {});
+        trCur.addClass("desactivateError");
       } else {
         isfound = false;
         ck = $("<input type=\"checkbox\" />");
         dummy();
-        for (j = 0; j < actmirrors.length; j += 1) {
+        for (j = 0; j < actmirrors.length; ++j) {
           if (actmirrors[j].mirrorName === mirrors[i].mirrorName) {
             isfound = true;
             break;
@@ -503,7 +514,7 @@ function switchColor(obj) {
   "use strict";
   var colPicks = $(".colorPicker"),
     i;
-  for (i = 0; i < colPicks.length; i += 1) {
+  for (i = 0; i < colPicks.length; ++i) {
     colPicks[i].className = "colorPicker";
   }
   obj.className += " active";
@@ -549,7 +560,7 @@ $(function () {
   // Call save_options on every change made to input elements
   //OLD WAY
   /*var input = document.getElementsByTagName('input');
-  for (i = 0; i < input.length; i += 1) {
+  for (i = 0; i < input.length; ++i) {
     input[i].addEventListener('change', save_options);
   }*/
   //DO IT the jQuery WAY

@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.4",
+  "version" : "1.5.5",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
@@ -42,10 +42,7 @@
         "css/back.css"
       ],
       "js" : [
-        "js/jquery.js",
-        "js/jquery.scrollTo-1.4.3.1-min.js",
-        "js/jquery.simplemodal-1.4.4.js",
-        "js/back.js"
+        "js/testPage.js"
       ]
     }, {
       "matches" : [
@@ -78,7 +75,7 @@
   "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net https://www.google.com/ https://platform.twitter.com/ https://www.facebook.com/; object-src 'self'",
   "homepage_url" : "http://www.allmangasreader.com/",
   "key" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFE73kwUiPfxcBtTkkkboktSCXCrDxMWvYSO72IabK3Q9pqvkEcViyFcuj6mpztx55kYhwFT+ntasZZiNgzhxkjc9zEuHopyrg+/S2tgGa7ueZ+P8s3IMOeEWj9Mqw2qyvPoZ508Q6FwrGjU6rZAhBtS5dzhibkFxRQc9Yej2ppQIDAQAB",
-  "minimum_chrome_version" : "18.0",
+  "minimum_chrome_version" : "30.0",
   "options_page" : "options.html",
   "permissions" : [
     "tabs",
@@ -113,6 +110,7 @@
     "img/dev.png",
     "img/ltload.gif",
     "img/imgerror.png",
-    "img/load10.gif"
+    "img/load10.gif",
+    "img/find.png"
   ]
 }

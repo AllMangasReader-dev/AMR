@@ -33,62 +33,26 @@ Array.prototype.remove = function (from, to) {
   return this.push.apply(this, rest);
 };
 
-function isArray(obj) {
-  "use strict";
-  if (obj.constructor.toString().indexOf("Array") === -1) {
-    return false;
-  }
-  return true;
-}
-
 function MangaElt(obj) {
   "use strict";
   this.mirror = obj.mirror;
   this.name = obj.name;
   this.url = obj.url;
-  if (obj.lastChapterReadURL !== undefined) {
-    this.lastChapterReadURL = obj.lastChapterReadURL;
-    this.lastChapterReadName = obj.lastChapterReadName;
-  } else {
-    this.lastChapterReadURL = null;
-    this.lastChapterReadName = null;
-  }
+  this.lastChapterReadURL = obj.lastChapterReadURL || null;
+  this.lastChapterReadName = obj.lastChapterReadName || null;
   this.listChaps = [];
-  if (obj.listChaps !== undefined && obj.listChaps !== null && obj.listChaps !== "null") {
-    if (!isArray(obj.cats)) {
-      // this.listChaps = $A(eval('(' + obj.listChaps + ')')); --> remove eval function
-      this.listChaps = JSON.parse(obj.listChaps);
-    }
+  if (obj.listChaps) {
+    this.listChaps = JSON.parse(obj.listChaps)
   }
-  this.read = 0;
-  if (obj.read !== undefined && obj.read !== null && obj.read !== "null") {
-    this.read = obj.read;
-  }
-  this.update = 1;
-  if (obj.update !== undefined && obj.update !== null && obj.update !== "null") {
-    this.update = obj.update;
-  }
-  this.display = 0;
-  if (obj.display !== undefined && obj.display !== null && obj.display !== "null") {
-    this.display = obj.display;
-  }
-  this.cats = [];
-  if (obj.cats !== undefined && obj.cats !== null && obj.cats !== "null") {
-    if (isArray(obj.cats)) {
-      this.cats = obj.cats;
-    } else {
-      // this.cats = $A(eval('(' + obj.cats + ')')); --> remove eval function
-      this.cats = JSON.parse(obj.cats);
-    }
-  }
-  this.ts = Math.round((new Date()).getTime() / 1000);
-  if (obj.ts !== undefined && obj.ts !== null && obj.ts !== "null") {
-    this.ts = obj.ts;
-  }
-  this.upts = 0;
-  if (obj.upts !== undefined && obj.upts !== null && obj.upts !== "null") {
-    this.upts = obj.upts;
-  }
+  this.read = obj.read || 0;
+  this.update = obj.update || 1;
+  this.display = obj.display || 0;
+  this.cats = obj.cats || [];
+  if (obj.cats) {
+    this.cats = JSON.parse(obj.cats);
+  }  
+  this.ts = obj.ts || Math.round((new Date()).getTime() / 1000);
+  this.upts = obj.upts || 0;
 
   this.consult = function (obj, fromSite) {
     if (fromSite === undefined) {
@@ -146,25 +110,19 @@ function MangaElt(obj) {
 
     //This happens when incoming updates comes from sync
     //if obj.display, obj.read, obj.cats, MAJ this....
-    if (obj.display !== undefined) {
+    if (obj.display) {
       this.display = obj.display;
     }
-    if (obj.read !== undefined) {
+    if (obj.read) {
       this.read = obj.read;
     }
-    if (obj.update !== undefined) {
+    if (obj.update) {
       this.update = obj.update;
     }
-    if (obj.cats !== undefined && obj.cats !== null && obj.cats !== "null") {
-      if (isArray(obj.cats)) {
-        this.cats = obj.cats;
-      } else {
-        // this.cats = $A(eval('(' + obj.cats + ')')); --> remove eval function
-        this.cats = JSON.parse(obj.cats);
-      }
+    if (obj.cats !== undefined && obj.cats !== null) {
+        this.cats = JSON.parse(obj.cats) || obj.cats || [];
     }
-
-    if (obj.ts !== undefined && fromSite) {
+    if (obj.ts && fromSite) {
       this.ts = obj.ts;
     }
   };
@@ -172,7 +130,7 @@ function MangaElt(obj) {
   this.refreshLast = function (doSave, callback) {
     if (this.update === 1) {
       //Refresh the last existing chapter of this manga
-      if (doSave === undefined) {
+      if (!doSave) {
         doSave = true;
       }
       var myself = this,
@@ -203,13 +161,6 @@ function MangaElt(obj) {
                 if (obj.read === 0 && (parameters.shownotifications === 1)) {
                   urls = $.map(obj.listChaps, function (chap) {return chap[1]; });
                   mangaData = {name: obj.name, mirror: obj.mirror, url: urls[urls.indexOf(obj.lastChapterReadURL) - 1]};
-                  /*notification = window.webkitNotifications.createHTMLNotification('notification.html#' + JSON.stringify(mangaData));
-                  notification.show();
-                  if (parameters.notificationtimer > 0) {
-                    setTimeout(function () {
-                      notification.cancel();
-                    }, parameters.notificationtimer * 1000);
-                  }*/
                   var description = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter.";
                   var notif = window.webkitNotifications.createNotification(
                         chrome.extension.getURL('img/icon-32.png'), mangaData.name, description);
@@ -228,7 +179,6 @@ function MangaElt(obj) {
                       notif.cancel();
                     }, parameters.notificationtimer * 1000);
                   }
-                  //console.log('A new chapter of "' + mangaList[i].name + '" was issued by "' + mangaList[i].mirror + '".');
                 }
                 //Set upts to now (means : 'last time we found a new chapter is now');
                 obj.upts = new Date().getTime();
@@ -237,7 +187,6 @@ function MangaElt(obj) {
                 obj.lastChapterReadURL = lst[lst.length - 1][1];
                 obj.lastChapterReadName = lst[lst.length - 1][0];
                 obj.ts = Math.round((new Date()).getTime() / 1000);
-                //console.log("New last : " + obj.lastChapterReadURL);
               }
               if (doSave || hasBeenTimeout) {
                 saveList();
