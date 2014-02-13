@@ -50,7 +50,8 @@
         "http://*.allmangasreader.com/*"
       ],
       "exclude_matches" : [
-        "http://wiki.allmangasreader.com/*"
+        "http://wiki.allmangasreader.com/*",
+        "http://allmanagesreader.com/forum/*"
       ],
       "css" : [
         "css/backsite.css"
