@@ -33,7 +33,8 @@
   },
   "content_scripts" : [{
       "matches" : [
-        "http://*/*"
+        "http://*/*",
+        "https://*/"
       ],
       "exclude_matches" : [
         "http://*.allmangasreader.com/*"
