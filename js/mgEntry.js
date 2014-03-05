@@ -18,6 +18,7 @@
  */
 var amrc_repository = "https://ssl10.ovh.net/~allmanga/community/latest_v2/";
 var amrc_root = "https://ssl10.ovh.net/~allmanga/community/";
+var amrc_repository_backup = "https://raw.github.com/AllMangasReader-dev/mirrors/master/";
 
 //##############################################################################
 // Load websites description and code in one array. Do first load if necessary.
@@ -116,6 +117,14 @@ function waitForFinishRepository(websites, callback) {
 //##############################################################################
 function updateWebsitesFromRepository(callback) {
   "use strict";
+  $.ajax({
+     type: 'GET',
+     url: amrc_repository + "websites.json",
+     error: function(xhr, status, error) {
+        amrc_repository = amrc_repository_backup;
+     },
+  });
+
   $.ajax({
     url : amrc_repository + "websites.json?1",
     beforeSend : function (xhr) {
