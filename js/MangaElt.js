@@ -162,22 +162,52 @@ function MangaElt(obj) {
                   urls = $.map(obj.listChaps, function (chap) {return chap[1]; });
                   mangaData = {name: obj.name, mirror: obj.mirror, url: urls[urls.indexOf(obj.lastChapterReadURL) - 1]};
                   var description = "... has new chapter(s) on " + mangaData.mirror + "! Click anywhere to open the next unread chapter.";
-                  var notif = window.webkitNotifications.createNotification(
-                        chrome.extension.getURL('img/icon-32.png'), mangaData.name, description);
-                  notif.url = mangaData.url;
-                  notif.onclick = function() {
-                    var _url = this.url;
-                    // notif.cancel() should hide the notif once clicked
-                    notif.cancel();
-                    chrome.tabs.create({
-                      "url" : _url
-                    });
-                  };
-                  notif.show();
-                  if (parameters.notificationtimer > 0) {
-                    setTimeout(function () {
+                  var title = mangaData.name;
+                  var icon = chrome.extension.getURL('img/icon-32.png');
+                  var url = mangaData.url;
+                  if (window.webkitNotifications) {
+                    var notif = window.webkitNotifications.createNotification(icon, title, description);
+                    notif.url = url;
+                    notif.onclick = function() {
+                      var _url = this.url;
+                      // notif.cancel() should hide the notif once clicked
                       notif.cancel();
-                    }, parameters.notificationtimer * 1000);
+                      chrome.tabs.create({
+                        "url" : _url
+                      });
+                    };
+                    notif.show();
+                    if (parameters.notificationtimer > 0) {
+                      setTimeout(function () {
+                        notif.cancel();
+                      }, parameters.notificationtimer * 1000);
+                    }
+                  } else if (chrome.notifications) {
+                    if (myself.notifications === undefined) {
+                      myself.notifications = {};
+                    }
+                    if (myself.lastNotificationID === undefined) {
+                      myself.lastNotificationID = 1;
+                    } else {
+                      myself.lastNotificationID++;
+                    }
+                    myself.notifications["amr" + myself.lastNotificationID] = url;
+                    var notificationClickCallback = function(id) {
+                      if (myself.notifications[id] !== undefined) {
+                        chrome.tabs.create({
+                          "url" : myself.notifications[id]
+                        });
+                        delete myself.notifications[id];
+                      }
+                    };
+                    var notificationOptions = {
+                      type: "basic",
+                      title: title,
+                      message: description,
+                      iconUrl: icon
+                    };
+                    chrome.notifications.onClicked.addListener(notificationClickCallback);
+                    chrome.notifications.create("amr" + myself.lastNotificationID, notificationOptions, function() {});
                   }
                 }
                 //Set upts to now (means : 'last time we found a new chapter is now');
