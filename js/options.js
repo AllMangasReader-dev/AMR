@@ -75,7 +75,7 @@ function save_options() {
   var obj = {},
     colPicks = $(".colorPicker");
   obj.action = "saveparameters";
-  obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
+  obj.displayAds = (document.getElementById("adsCk").checked ? 0 : 1);
   obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
   if (document.getElementById("modeChap1").checked) {
     obj.displayMode = 1;
@@ -419,7 +419,7 @@ function restore_options() {
   var response = chrome.extension.getBackgroundPage().getParameters(),
     colPicks;
 
-  document.getElementById("adsCk").checked = (response.displayAdds !== 1);
+  document.getElementById("adsCk").checked = (response.displayAds !== 1);
   document.getElementById("chapsCk").checked = (response.displayChapters === 1);
   document.getElementById("modeChap1").checked = (response.displayMode === 1);
   document.getElementById("modeChap2").checked = (response.displayMode !== 1);
