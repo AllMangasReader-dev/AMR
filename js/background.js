@@ -1459,7 +1459,7 @@ function getParameters() {
 }
 function defaultParams() {
     var obj = {};
-    obj.displayAds = 0;
+    obj.displayAds = 1;
     obj.displayChapters = 1;
     obj.displayMode = 1;
     obj.popupMode = 1;
