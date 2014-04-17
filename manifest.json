@@ -81,7 +81,8 @@
   "options_page" : "options.html",
   "permissions" : [
     "tabs",
-    "<all_urls>",
+    "https://*/*",
+    "http://*/*",
     "https://ssl10.ovh.net/*",
     "unlimited_storage",
     "clipboardWrite",
