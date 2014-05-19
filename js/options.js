@@ -22,31 +22,6 @@ var mangas;
 var actmirrors;
 var i = 0;
 
-// This function is not called anywhere, also JS has a built in fuction called the same.
-/*function getElementsByClass(searchClass, obj) {
-    "use strict";
-    if (!obj) {
-        obj = document;
-    }
-
-    var classElements = [],
-    els = document.getElementsByTagName('*'),
-    elsLen = els.length,
-    j = 0,
-    i = 0,
-    k = 0,
-    classes;
-    for (i = 0, j = 0; i < elsLen; ++i) {
-        classes = els[i].className.split(' ');
-        for (k = 0; k < classes.length; ++k) {
-            if (classes[k] === searchClass) {
-                classElements[++j] = els[i];
-            }
-        }
-    }
-    return classElements;
-}*/
-
 function getMangaMirror(mirror) {
   "use strict";
   for (i = 0; i < mirrors.length; ++i) {
