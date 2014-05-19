@@ -381,19 +381,6 @@ function formatMgName(name) {
   }
   return name.trim().replace(/[^0-9A-Za-z]/g, '').toUpperCase();
 }
-
-function getMangaMirror(mirror) {
-  "use strict";
-  var i;
-  for (i = 0; i < mirrors.length; i += 1) {
-    if (mirrors[i].mirrorName === mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
-}
-
-
 function switchOnglet(ong, tab) {
   "use strict";
   $(".tab").removeClass("checked");
