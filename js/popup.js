@@ -308,56 +308,6 @@ function moveMangaParent(elt) {
     });
   }
 }
-function moveMangaElement(elt) {
-  "use strict";
-  var eltAfter = null;
-  var toMove;
-  var isplaceOk = true;
-  if (isList()) {
-    if ($(".mgline:not(.new)", elt.closest(".manga")).size() > 1) {
-      eltAfter = $($(".mgline:not(.new)", elt.closest(".manga"))[1]);
-    }
-    toMove = elt.closest(".mgline");
-  } else {
-    if ($(".mgelt:not(.new)", elt.closest(".manga")).size() > 1) {
-      eltAfter = $($(".mgelt:not(.new)", elt.closest(".manga"))[1]);
-    }
-    toMove = elt.closest(".mgelt");
-  }
-  if (closestEltData(toMove).next().is(".new") || closestEltData(toMove).is(":last")) {
-    isplaceOk = false;
-  }
-  if (!isplaceOk) {
-    if (isInFirstOfGroup(elt)) {
-      var first = closestEltData(elt);
-      var second = getSecondElementOfGroup(elt);
-      var wasVisible = second.is(":visible");
-      switchHeader(first, second);
-      if (!wasVisible) {
-        first.toggle();
-      }
-    }
-    if (isList()) {
-      if (eltAfter === null) {
-        $(toMove).appendTo($(".mgtable", elt.closest(".manga")));
-      } else {
-        eltAfter.before($(toMove));
-      }
-    } else {
-      if (eltAfter === null) {
-        toMove.toggle("blind", {}, 250, function () {
-          $(".mgelt:last", elt.closest(".manga")).after($(this));
-          $(this).toggle("blind", {}, 250);
-        });
-      } else {
-        toMove.toggle("blind", {}, 250, function () {
-          eltAfter.before($(this));
-          $(this).toggle("blind", {}, 250);
-        });
-      }
-    }
-  }
-}
 function updateProgression(elt) {
   "use strict";
   var par;

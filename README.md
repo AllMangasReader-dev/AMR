@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/AllMangasReader-dev/AMR/badge.png)](https://coveralls.io/r/AllMangasReader-dev/AMR) [![Code Climate](https://codeclimate.com/github/AllMangasReader-dev/AMR.png)](https://codeclimate.com/github/AllMangasReader-dev/AMR)
+
 AMR
 ===
 AllMangasReader developer branch has the lastest changes made
