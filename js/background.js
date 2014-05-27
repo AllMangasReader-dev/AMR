@@ -773,7 +773,7 @@ chrome.extension.onRequest.addListener(function (request, sender, sendResponse) 
     }
     if (request.action == "saveparameters") {
         var obj = {};
-        obj.displayAdds = request.displayAdds;
+        obj.displayAds = request.displayAds;
         obj.displayChapters = request.displayChapters;
         obj.displayMode = request.displayMode;
         obj.popupMode = request.popupMode;
@@ -1459,7 +1459,7 @@ function getParameters() {
 }
 function defaultParams() {
     var obj = {};
-    obj.displayAdds = 0;
+    obj.displayAds = 1;
     obj.displayChapters = 1;
     obj.displayMode = 1;
     obj.popupMode = 1;

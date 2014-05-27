@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.5",
+  "version" : "1.5.6",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
@@ -33,7 +33,8 @@
   },
   "content_scripts" : [{
       "matches" : [
-        "http://*/*"
+        "http://*/*",
+        "https://*/*"
       ],
       "exclude_matches" : [
         "http://*.allmangasreader.com/*"
@@ -49,7 +50,8 @@
         "http://*.allmangasreader.com/*"
       ],
       "exclude_matches" : [
-        "http://wiki.allmangasreader.com/*"
+        "http://wiki.allmangasreader.com/*",
+        "http://allmanagesreader.com/forum/*"
       ],
       "css" : [
         "css/backsite.css"
@@ -72,13 +74,14 @@
       ]
     }
   ],
-  "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net https://www.google.com/ https://platform.twitter.com/ https://www.facebook.com/; object-src 'self'",
+  "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com https://ssl10.ovh.net https://www.google.com/ https://platform.twitter.com/ https://www.facebook.com/ https://raw.github.com/ ; object-src 'self'",
   "homepage_url" : "http://www.allmangasreader.com/",
   "key" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFE73kwUiPfxcBtTkkkboktSCXCrDxMWvYSO72IabK3Q9pqvkEcViyFcuj6mpztx55kYhwFT+ntasZZiNgzhxkjc9zEuHopyrg+/S2tgGa7ueZ+P8s3IMOeEWj9Mqw2qyvPoZ508Q6FwrGjU6rZAhBtS5dzhibkFxRQc9Yej2ppQIDAQAB",
   "minimum_chrome_version" : "30.0",
   "options_page" : "options.html",
   "permissions" : [
     "tabs",
+    "https://*/*",
     "http://*/*",
     "https://ssl10.ovh.net/*",
     "unlimited_storage",

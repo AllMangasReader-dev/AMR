@@ -23,16 +23,6 @@ function isSame(a, b) {
         bt = b.trim().replace(/^\s*|\s*$/g, '').toUpperCase();
     return (at === bt);
 }
-function getMangaMirror(mirror) {
-    "use strict";
-    var i;
-    for (i = 0; i < mirrors.length; i += 1) {
-        if (mirrors[i].mirrorName === mirror) {
-            return mirrors[i];
-        }
-    }
-    return null;
-}
 function switchOnglet(ong, tab) {
     "use strict";
     $(".tab").removeClass("checked");
@@ -204,6 +194,13 @@ function filter() {
         $("#nores").css("display", "block");
     }
 }
+function addoptionvalue(curMg, valMg) {
+     opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
+     if (valMg !== null && valMg !== "" && isSame(valMg, curMg)) {
+         opt.attr("selected", true);
+     }
+     opt.appendTo($("#mangas"));
+}
 function loadBookmarks() {
     "use strict";
     if (localStorage.bookmarkMangasSearch !== undefined) {
@@ -225,20 +222,22 @@ function loadBookmarks() {
         $("<option value='' " + ((valMg === "") ? "selected='selected'" : "") + ">All mangas</option>").appendTo($("#mangas"));
         for (i = 0; i < bmsAll.length; i += 1) {
             if (curMg !== undefined && !isSame(curMg, bmsAll[i].name)) {
-                opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
+                addoptionvalue(curMg, valMg);
+                /* opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
                 if (valMg !== null && valMg !== "" && isSame(valMg, curMg)) {
                     opt.attr("selected", true);
                 }
-                opt.appendTo($("#mangas"));
+                opt.appendTo($("#mangas")); */
             }
             curMg = bmsAll[i].name;
         }
         if (curMg !== undefined) {
-            opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
+            addoptionvalue(curMg, valMg);
+            /* opt = $("<option value='" + curMg + "'>" + curMg + "</option>");
             if (valMg !== null && valMg !== "" && isSame(valMg, curMg)) {
                 opt.attr("selected", true);
             }
-            opt.appendTo($("#mangas"));
+            opt.appendTo($("#mangas"));*/
         }
         filter();
     } else {

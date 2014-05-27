@@ -43,7 +43,7 @@ function removeBanner() {
   var obj = {};
   obj.action = "parameters";
   chrome.extension.sendRequest(obj, function(response) {
-    if (response.displayAdds === 0) {
+    if (response.displayAds === 0) {
        getMangaMirror().removeBanners(document, window.location.href);
     }
   });

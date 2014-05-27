@@ -22,31 +22,6 @@ var mangas;
 var actmirrors;
 var i = 0;
 
-// This function is not called anywhere, also JS has a built in fuction called the same.
-/*function getElementsByClass(searchClass, obj) {
-    "use strict";
-    if (!obj) {
-        obj = document;
-    }
-
-    var classElements = [],
-    els = document.getElementsByTagName('*'),
-    elsLen = els.length,
-    j = 0,
-    i = 0,
-    k = 0,
-    classes;
-    for (i = 0, j = 0; i < elsLen; ++i) {
-        classes = els[i].className.split(' ');
-        for (k = 0; k < classes.length; ++k) {
-            if (classes[k] === searchClass) {
-                classElements[++j] = els[i];
-            }
-        }
-    }
-    return classElements;
-}*/
-
 function getMangaMirror(mirror) {
   "use strict";
   for (i = 0; i < mirrors.length; ++i) {
@@ -75,7 +50,7 @@ function save_options() {
   var obj = {},
     colPicks = $(".colorPicker");
   obj.action = "saveparameters";
-  obj.displayAdds = (document.getElementById("adsCk").checked ? 0 : 1);
+  obj.displayAds = (document.getElementById("adsCk").checked ? 0 : 1);
   obj.displayChapters = (document.getElementById("chapsCk").checked ? 1 : 0);
   if (document.getElementById("modeChap1").checked) {
     obj.displayMode = 1;
@@ -419,7 +394,7 @@ function restore_options() {
   var response = chrome.extension.getBackgroundPage().getParameters(),
     colPicks;
 
-  document.getElementById("adsCk").checked = (response.displayAdds !== 1);
+  document.getElementById("adsCk").checked = (response.displayAds !== 1);
   document.getElementById("chapsCk").checked = (response.displayChapters === 1);
   document.getElementById("modeChap1").checked = (response.displayMode === 1);
   document.getElementById("modeChap2").checked = (response.displayMode !== 1);
