@@ -1729,14 +1729,6 @@ function mangaListLoaded(mirror, lst) {
         wssql.webdb.storeMangaList(mirror, lst);
     });
 }
-function getMangaMirror(mirror) {
-    for (var i = 0; i < mirrors.length; i++) {
-        if (mirrors[i].mirrorName == mirror) {
-            return mirrors[i];
-        }
-    }
-    return null;
-}
 function saveList() {
     try {
         localStorage["mangas"] = getJSONList();

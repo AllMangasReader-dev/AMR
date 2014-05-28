@@ -39,14 +39,6 @@ function sendExtRequestS(request, button, callback, backsrc) {
         button.removeData("currentlyClicked");
     });
 }
-function getMangaMirror(mirror) {
-    for (var i = 0; i < mirrors.length; i++) {
-        if (mirrors[i].mirrorName == mirror) {
-            return mirrors[i];
-        }
-    }
-    return null;
-}
 function switchOnglet(ong, tab) {
     var ongsTitle = getElementsByClass("onglet", document);
     for (var i = 0; i < ongsTitle.length; i++) {

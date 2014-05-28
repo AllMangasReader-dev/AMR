@@ -22,16 +22,6 @@ var mangas;
 var actmirrors;
 var i = 0;
 
-function getMangaMirror(mirror) {
-  "use strict";
-  for (i = 0; i < mirrors.length; ++i) {
-    if (mirrors[i].mirrorName === mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
-}
-
 //Opens an url in new tab
 
 function openTab(urlToOpen) {

@@ -28,6 +28,7 @@
         "js/personalstat.js",
         "js/wssql.js",
         "js/amrcsql.js",
+        "js/lib.js"
         "js/background.js"
     ]
   },
@@ -57,6 +58,7 @@
         "css/backsite.css"
       ],
       "js" : [
+        "js/lib.js"
         "js/jquery.js",
         "js/backsite.js"
       ]
