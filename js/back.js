@@ -35,7 +35,7 @@ var times = [];
 var debugTimes = false;
 var timeoutAMRbar = 0;
 
-function getMangaMirror() {
+function getMirrorScript() {
   return currentMirror;
 }
 
@@ -44,14 +44,14 @@ function removeBanner() {
   obj.action = "parameters";
   chrome.extension.sendRequest(obj, function(response) {
     if (response.displayAds === 0) {
-       getMangaMirror().removeBanners(document, window.location.href);
+       getMirrorScript().removeBanners(document, window.location.href);
     }
   });
 }
 
 function initPage() {
   //console.log("initPage");
-  if (getMangaMirror().isCurrentPageAChapterPage(document, window.location.href)) {
+  if (getMirrorScript().isCurrentPageAChapterPage(document, window.location.href)) {
      setKeys();
      //console.log("found mirror for current page");
      chrome.extension.sendRequest({"action": "parameters"}, function(response) {
@@ -71,7 +71,7 @@ function initPage() {
           sendStats = true;
         }
 
-        getMangaMirror().getInformationsFromCurrentPage(document, window.location.href, function(res) {
+        getMirrorScript().getInformationsFromCurrentPage(document, window.location.href, function(res) {
           jQuery.data(document.body, "curpageinformations", res);
           //console.log(res);
           //console.log(jQuery.data(document.body, "curpageinformations"));
@@ -80,27 +80,27 @@ function initPage() {
             chrome.extension.sendRequest({action: "barState"}, function(barState) {
               createDataDiv(res);
               if (response.displayChapters == 1) {
-                var imagesUrl = getMangaMirror().getListImages(document, window.location.href);
-                var select = getMangaMirror().getMangaSelectFromPage(document, window.location.href);
+                var imagesUrl = getMirrorScript().getListImages(document, window.location.href);
+                var select = getMirrorScript().getMangaSelectFromPage(document, window.location.href);
                 var isSel = true;
                 if (select === null) {
                   var selectIns = $("<select></select>");
                   selectIns.data("mangaCurUrl", res.currentChapterURL);
-                  getMangaMirror().getListChaps(res.currentMangaURL, res.name, selectIns, callbackListChaps);
+                  getMirrorScript().getListChaps(res.currentMangaURL, res.name, selectIns, callbackListChaps);
                   isSel = false;
                 }
-                getMangaMirror().doSomethingBeforeWritingScans(document, window.location.href);
+                getMirrorScript().doSomethingBeforeWritingScans(document, window.location.href);
                 if (isSel) {
                   var whereNav;
                   if (response.newbar == 1) {
                     whereNav = createBar(barState.barVis);
                   } else {
-                    whereNav = getMangaMirror().whereDoIWriteNavigation(document, window.location.href);
+                    whereNav = getMirrorScript().whereDoIWriteNavigation(document, window.location.href);
                   }
 
                   writeNavigation(whereNav, select, res, response);
                 }
-                var where = getMangaMirror().whereDoIWriteScans(document, window.location.href);
+                var where = getMirrorScript().whereDoIWriteScans(document, window.location.href);
                 amrWhereScans = where;
                 $(document.body).data("amrparameters", response);
                 //Get specific mode for currentManga
@@ -117,7 +117,7 @@ function initPage() {
               if (response.markwhendownload === 0 && (response.addauto == 1 || resp !== null)) {
                 var obj = {"action": "readManga",
                            "url": res.currentMangaURL,
-                           "mirror": getMangaMirror().mirrorName,
+                           "mirror": getMirrorScript().mirrorName,
                            "lastChapterReadName": res.currentChapter,
                            "lastChapterReadURL": res.currentChapterURL,
                            "name": res.name};
@@ -127,7 +127,7 @@ function initPage() {
                 if (response.markwhendownload === 1 && (response.addauto === 1 || resp !== null)) {
                   jQuery.data(document.body, "sendwhendownloaded", {"action": "readManga",
                            "url": res.currentMangaURL,
-                           "mirror": getMangaMirror().mirrorName,
+                           "mirror": getMirrorScript().mirrorName,
                            "lastChapterReadName": res.currentChapter,
                            "lastChapterReadURL": res.currentChapterURL,
                            "name": res.name});
@@ -136,7 +136,7 @@ function initPage() {
               if (sendStats) {
                 var statobj = {"action": "readMgForStat",
                            "url": res.currentMangaURL,
-                           "mirror": getMangaMirror().mirrorName,
+                           "mirror": getMirrorScript().mirrorName,
                            "lastChapterReadName": res.currentChapter,
                            "lastChapterReadURL": res.currentChapterURL,
                            "name": res.name};
@@ -329,7 +329,7 @@ function createDataDiv(res) {
   var divData = $("<div id='bookmarkData' style='display:none'></div>");
   $("<span>This div is used to store data for AMR</span>").appendTo(divData);
   divData.appendTo($(document.body));
-  divData.data("mirror", getMangaMirror().mirrorName);
+  divData.data("mirror", getMirrorScript().mirrorName);
   divData.data("url", res.currentMangaURL);
   divData.data("chapUrl", res.currentChapterURL);
   divData.data("name", res.name);
@@ -429,7 +429,7 @@ function writeNavigation(where, select, res, params) {
       window.location.href = $("option:selected", $(this)).val();
     });
 
-    var prevUrl = getMangaMirror().previousChapterUrl(selectIns, document, window.location.href);
+    var prevUrl = getMirrorScript().previousChapterUrl(selectIns, document, window.location.href);
     if (prevUrl !== null) {
       var aprev=$("<a id='pChapBtn" + index + "' class='buttonAMR' href='"+prevUrl+"'>Previous</a>");
       aprev.appendTo(this);
@@ -437,7 +437,7 @@ function writeNavigation(where, select, res, params) {
 
     selectIns.appendTo(this);
 
-    var nextUrl = getMangaMirror().nextChapterUrl(selectIns, document, window.location.href);
+    var nextUrl = getMirrorScript().nextChapterUrl(selectIns, document, window.location.href);
     if (nextUrl !== null) {
       var anext=$("<a id='nChapBtn" + index + "' class='buttonAMR' href='"+nextUrl+"'>Next</a>");
       anext.appendTo(this);
@@ -462,7 +462,7 @@ function writeNavigation(where, select, res, params) {
     if (index === 0) {
       var objBM = {
         action: "getBookmarkNote",
-        mirror: getMangaMirror().mirrorName,
+        mirror: getMirrorScript().mirrorName,
         url: res.currentMangaURL,
         chapUrl: res.currentChapterURL,
         type: "chapter"};
@@ -565,7 +565,7 @@ function writeNavigation(where, select, res, params) {
         if (ret) {
           var obj = {"action": "setMangaChapter",
                    "url": $(this).data("mangainfo").currentMangaURL,
-                   "mirror": getMangaMirror().mirrorName,
+                   "mirror": getMirrorScript().mirrorName,
                    "lastChapterReadName": $(this).data("mangainfo").currentChapter,
                    "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
                    "name": $(this).data("mangainfo").name};
@@ -582,7 +582,7 @@ function writeNavigation(where, select, res, params) {
         imgadd.click(function() {
           var obj = {"action": "readManga",
                    "url": $(this).data("mangainfo").currentMangaURL,
-                   "mirror": getMangaMirror().mirrorName,
+                   "mirror": getMirrorScript().mirrorName,
                    "lastChapterReadName": $(this).data("mangainfo").currentChapter,
                    "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
                    "name": $(this).data("mangainfo").name};
@@ -620,7 +620,7 @@ function writeNavigation(where, select, res, params) {
         deletePub.appendTo(linkPub);
         linkPub.appendTo(_self);
       }
-      var whereNavToTrail = getMangaMirror().whereDoIWriteNavigation(document, window.location.href);
+      var whereNavToTrail = getMirrorScript().whereDoIWriteNavigation(document, window.location.href);
       addTrailingLastChap($(whereNavToTrail).last());
     });
   });
@@ -689,7 +689,7 @@ function callbackListChaps(list, select) {
           writeNavigation(whereNav, select, jQuery.data(document.body, "curpageinformations"), response);
         });
       } else {
-        whereNav = getMangaMirror().whereDoIWriteNavigation(document, window.location.href);
+        whereNav = getMirrorScript().whereDoIWriteNavigation(document, window.location.href);
         writeNavigation(whereNav, select, jQuery.data(document.body, "curpageinformations"), response);
       }
   });
@@ -920,7 +920,7 @@ function onErrorImage() {
           $(img).css("border", "5px solid white");
           $(img).load(onLoadImage);
           $(img).error(onErrorImage);
-          getMangaMirror().getImageFromPageAndWrite(url, img, document, window.location.href);
+          getMirrorScript().getImageFromPageAndWrite(url, img, document, window.location.href);
 
           $(img).appendTo(spanner);
 
@@ -951,7 +951,7 @@ function onErrorImage() {
       $(imgSave).css("border", "5px solid white");
       $(imgSave).load(onLoadImage);
       $(imgSave).error(onErrorImage);
-      getMangaMirror().getImageFromPageAndWrite($(this).data("urlToLoad"), imgSave, document, window.location.href);
+      getMirrorScript().getImageFromPageAndWrite($(this).data("urlToLoad"), imgSave, document, window.location.href);
 
       $(this).after($(imgSave));
       $(this).remove();
@@ -975,14 +975,14 @@ function loadImageAMR(where, url, img, pos, res, mode, second) {
 
   if (res.imgorder == 1) {
     if (nbLoaded(where) == pos) {
-      getMangaMirror().getImageFromPageAndWrite(url, img, document, window.location.href);
+      getMirrorScript().getImageFromPageAndWrite(url, img, document, window.location.href);
     } else {
       setTimeout(function() {
         loadImageAMR(where, url, img, pos, res, mode, true);
       }, 100);
     }
   } else {
-    getMangaMirror().getImageFromPageAndWrite(url, img, document, window.location.href);
+    getMirrorScript().getImageFromPageAndWrite(url, img, document, window.location.href);
   }
 }
 
@@ -1063,7 +1063,7 @@ function waitForImages(where, mode, res, title){
   if (isOk) {
     //console.log("finish loading images");
     transformImagesInBook(where, mode, res);
-    getMangaMirror().doAfterMangaLoaded(document, window.location.href);
+    getMirrorScript().doAfterMangaLoaded(document, window.location.href);
     $("title").text(title);
     if (jQuery.data(document.body, "nexturltoload") && prefetchChapter) {
       loadNextChapter(jQuery.data(document.body, "nexturltoload"));
@@ -1111,7 +1111,7 @@ function transformImagesInBook(where, mode, res){
       return ((nba < nbb) ? -1 : ((nba == nbb) ? 0 : 1));
    }).each(function (index) {
     //console.log("setting image position...");
-    if (isLandscape(this) || getMangaMirror().isImageInOneCol(this, document, window.location.href)) {
+    if (isLandscape(this) || getMirrorScript().isImageInOneCol(this, document, window.location.href)) {
       posImg[index] = 2;
       if (isLandscape(this) && isFirstDouble) {
         if (index !== 0 && posImg[index-1] != 1) {
@@ -1255,7 +1255,7 @@ function transformImagesInBook(where, mode, res){
 
 function loadNextChapter(urlNext) {
   // load an iframe with urlNext and get list of images
-  chrome.extension.sendRequest({action: "getNextChapterImages", url: urlNext, mirrorName: getMangaMirror().mirrorName}, function(resp) {
+  chrome.extension.sendRequest({action: "getNextChapterImages", url: urlNext, mirrorName: getMirrorScript().mirrorName}, function(resp) {
      var lst = resp.images;
      if (lst !== null) {
        for (var i = 0; i < lst.length; i++) {
@@ -1267,7 +1267,7 @@ function loadNextChapter(urlNext) {
         $(img).data("total", lst.length);
         $(img).load(onLoadNextImage);
         $(img).error(onErrorNextImage);
-        getMangaMirror().getImageFromPageAndWrite(lst[i], img, document, urlNext);
+        getMirrorScript().getImageFromPageAndWrite(lst[i], img, document, urlNext);
        }
      }
   });
