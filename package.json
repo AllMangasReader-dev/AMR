@@ -1,0 +1,21 @@
+{
+  "name": "AMR",
+  "version": "1.5.6",
+  "description": "[![Coverage Status](https://coveralls.io/repos/AllMangasReader-dev/AMR/badge.png)](https://coveralls.io/r/AllMangasReader-dev/AMR) [![Code Climate](https://codeclimate.com/github/AllMangasReader-dev/AMR.png)](https://codeclimate.com/github/AllMangasReader-dev/AMR)",
+  "main": "index.js",
+  "devDependencies": {
+    "jsonlint": "1.6.x"
+  },
+  "scripts": {
+    "test": "jsonlint manifest.json _locales/*/*.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AllMangasReader-dev/AMR.git"
+  },
+  "author": "",
+  "license": "GLP v3",
+  "bugs": {
+    "url": "https://github.com/AllMangasReader-dev/AMR/issues"
+  }
+}
