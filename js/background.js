@@ -925,6 +925,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 });
             }, 'text');
         });
+        return true;
     }
     if (request.action == "deletepub") {
         var params = getParameters();
