@@ -545,7 +545,7 @@ function doesCurrentPageMatchManga(url, activatedMirrors, callback) {
 
 function getActivatedMirrors(callback) {
   "use strict";
-  chrome.extension.sendRequest({
+  chrome.runtime.sendMessage({
     action : "activatedMirrors"
   }, function (res) {
     getActivatedMirrorsWithList(res, callback);

@@ -42,7 +42,7 @@ function getMirrorScript() {
 function removeBanner() {
   var obj = {};
   obj.action = "parameters";
-  chrome.extension.sendRequest(obj, function(response) {
+  chrome.runtime.sendMessage(obj, function(response) {
     if (response.displayAds === 0) {
        getMirrorScript().removeBanners(document, window.location.href);
     }
@@ -54,7 +54,7 @@ function initPage() {
   if (getMirrorScript().isCurrentPageAChapterPage(document, window.location.href)) {
      setKeys();
      //console.log("found mirror for current page");
-     chrome.extension.sendRequest({"action": "parameters"}, function(response) {
+     chrome.runtime.sendMessage({"action": "parameters"}, function(response) {
         if (response.lrkeys == 1) {
           useLeftRightKeys = true;
         }
@@ -76,8 +76,8 @@ function initPage() {
           //console.log(res);
           //console.log(jQuery.data(document.body, "curpageinformations"));
           //console.log(res);
-          chrome.extension.sendRequest({action: "mangaInfos", url: res.currentMangaURL}, function(resp) {
-            chrome.extension.sendRequest({action: "barState"}, function(barState) {
+          chrome.runtime.sendMessage({action: "mangaInfos", url: res.currentMangaURL}, function(resp) {
+            chrome.runtime.sendMessage({action: "barState"}, function(barState) {
               createDataDiv(res);
               if (response.displayChapters == 1) {
                 var imagesUrl = getMirrorScript().getListImages(document, window.location.href);
@@ -121,7 +121,7 @@ function initPage() {
                            "lastChapterReadName": res.currentChapter,
                            "lastChapterReadURL": res.currentChapterURL,
                            "name": res.name};
-                chrome.extension.sendRequest(obj, function(response) {
+                chrome.runtime.sendMessage(obj, function(response) {
                 });
               } else {
                 if (response.markwhendownload === 1 && (response.addauto === 1 || resp !== null)) {
@@ -140,7 +140,7 @@ function initPage() {
                            "lastChapterReadName": res.currentChapter,
                            "lastChapterReadURL": res.currentChapterURL,
                            "name": res.name};
-                chrome.extension.sendRequest(statobj, function(response) {
+                chrome.runtime.sendMessage(statobj, function(response) {
                   idStat = response.id;
                   bindCalculateTime();
                   setTimeout(function() {
@@ -199,7 +199,7 @@ function updateStat(estimated) {
              "id": idStat,
              "time_spent": tosend};
   if (sendStats) {
-    chrome.extension.sendRequest(statobj, function(response) {});
+    chrome.runtime.sendMessage(statobj, function(response) {});
   }
   setTimeout(updateStat, updatetime);
 }
@@ -219,7 +219,7 @@ function createBar(barVis) {
   var imgBtn = $("<img src='" + chrome.extension.getURL("img/down.png") + "' width='16px;' title='Hide AMR Toolbar'/>");
   imgBtn.appendTo(divBottom);
   imgBtn.click(function() {
-    chrome.extension.sendRequest({action: "hideBar"}, function(response) {
+    chrome.runtime.sendMessage({action: "hideBar"}, function(response) {
       if (response.res == 1) {
         if ($("#AMRBarIn").data("temporary")) {
           $("#AMRBarIn").removeData("temporary");
@@ -288,7 +288,7 @@ function createBar(barVis) {
     $("#AMRBarInLtl").fadeOut('fast', function() {
       $("#AMRBar").css("text-align", "center");
       $("#AMRBarIn").fadeIn();
-      chrome.extension.sendRequest({action: "showBar"}, function(response) {});
+      chrome.runtime.sendMessage({action: "showBar"}, function(response) {});
     });
   });
 
@@ -372,7 +372,7 @@ function writeNavigation(where, select, res, params) {
       $("#bookmarkData").data("chapbooked", true);
     }
 
-    chrome.extension.sendRequest(obj, function(resp) {});
+    chrome.runtime.sendMessage(obj, function(resp) {});
     $.modal.close();
   });
 
@@ -400,7 +400,7 @@ function writeNavigation(where, select, res, params) {
       $("#bookmarkData").removeData("chapbooked");
     }
 
-    chrome.extension.sendRequest(obj, function(resp) {});
+    chrome.runtime.sendMessage(obj, function(resp) {});
     $.modal.close();
   });
   btndel.appendTo(div);
@@ -410,7 +410,7 @@ function writeNavigation(where, select, res, params) {
   $("<span>To bookmark a scan, right click on it and choose 'Bookmark in AMR'.</span><br /><span>To manage bookmarks, go to </span>").appendTo(divTip);
   var aBMPage = $("<a href='#'>AMR Bookmark Page</a>");
   aBMPage.click(function() {
-    chrome.extension.sendRequest({action: "opentab", url: "/bookmarks.html"}, function(resp){});
+    chrome.runtime.sendMessage({action: "opentab", url: "/bookmarks.html"}, function(resp){});
   });
   aBMPage.appendTo(divTip);
   divTip.appendTo(div);
@@ -466,7 +466,7 @@ function writeNavigation(where, select, res, params) {
         url: res.currentMangaURL,
         chapUrl: res.currentChapterURL,
         type: "chapter"};
-      chrome.extension.sendRequest(objBM, function(result) {
+      chrome.runtime.sendMessage(objBM, function(result) {
         if (!result.isBooked) {
           $("#bookmarkData").data("note", "");
           $(".bookAMR").attr("title", "Click here to bookmark this chapter");
@@ -481,7 +481,7 @@ function writeNavigation(where, select, res, params) {
 
     //Get specific read for currentManga
     var _self = this;
-    chrome.extension.sendRequest({action: "mangaInfos", url: res.currentMangaURL}, function(resp) {
+    chrome.runtime.sendMessage({action: "mangaInfos", url: res.currentMangaURL}, function(resp) {
       var isRead = (resp === null ? false : (resp.read == 1));
       var imgread = $("<img class='butamrread' src='" + chrome.extension.getURL("img/" + (!isRead ? "read_stop.png" : "read_play.png")) + "' title='" + (!isRead ? "Stop following updates for this manga" : "Follow updates for this manga") + "' />");
       if (resp === null && params.addauto === 0) {
@@ -604,7 +604,7 @@ function writeNavigation(where, select, res, params) {
         linkP2.css("vertical-align", "middle");
         linkP2.css("color", "red!important");
         /*linkP2.click(function() {
-          chrome.extension.sendRequest({action: "openExtensionMainPage"}, function(response) {});
+          chrome.runtime.sendMessage({action: "openExtensionMainPage"}, function(response) {});
         });*/
         linkP2.appendTo(linkPub);
         var deletePub = $("<img src=\"" + chrome.extension.getURL("img/cancel.png") + "\" />");
@@ -613,7 +613,7 @@ function writeNavigation(where, select, res, params) {
         deletePub.css("vertical-align", "middle");
         deletePub.css("margin-left", "10px");
         deletePub.click(function() {
-          chrome.extension.sendRequest({action: "deletepub"}, function(response) {
+          chrome.runtime.sendMessage({action: "deletepub"}, function(response) {
             $(".titleAMRPub").remove();
           });
         });
@@ -648,7 +648,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     }
   }
   //Call the action
-  chrome.extension.sendRequest(request, function() {
+  chrome.runtime.sendMessage(request, function() {
   //setTimeout(function() {
     //Do the callback
     callback();
@@ -681,10 +681,10 @@ function callbackListChaps(list, select) {
     optTmp.appendTo($(select));
   }
 
-  chrome.extension.sendRequest({"action": "parameters"}, function(response) {
+  chrome.runtime.sendMessage({"action": "parameters"}, function(response) {
       var whereNav;
       if (response.newbar == 1) {
-        chrome.extension.sendRequest({action: "barState"}, function(barState) {
+        chrome.runtime.sendMessage({action: "barState"}, function(barState) {
           whereNav = createBar(barState.barVis);
           writeNavigation(whereNav, select, jQuery.data(document.body, "curpageinformations"), response);
         });
@@ -785,7 +785,7 @@ function onLoadImage() {
     }
 
     //Create contextual menu to bookmark image
-    chrome.extension.sendRequest({
+    chrome.runtime.sendMessage({
       action: "createContextMenu",
       lstUrls: [ $(this).attr("src") ]
     }, function(resp) {});
@@ -798,7 +798,7 @@ function onLoadImage() {
       type: "scan",
       scanUrl: $(this).attr("src"),
       scanName: $(this).data("idScan")};
-    chrome.extension.sendRequest(objBM, function(result) {
+    chrome.runtime.sendMessage(objBM, function(result) {
       if (result.isBooked) {
         var imgScan = $(".spanForImg img[src='" + result.scanSrc + "']");
         if (imgScan.size() === 0) {
@@ -831,7 +831,7 @@ function onLoadImage() {
           $(this).removeData("booked");
           $(this).removeData("note");
 
-          chrome.extension.sendRequest(obj, function(resp) {});
+          chrome.runtime.sendMessage(obj, function(resp) {});
         } else {
           obj = {
             action: "addUpdateBookmark",
@@ -850,7 +850,7 @@ function onLoadImage() {
           $(this).data("note", "");
           $(this).data("booked", 1);
 
-          chrome.extension.sendRequest(obj, function(resp) {});
+          chrome.runtime.sendMessage(obj, function(resp) {});
         }
       });
     }
@@ -1070,7 +1070,7 @@ function waitForImages(where, mode, res, title){
     }
 
     if (jQuery.data(document.body, "sendwhendownloaded")) {
-      chrome.extension.sendRequest(jQuery.data(document.body, "sendwhendownloaded"), function(response) {
+      chrome.runtime.sendMessage(jQuery.data(document.body, "sendwhendownloaded"), function(response) {
       });
     }
 
@@ -1255,7 +1255,7 @@ function transformImagesInBook(where, mode, res){
 
 function loadNextChapter(urlNext) {
   // load an iframe with urlNext and get list of images
-  chrome.extension.sendRequest({action: "getNextChapterImages", url: urlNext, mirrorName: getMirrorScript().mirrorName}, function(resp) {
+  chrome.runtime.sendMessage({action: "getNextChapterImages", url: urlNext, mirrorName: getMirrorScript().mirrorName}, function(resp) {
      var lst = resp.images;
      if (lst !== null) {
        for (var i = 0; i < lst.length; i++) {

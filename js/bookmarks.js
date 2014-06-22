@@ -2,7 +2,7 @@
 var bmsAll;
 function openTab(urlToOpen) {
   "use strict";
-  chrome.extension.sendRequest({
+  chrome.runtime.sendMessage({
     action : "opentab",
     url : urlToOpen
   }, function (response) {});
@@ -272,7 +272,7 @@ function deleteBM(dataElt) {
             obj.scanUrl = dataElt.data("scanUrl");
             obj.scanName = dataElt.data("scanName");
         }
-        chrome.extension.sendRequest(obj, function (resp) {
+        chrome.runtime.sendMessage(obj, function (resp) {
             loadBookmarks();
         });
     }
@@ -452,7 +452,7 @@ function createPopupBM() {
             obj.scanName = $("#bookmarkData").data("scanName");
         }
         obj.note = $("#noteAMR").val();
-        chrome.extension.sendRequest(obj, function (resp) {
+        chrome.runtime.sendMessage(obj, function (resp) {
             loadBookmarks();
         });
         $.modal.close();

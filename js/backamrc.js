@@ -59,7 +59,7 @@ $(function() {
         id: _id
       };
       sendExtRequest(req, $(this).is(".button") ? $(this) : $(".labimplemamr", $(this)), function(response) {
-        chrome.extension.sendRequest({action: "opentab", url: chrome.extension.getURL("lab.html?mirror=" + response.mirror)}, function() {});
+        chrome.runtime.sendMessage({action: "opentab", url: chrome.extension.getURL("lab.html?mirror=" + response.mirror)}, function() {});
       }, true);
     }
   });
@@ -87,7 +87,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     }
   }
   //Call the action
-  chrome.extension.sendRequest(request, function(response) {
+  chrome.runtime.sendMessage(request, function(response) {
   //setTimeout(function() {
     //Do the callback
     callback(response);

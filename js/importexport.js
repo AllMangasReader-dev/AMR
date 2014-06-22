@@ -39,7 +39,7 @@ function sendExtRequest(request, button, callback, backsrc) {
   }
   //Call the action
   setTimeout(function () {
-    chrome.extension.sendRequest(request, function (response) {
+    chrome.runtime.sendMessage(request, function (response) {
       //setTimeout(function() {
       //Do the callback
       callback(response);

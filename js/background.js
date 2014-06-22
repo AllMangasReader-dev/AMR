@@ -603,7 +603,7 @@ function editCategory(request, callback) {
     refreshUpdate();
     callback();
 }
-chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action == "readManga") {
         readManga(request, function () {
             sendResponse({});
