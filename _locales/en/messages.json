@@ -317,6 +317,9 @@
     "message": "Notifications",
     "description": "Title of a section about notifications"
   },
+  "options_notif_native": {
+      "message": "Use native extension notifications"
+  },
   "options_notif_chap": {
     "message": "Show browser notifications when new chapters are found.",
     "description": "Option to show browser notifications on new chapter"
