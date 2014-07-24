@@ -114,7 +114,7 @@ $(function () {
   $('#category').click(function () {viewArticle('manage category'); });
   $('#impexp').click(function () {viewArticle('overview mainelements impexp'); });
   $('.extmain').click(function () {
-    chrome.extension.sendRequest({
+    chrome.runtime.sendMessage({
       action : 'openExtensionMainPage'
     }, function (response) {});
   });

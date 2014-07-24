@@ -32,7 +32,7 @@ var menusAMR = [
 
 var dispIcons = false;
 function loadMenu(cur) {
-  chrome.extension.sendRequest({"action": "parameters"}, function(response) {
+  chrome.runtime.sendMessage({"action": "parameters"}, function(response) {
     $("#menuitems ul").empty();
     $.each(menusAMR, function(ind, val) {
       var display = true;

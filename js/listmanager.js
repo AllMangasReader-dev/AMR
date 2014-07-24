@@ -69,7 +69,7 @@ function clickOnUpdate() {
   //Get extension list
   var mglstext;
   var _self = this;
-  chrome.extension.sendRequest({action: "mangaList"}, function(res) {
+  chrome.runtime.sendMessage({action: "mangaList"}, function(res) {
     var updtServ = updateServer(tsacc, res.ts, res.haschange);
     
     var lstmerge;
@@ -903,7 +903,7 @@ function validateUpdateServer(callback) {
       if (obj.errors && !obj.ts) {
         window.location.href = "/accountlist.php";
       } else {
-        chrome.extension.sendRequest({action: "siteUpdated", ts: obj.sync}, function() {
+        chrome.runtime.sendMessage({action: "siteUpdated", ts: obj.sync}, function() {
           window.location.href = "/accountlist.php";
         });
       }
@@ -927,7 +927,7 @@ function validateUpdateExt(callback) {
   });
   
   //console.log(toSend);
-  chrome.extension.sendRequest({action: "updateFromSite", ts: tsacc, lst: toSend}, function() {
+  chrome.runtime.sendMessage({action: "updateFromSite", ts: tsacc, lst: toSend}, function() {
     window.location.href = "/accountlist.php?ext=1";
   });
 }
@@ -936,7 +936,7 @@ function validateUpdateExt(callback) {
 function replaceServerList(callback) {
   if (confirm("Are you sure to replace your online manga list with your local one ?")) {
     var toSend = [];
-    chrome.extension.sendRequest({action: "mangaList"}, function(res) {
+    chrome.runtime.sendMessage({action: "mangaList"}, function(res) {
       var exten = res.lst;
       setChapNoTot(exten);
       for (var i = 0; i < exten.length; i++) {
@@ -975,7 +975,7 @@ function replaceServerList(callback) {
           if (obj.errors && !obj.ts) {
             window.location.href = "/accountlist.php";
           } else {
-            chrome.extension.sendRequest({action: "siteUpdated", ts: obj.sync}, function() {
+            chrome.runtime.sendMessage({action: "siteUpdated", ts: obj.sync}, function() {
               //console.log(obj);
               window.location.href = "/accountlist.php?act=up";
             });
@@ -1014,7 +1014,7 @@ function replaceLocalList(callback) {
       toSend[toSend.length] = nen;
     }
     
-    chrome.extension.sendRequest({action: "replaceFromSite", ts: tsacc, lst: toSend}, function() {
+    chrome.runtime.sendMessage({action: "replaceFromSite", ts: tsacc, lst: toSend}, function() {
       window.location.href = "/accountlist.php?act=down";
     });
   } else {

@@ -29,7 +29,7 @@ function sendExtRequestS(request, button, callback, backsrc) {
         _ancSrc = button.attr("src");
         button.attr("src", chrome.extension.getURL("img/load16.gif"));
     }
-    chrome.extension.sendRequest(request, function () {
+    chrome.runtime.sendMessage(request, function () {
         callback();
         if (button.is("img")) {
             if (backsrc) {
@@ -38,14 +38,6 @@ function sendExtRequestS(request, button, callback, backsrc) {
         }
         button.removeData("currentlyClicked");
     });
-}
-function getMangaMirror(mirror) {
-    for (var i = 0; i < mirrors.length; i++) {
-        if (mirrors[i].mirrorName == mirror) {
-            return mirrors[i];
-        }
-    }
-    return null;
 }
 function switchOnglet(ong, tab) {
     var ongsTitle = getElementsByClass("onglet", document);
@@ -357,14 +349,14 @@ function fillCurrentLstSingleMg(lstCur, nbForPij) {
 }
 function bindSearchGlobActs() {
     $(".mirrorsearchimg").click(function () {
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
             action : 'opentab',
             url : $(this).data("urlmirror")
         }, function (response) {});
     });
     $(".externsearch").click(function () {
         $(".mirrorsearchimg", $(this).closest("td").next()).each(function (index) {
-            chrome.extension.sendRequest({
+            chrome.runtime.sendMessage({
                 action : 'opentab',
                 url : $(this).data("urlmirror")
             }, function (response) {});

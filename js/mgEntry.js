@@ -545,7 +545,7 @@ function doesCurrentPageMatchManga(url, activatedMirrors, callback) {
 
 function getActivatedMirrors(callback) {
   "use strict";
-  chrome.extension.sendRequest({
+  chrome.runtime.sendMessage({
     action : "activatedMirrors"
   }, function (res) {
     getActivatedMirrorsWithList(res, callback);
@@ -642,7 +642,7 @@ function waitForActivatedAndListFinish(mirrorsT, callback) {
 
 function displayNotification(wsData, params) {
   "use strict";
-  var text = "";
+/*  var text = "";
   if (wsData.revision > 0) {
     if (wsData.isnew) {
       text = "Implementation created by " + wsData.developer + ".";
@@ -668,5 +668,5 @@ function displayNotification(wsData, params) {
     setTimeout(function () {
       notif.cancel();
     }, params.notificationtimer * 1000);
-  }
+  }*/
 }

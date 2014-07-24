@@ -18,7 +18,7 @@
 */
 
 var mirrors,
-  params = chrome.extension.getBackgroundPage().getParameters();
+    params = chrome.extension.getBackgroundPage().getParameters();
 amrcsql.init();
 
 $(function() {
@@ -893,13 +893,4 @@ function resetAfter(idTest) {
     nxt = $("#" + idTest).next();
   }
   pyjama();
-}
-
-function getMangaMirror(mirror) {
-  for (var i = 0; i < mirrors.length; i++) {
-    if (mirrors[i].mirrorName == mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
 }

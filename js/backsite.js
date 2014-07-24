@@ -4,10 +4,10 @@ var states;
 
 $(function() {
   //Load mirrors definitions
-  chrome.extension.sendRequest({action: "actmirrors"}, function(res) {
+  chrome.runtime.sendMessage({action: "actmirrors"}, function(res) {
     mirrors = res;
     // access localStorage via background
-    chrome.extension.sendRequest({action: "searchMirrorsState"}, function(locms) {
+    chrome.runtime.sendMessage({action: "searchMirrorsState"}, function(locms) {
       if (locms.res != undefined) {
         states = JSON.parse(locms.res);
       }
@@ -87,7 +87,7 @@ function loadSearch(td, toSearch) {
       } else {
         // Request mirror to search.
         // call background to search res
-        chrome.extension.sendRequest({action: "searchManga", mirrorName: mirrors[i].mirrorName, search: toSearch}, function(resp) {
+        chrome.runtime.sendMessage({action: "searchManga", mirrorName: mirrors[i].mirrorName, search: toSearch}, function(resp) {
           for (var j = 0; j < resp.list.length; j++) {
             if (formatMgName(resp.list[j][0]) == (formatMgName(toSearch))) {
               var obj = {};
@@ -152,7 +152,7 @@ function addResult(tdRes, obj, name) {
 function bindEvents() {
   $(".mirrorsearchimg").unbind("click");
   $(".mirrorsearchimg").click(function() {
-    chrome.extension.sendRequest({action: 'opentab', url: $(this).data("urlmirror")}, function(response) {});
+    chrome.runtime.sendMessage({action: 'opentab', url: $(this).data("urlmirror")}, function(response) {});
   });
   $(".addsinglemg").unbind("click");
   $(".addsinglemg").click(function() {
@@ -171,16 +171,6 @@ function formatMgName(name) {
   return name.trim().replace(/[^0-9A-Za-z]/g, '').toUpperCase();
 }
 
-function getMangaMirror(mirror) {
-  for (var i = 0; i < mirrors.length; i++) {
-    if (mirrors[i].mirrorName == mirror) {
-      return mirrors[i];
-    }
-  }
-  
-  return null;
-}
-
 //Used to request background page action
 function sendExtRequestS(request, button, callback, backsrc) {
   //Prevent a second request
@@ -194,7 +184,7 @@ function sendExtRequestS(request, button, callback, backsrc) {
     button.attr("src", chrome.extension.getURL("img/load16.gif"));
   }
   //Call the action
-  chrome.extension.sendRequest(request, function() {
+  chrome.runtime.sendMessage(request, function() {
   //setTimeout(function() {
     //Do the callback
     callback();

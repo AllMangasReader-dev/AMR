@@ -1,6 +1,6 @@
 ﻿{
   "name" : "All Mangas Reader",
-  "version" : "1.5.6",
+  "version" : "1.5.7",
   "manifest_version" : 2,
   "description" : "__MSG_description__",
   "default_locale" : "en",
@@ -28,6 +28,7 @@
         "js/personalstat.js",
         "js/wssql.js",
         "js/amrcsql.js",
+        "js/lib.js",
         "js/background.js"
     ]
   },
@@ -57,6 +58,7 @@
         "css/backsite.css"
       ],
       "js" : [
+        "js/lib.js",
         "js/jquery.js",
         "js/backsite.js"
       ]

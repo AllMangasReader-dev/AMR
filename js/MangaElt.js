@@ -166,27 +166,7 @@ function MangaElt(obj) {
                   var title = mangaData.name;
                   var icon = chrome.extension.getURL('img/icon-32.png');
                   var url = mangaData.url;
-                  // If the old API is available, use it.
-                  if (window.webkitNotifications) {
-                    var notif = window.webkitNotifications.createNotification(icon, title, description);
-                    notif.url = url;
-                    notif.onclick = function() {
-                      var _url = this.url;
-                      // notif.cancel() should hide the notif once clicked
-                      notif.cancel();
-                      chrome.tabs.create({
-                        "url" : _url
-                      });
-                    };
-                    notif.show();
-                    if (parameters.notificationtimer > 0) {
-                      setTimeout(function () {
-                        notif.cancel();
-                      }, parameters.notificationtimer * 1000);
-                    }
-                  // If not, try the new notifications API.
-                  // As seen at http://blog.chromium.org/2013/05/rich-notifications-in-chrome.html
-                  } else if (chrome.notifications) {
+                  if (chrome.notifications) {
                     // The new API have no notification object, so can't save data on it.
                     // Hence, the URL must be saved under a global object, mapped by ID.
                     // (no one would like to click a manga notification and ending up opening another manga)

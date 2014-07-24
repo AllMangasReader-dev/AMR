@@ -22,21 +22,11 @@ var mangas;
 var actmirrors;
 var i = 0;
 
-function getMangaMirror(mirror) {
-  "use strict";
-  for (i = 0; i < mirrors.length; ++i) {
-    if (mirrors[i].mirrorName === mirror) {
-      return mirrors[i];
-    }
-  }
-  return null;
-}
-
 //Opens an url in new tab
 
 function openTab(urlToOpen) {
   "use strict";
-  chrome.extension.sendRequest({
+  chrome.runtime.sendMessage({
     action: "opentab",
     url: urlToOpen
   }, function () {});
@@ -116,7 +106,7 @@ function save_options() {
     obj.notificationtimer = 0;
   }
 
-  chrome.extension.sendRequest(obj, function () {});
+  chrome.runtime.sendMessage(obj, function () {});
 }
 
 function switchOnglet(ong, tab) {
@@ -159,7 +149,7 @@ function loadSelectors() {
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
         //console.log("activate " + mirrorName + " ischecked : " + $(this).is(":checked"));
         
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
           action: "activateMirror",
           mirror: mirrorName
         }, function () {});
@@ -172,7 +162,7 @@ function loadSelectors() {
       if ($(this).is(":checked")) {
         $(this).prop("checked", false);
         var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
           action: "desactivateMirror",
           mirror: mirrorName
         }, function () {});
@@ -240,7 +230,7 @@ function sendExtRequest(request, button, callback, backsrc) {
     }
   }
   //Call the action
-  chrome.extension.sendRequest(request, function (response) {
+  chrome.runtime.sendMessage(request, function (response) {
     //setTimeout(function() {
     //Do the callback
     callback(response);
@@ -334,7 +324,7 @@ function restore_mirrors() {
         trCur.addClass("desactivate");
       } else if (mirrors[i].error) {
         // desactivate the mirror
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
           action: "desactivateMirror",
           mirror: mirrors[i].mirrorName
         }, function () {});
@@ -356,13 +346,13 @@ function restore_mirrors() {
           var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
           if ($(this).is(":checked")) {
             // activate the mirror
-            chrome.extension.sendRequest({
+            chrome.runtime.sendMessage({
               action: "activateMirror",
               mirror: mirrorName
             }, function () {});
           } else {
             // desactivate the mirror
-            chrome.extension.sendRequest({
+            chrome.runtime.sendMessage({
               action: "desactivateMirror",
               mirror: mirrorName
             }, function () {});
@@ -562,10 +552,10 @@ $(function () {
   });
   // Bottom links
   $("#forumlink").click(function () {
-    chrome.extension.sendRequest({action: 'opentab', url: 'http://www.allmangasreader.com/forum/'}, function () {});
+    chrome.runtime.sendMessage({action: 'opentab', url: 'http://www.allmangasreader.com/forum/'}, function () {});
   });
   $("#communitylink").click(function () {
-    chrome.extension.sendRequest({action: 'opentab', url: 'http://community.allmangasreader.com/'}, function () {});
+    chrome.runtime.sendMessage({action: 'opentab', url: 'http://community.allmangasreader.com/'}, function () {});
   });
 });
 

@@ -24,7 +24,7 @@ var bookmarks;
 
 function openTab(urlToOpen) {
   "use strict";
-  chrome.extension.sendRequest({
+  chrome.runtime.sendMessage({
     action : "opentab",
     url : urlToOpen
   }, function (response) {});
@@ -49,7 +49,7 @@ function sendExtRequest(request, button, callback, backsrc) {
       ancSrc.appendTo(button);
     }
   }
-  chrome.extension.sendRequest(request, function () {
+  chrome.runtime.sendMessage(request, function () {
     callback();
     if (button.is("img")) {
       if (backsrc) {
@@ -1745,7 +1745,7 @@ function bindActions() {
   });
   $("#home").unbind();
   $("#home").click(function () {
-    chrome.extension.sendRequest({
+    chrome.runtime.sendMessage({
       action : "openExtensionMainPage"
     }, function (response) {});
   });
@@ -1756,12 +1756,12 @@ function bindActions() {
   $("#release").unbind();
   $("#release").click(function () {
     if (chrome.extension.isBeta()) {
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
             action : "opentab",
             url : "https://github.com/AllMangasReader-dev/AMR/commits/develop"
         })
     } else {
-        chrome.extension.sendRequest({
+        chrome.runtime.sendMessage({
             action : "opentab",
             url : "http://wiki.allmangasreader.com/changelog"
         }, function (response) {

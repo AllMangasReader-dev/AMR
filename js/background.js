@@ -603,570 +603,585 @@ function editCategory(request, callback) {
     refreshUpdate();
     callback();
 }
-chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
-    if (request.action == "readManga") {
-        readManga(request, function () {
-            sendResponse({});
-        }, true);
-    }
-    if (request.action == "readMangas") {
-        $.each(request.list, function (index, val) {
-            readManga(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "killManga") {
-        killManga(request, function () {
-            sendResponse({});
-        }, true);
-    }
-    if (request.action == "killMangas") {
-        $.each(request.list, function (index, val) {
-            killManga(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "resetManga") {
-        resetManga(request, function () {
-            sendResponse({});
-        }, true);
-    }
-    if (request.action == "resetMangas") {
-        $.each(request.list, function (index, val) {
-            resetManga(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "setMangaChapter") {
-        resetManga(request, function () {
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+      "use strict";
+        switch (request.action) {
+        case "readManga":
             readManga(request, function () {
                 sendResponse({});
             }, true);
-        }, false);
-    }
-    if (request.action == "markReadTop") {
-        markReadTop(request, function () {
-            if (request.updatesamemangas) {
-                if (getParameters().groupmgs == 1) {
-                    var mangaExist = isInMangaList(request.url);
-                    if (mangaExist != null) {
-                        var othMg = getSimilarMangaTitles(mangaExist);
-                        if (othMg.length > 0) {
-                            for (var i = 0; i < othMg.length; i++) {
-                                othMg.read = request.read;
-                            }
-                            saveList();
-                            refreshUpdate();
-                        }
-                    }
-                }
-                sendResponse({});
-            } else {
-                sendResponse({});
-            }
-        }, true);
-    }
-    if (request.action == "markReadTops") {
-        $.each(request.list, function (index, val) {
-            markReadTop(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "markUpdateTop") {
-        markUpdateTop(request, function () {
-            if (request.updatesamemangas) {
-                if (getParameters().groupmgs == 1) {
-                    var mangaExist = isInMangaList(request.url);
-                    if (mangaExist != null) {
-                        var othMg = getSimilarMangaTitles(mangaExist);
-                        if (othMg.length > 0) {
-                            for (var i = 0; i < othMg.length; i++) {
-                                othMg.update = request.update;
-                            }
-                            saveList();
-                            refreshUpdate();
-                        }
-                    }
-                }
-                sendResponse({});
-            } else {
-                sendResponse({});
-            }
-        }, true);
-    }
-    if (request.action == "markUpdateTops") {
-        $.each(request.list, function (index, val) {
-            markUpdateTop(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "addCategory") {
-        addCategory(request, function () {
-            sendResponse({});
-        }, true);
-    }
-    if (request.action == "addCategories") {
-        $.each(request.list, function (index, val) {
-            addCategory(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "removeCategory") {
-        removeCategory(request, function () {
-            sendResponse({});
-        });
-    }
-    if (request.action == "removeCatManga") {
-        removeCatManga(request, function () {
-            sendResponse({});
-        }, true);
-    }
-    if (request.action == "removeCatMangas") {
-        $.each(request.list, function (index, val) {
-            removeCatManga(val, function () {}, false);
-        });
-        saveList();
-        refreshUpdate();
-        sendResponse({});
-    }
-    if (request.action == "editCategory") {
-        editCategory(request, function () {
-            sendResponse({});
-        });
-    }
-    if (request.action == "mangaInfos") {
-        var mangaExist = isInMangaList(request.url);
-        if (mangaExist != null) {
-            sendResponse({
-                read : mangaExist.read,
-                display : mangaExist.display
+            break;
+        case "readMangas":
+            $.each(request.list, function (index, val) {
+                readManga(val, function () {}, false);
             });
-        } else {
-            sendResponse(null);
-        }
-    }
-    if (request.action == "setDisplayMode") {
-        var mangaExist = isInMangaList(request.url);
-        if (mangaExist != null) {
-            mangaExist.display = request.display;
             saveList();
             refreshUpdate();
             sendResponse({});
-        } else {
-            sendResponse({});
-        }
-    }
-    if (request.action == "parameters") {
-        sendResponse(getParameters());
-    }
-    if (request.action == "saveparameters") {
-        var obj = {};
-        obj.displayAds = request.displayAds;
-        obj.displayChapters = request.displayChapters;
-        obj.displayMode = request.displayMode;
-        obj.popupMode = request.popupMode;
-        obj.omSite = request.omSite;
-        obj.newTab = request.newTab;
-        obj.sync = request.sync;
-        obj.displayzero = request.displayzero;
-        obj.pub = request.pub;
-        obj.dev = request.dev;
-        obj.load = request.load;
-        obj.resize = request.resize;
-        obj.color = request.color;
-        obj.imgorder = request.imgorder;
-        obj.groupmgs = request.groupmgs;
-        obj.openupdate = request.openupdate;
-        obj.updatechap = request.updatechap;
-        obj.updatemg = request.updatemg;
-        obj.newbar = request.newbar;
-        obj.addauto = request.addauto;
-        obj.lrkeys = request.lrkeys;
-        obj.size = request.size;
-        obj.autobm = request.autobm;
-        obj.prefetch = request.prefetch;
-        obj.shownotifications = request.shownotifications;
-        obj.notificationtimer = request.notificationtimer;
-        obj.rightnext = request.rightnext;
-        obj.refreshspin = request.refreshspin;
-        obj.savebandwidth = request.savebandwidth;
-        obj.checkmgstart = request.checkmgstart;
-        obj.nocount = request.nocount;
-        obj.displastup = request.displastup;
-        obj.markwhendownload = request.markwhendownload;
-        obj.sendstats = request.sendstats;
-        obj.shownotifws = request.shownotifws;
-        var ancParams = getParameters();
-        obj.updated = ancParams.updated;
-        obj.syncAMR = ancParams.syncAMR;
-        if (ancParams.sync != obj.sync) {
-            if (obj.sync == 1) {
-                console.log("synchronization started (parameter update)");
-                sync.start();
-                try {
-                    _gaq.push(['_trackEvent', 'Sync', 'activate']);
-                } catch (e) {}
-
-            } else {
-                console.log("synchronization stopped (parameter update)");
-                sync.stop();
-                try {
-                    _gaq.push(['_trackEvent', 'Sync', 'desactivate']);
-                } catch (e) {}
-
-            }
-        }
-        localStorage["parameters"] = JSON.stringify(obj);
-        if (ancParams.displayzero != obj.displayzero) {
-            refreshTag();
-        }
-        if (ancParams.nocount != obj.nocount) {
-            drawIcon(false);
-            refreshTag();
-        }
-        if (ancParams.groupmgs != obj.groupmgs) {
-            refreshTag();
-        }
-        if (ancParams.updatechap != obj.updatechap) {
-            refreshAllLasts(true, false);
-        }
-        if (ancParams.updatemg != obj.updatemg) {
-            refreshMangaLists(true, false);
-        }
-        sendResponse({});
-    }
-    if (request.action == "opentab") {
-        chrome.tabs.create({
-            "url" : request.url
-        });
-        sendResponse({});
-    }
-    if (request.action == "openExtensionMainPage") {
-        chrome.tabs.create({
-            "url" : "http://www.allmangasreader.com/"
-        });
-        try {}
-        catch (e) {}
-        sendResponse({});
-    }
-    if (request.action == "save") {
-        saveList();
-        sendResponse({});
-    }
-    if (request.action == "mirrors") {
-        getFilledMirrorsDesc(activatedMirrors(), function (mirrorsDesc) {
-            sendResponse(mirrorsDesc);
-        });
-    }
-    if (request.action == "actmirrors") {
-        getActivatedMirrorsWithList({
-            list : activatedMirrors()
-        }, function (mirrorsDesc) {
-            sendResponse(mirrorsDesc);
-        });
-    }
-    if (request.action == "searchManga") {
-        if (getMangaMirror(request.mirrorName) != null) {
-            getMangaMirror(request.mirrorName).getMangaList(request.search, function (mirror, lst) {
-                request.list = lst;
-                sendResponse(request);
+            break;
+        case "killManga":
+            killManga(request, function () {
+                sendResponse({});
+            }, true);
+            break;
+        case "killMangas":
+            $.each(request.list, function (index, val) {
+                killManga(val, function () {}, false);
             });
-        } else {
-            request.list = [];
-            sendResponse(request);
-        }
-    }
-    if (request.action == "searchMirrorsState") {
-        sendResponse({
-            res : localStorage["searchMirrorsState"]
-        });
-    }
-    if (request.action == "pagematchurls") {
-        doesCurrentPageMatchManga(request.url, activatedMirrors(), function (_isOk, _mirrorName, _implementationURL) {
-            var docache = true;
-            if (!_isOk) {
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "resetManga":
+            resetManga(request, function () {
+                sendResponse({});
+            }, true);
+            break;
+        case "resetMangas":
+            $.each(request.list, function (index, val) {
+                resetManga(val, function () {}, false);
+            });
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "setMangaChapter":
+            resetManga(request, function () {
+                readManga(request, function () {
+                    sendResponse({});
+                }, true);
+            }, false);
+            break;
+        case "markReadTop":
+            markReadTop(request, function () {
+                if (request.updatesamemangas) {
+                    if (getParameters().groupmgs == 1) {
+                        var mangaExist = isInMangaList(request.url);
+                        if (mangaExist !== null) {
+                            var othMg = getSimilarMangaTitles(mangaExist);
+                            if (othMg.length > 0) {
+                                for (var i = 0; i < othMg.length; i++) {
+                                    othMg.read = request.read;
+                                }
+                                saveList();
+                                refreshUpdate();
+                            }
+                        }
+                    }
+                    sendResponse({});
+                } else {
+                    sendResponse({});
+                }
+            }, true);
+            break;
+        case "markReadTops":
+            $.each(request.list, function (index, val) {
+                markReadTop(val, function () {}, false);
+            });
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "markUpdateTop":
+            markUpdateTop(request, function () {
+                if (request.updatesamemangas) {
+                    if (getParameters().groupmgs == 1) {
+                        var mangaExist = isInMangaList(request.url);
+                        if (mangaExist !== null) {
+                            var othMg = getSimilarMangaTitles(mangaExist);
+                            if (othMg.length > 0) {
+                                for (var i = 0; i < othMg.length; i++) {
+                                    othMg.update = request.update;
+                                }
+                                saveList();
+                                refreshUpdate();
+                            }
+                        }
+                    }
+                    sendResponse({});
+                } else {
+                    sendResponse({});
+                }
+            }, true);
+            break;
+        case "markUpdateTops":
+            $.each(request.list, function (index, val) {
+                markUpdateTop(val, function () {}, false);
+            });
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "addCategory":
+            addCategory(request, function () {
+                sendResponse({});
+            }, true);
+            break;
+        case "addCategories":
+            $.each(request.list, function (index, val) {
+                addCategory(val, function () {}, false);
+            });
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "removeCategory":
+            removeCategory(request, function () {
+                sendResponse({});
+            });
+            break;
+        case "removeCatManga":
+            removeCatManga(request, function () {
+                sendResponse({});
+            }, true);
+            break;
+        case "removeCatMangas":
+            $.each(request.list, function (index, val) {
+                removeCatManga(val, function () {}, false);
+            });
+            saveList();
+            refreshUpdate();
+            sendResponse({});
+            break;
+        case "editCategory":
+            editCategory(request, function () {
+                sendResponse({});
+            });
+            break;
+        case "mangaInfos":
+            var mangaExist = isInMangaList(request.url);
+            if (mangaExist !== null) {
                 sendResponse({
-                    isOk : false
+                    read: mangaExist.read,
+                    display: mangaExist.display
                 });
-                return;
-            }
-            if (_implementationURL !== null && _implementationURL.indexOf(".php") != -1) {
-                docache = false;
-            }
-            $.loadScript(_implementationURL, docache, function (sScriptBody, textstatus_ready, jsXHR) {
-                var tabId = sender.tab.id;
-                // inject all the scripts defined in the contentScript array (at the top of this file)
-                batchInjectScripts(tabId, contentScripts, function() {
-                    chrome.tabs.executeScript(tabId, {code: sScriptBody}, function() {
-                        console.log('injected ' + _implementationURL);
-                        sendResponse({
-                            isOk: _isOk,
-                            mirrorName: _mirrorName,
-                            implURL: _implementationURL
-                        });
-                    });
-                });
-            }, function () {
-                console.log("Script " + _mirrorName + " failed to be loaded in page...");
-                sendResponse({
-                    isOk : false
-                });
-            }, 'text');
-        });
-    }
-    if (request.action == "deletepub") {
-        var params = getParameters();
-        params.pub = 0;
-        localStorage["parameters"] = JSON.stringify(params);
-        sendResponse({});
-    }
-    if (request.action == "getListManga") {
-        wssql.webdb.getMangaList(request.mirror, function (list) {
-            var mangas = list;
-            if (mangas != undefined && mangas != null && mangas.length > 0) {
-                sendResponse(mangas);
             } else {
-                if (getMangaMirror(request.mirror) != null) {
-                    getMangaMirror(request.mirror).getMangaList("", function (name, lst) {
+                sendResponse(null);
+            }
+            break;
+        case "setDisplayMode":
+            var mangaExist = isInMangaList(request.url);
+            if (mangaExist !== null) {
+                mangaExist.display = request.display;
+                saveList();
+                refreshUpdate();
+                sendResponse({});
+            } else {
+                sendResponse({});
+            }
+            break;
+        case "parameters":
+            sendResponse(getParameters());
+            break;
+        case "saveparameters":
+            var obj = {};
+            obj.displayAds = request.displayAds;
+            obj.displayChapters = request.displayChapters;
+            obj.displayMode = request.displayMode;
+            obj.popupMode = request.popupMode;
+            obj.omSite = request.omSite;
+            obj.newTab = request.newTab;
+            obj.sync = request.sync;
+            obj.displayzero = request.displayzero;
+            obj.pub = request.pub;
+            obj.dev = request.dev;
+            obj.load = request.load;
+            obj.resize = request.resize;
+            obj.color = request.color;
+            obj.imgorder = request.imgorder;
+            obj.groupmgs = request.groupmgs;
+            obj.openupdate = request.openupdate;
+            obj.updatechap = request.updatechap;
+            obj.updatemg = request.updatemg;
+            obj.newbar = request.newbar;
+            obj.addauto = request.addauto;
+            obj.lrkeys = request.lrkeys;
+            obj.size = request.size;
+            obj.autobm = request.autobm;
+            obj.prefetch = request.prefetch;
+            obj.shownotifications = request.shownotifications;
+            obj.notificationtimer = request.notificationtimer;
+            obj.rightnext = request.rightnext;
+            obj.refreshspin = request.refreshspin;
+            obj.savebandwidth = request.savebandwidth;
+            obj.checkmgstart = request.checkmgstart;
+            obj.nocount = request.nocount;
+            obj.displastup = request.displastup;
+            obj.markwhendownload = request.markwhendownload;
+            obj.sendstats = request.sendstats;
+            obj.shownotifws = request.shownotifws;
+            var ancParams = getParameters();
+            obj.updated = ancParams.updated;
+            obj.syncAMR = ancParams.syncAMR;
+            if (ancParams.sync != obj.sync) {
+                if (obj.sync == 1) {
+                    console.log("synchronization started (parameter update)");
+                    sync.start();
+                    try {
+                        _gaq.push(['_trackEvent', 'Sync', 'activate']);
+                    } catch (e) {}
+
+                } else {
+                    console.log("synchronization stopped (parameter update)");
+                    sync.stop();
+                    try {
+                        _gaq.push(['_trackEvent', 'Sync', 'desactivate']);
+                    } catch (e) {}
+
+                }
+            }
+            localStorage.parameters = JSON.stringify(obj);
+            if (ancParams.displayzero != obj.displayzero) {
+                refreshTag();
+            }
+            if (ancParams.nocount != obj.nocount) {
+                drawIcon(false);
+                refreshTag();
+            }
+            if (ancParams.groupmgs != obj.groupmgs) {
+                refreshTag();
+            }
+            if (ancParams.updatechap != obj.updatechap) {
+                refreshAllLasts(true, false);
+            }
+            if (ancParams.updatemg != obj.updatemg) {
+                refreshMangaLists(true, false);
+            }
+            sendResponse({});
+            break;
+        case "opentab":
+            chrome.tabs.create({
+                "url": request.url
+            });
+            sendResponse({});
+            break;
+        case "openExtensionMainPage":
+            chrome.tabs.create({
+                "url": "http://www.allmangasreader.com/"
+            });
+            try {} catch (e) {}
+            sendResponse({});
+            break;
+        case "save":
+            saveList();
+            sendResponse({});
+            break;
+        case "mirrors":
+            getFilledMirrorsDesc(activatedMirrors(), function (mirrorsDesc) {
+                sendResponse(mirrorsDesc);
+            });
+            break;
+        case "actmirrors":
+            getActivatedMirrorsWithList({
+                list: activatedMirrors()
+            }, function (mirrorsDesc) {
+                sendResponse(mirrorsDesc);
+            });
+            break;
+        case "searchManga":
+            if (getMangaMirror(request.mirrorName) !== null) {
+                getMangaMirror(request.mirrorName)
+                    .getMangaList(request.search, function (mirror, lst) {
+                    request.list = lst;
+                    sendResponse(request);
+                });
+            } else {
+                request.list = [];
+                sendResponse(request);
+            }
+            break;
+        case "searchMirrorsState":
+            sendResponse({
+                res: localStorage.searchMirrorsState
+            });
+            break;
+        case "pagematchurls":
+            doesCurrentPageMatchManga(request.url,
+                                      activatedMirrors(),
+                                      function (_isOk,
+                                                _mirrorName,
+                                                _implementationURL) {
+                var docache = true;
+                if (!_isOk) {
+                    sendResponse({
+                        isOk: false
+                    });
+                    return;
+                }
+                if (_implementationURL !== null &&
+                    _implementationURL.indexOf(".php") != -1) {
+                    docache = false;
+                }
+                $.loadScript(_implementationURL,
+                             docache,
+                             function (sScriptBody, textstatus_ready, jsXHR) {
+                                 var tabId = sender.tab.id;
+                                 // inject all the scripts defined in the contentScript array (at the top of this file)
+                                 batchInjectScripts(tabId, contentScripts, function () {
+                                     chrome.tabs.executeScript(tabId, {
+                                         code: sScriptBody
+                                     }, function () {
+                                         console.log('injected ' + _implementationURL);
+                                         sendResponse({
+                                             isOk: _isOk,
+                                             mirrorName: _mirrorName,
+                                             implURL: _implementationURL
+                                         });
+                                     });
+                                 });
+                             }, function () {
+                                 console.log("Script " + _mirrorName + " failed to be loaded in page...");
+                                 sendResponse({
+                                     isOk: false
+                                 });
+                             }, 'text');
+                                      });
+            break;
+        case "deletepub":
+            var params = getParameters();
+            params.pub = 0;
+            localStorage.parameters = JSON.stringify(params);
+            sendResponse({});
+            break;
+        case "getListManga":
+            wssql.webdb.getMangaList(request.mirror, function (list) {
+                var mangas = list;
+                if (mangas !== undefined && mangas !== null && mangas.length > 0) {
+                    sendResponse(mangas);
+                } else {
+                    if (getMangaMirror(request.mirror) !== null) {
+                        getMangaMirror(request.mirror).getMangaList("", function (name, lst) {
+                            sendResponse(lst);
+                        });
+                    } else {
+                        sendResponse([]);
+                    }
+                }
+            });
+            break;
+        case "getListChap":
+            var mangaExist = isInMangaList(request.url);
+            if (mangaExist === null) {
+                if (getMangaMirror(request.mirror) !== null) {
+                    getMangaMirror(request.mirror).getListChaps(request.mangaUrl, request.mangaName, null, function (lst, obj) {
                         sendResponse(lst);
                     });
                 } else {
                     sendResponse([]);
                 }
-            }
-        });
-    }
-    if (request.action == "getListChap") {
-        var mangaExist = isInMangaList(request.url);
-        if (mangaExist == null) {
-            if (getMangaMirror(request.mirror) != null) {
-                getMangaMirror(request.mirror).getListChaps(request.mangaUrl, request.mangaName, null, function (lst, obj) {
-                    sendResponse(lst);
-                });
             } else {
-                sendResponse([]);
+                sendResponse(mangaExist.listChaps);
             }
-        } else {
-            sendResponse(mangaExist.listChaps);
-        }
-    }
-    if (request.action == "nbMangaInMirror") {
-        var nb = 0;
-        for (var i = 0; i < mangaList.length; i++) {
-            if (mangaList[i].mirror == request.mirror) {
-                nb++;
-            }
-        }
-        sendResponse({
-            number : nb,
-            mirror : request.mirror
-        });
-    }
-    if (request.action == "activateMirror") {
-        activateMirror(request.mirror);
-        try {
-            _gaq.push(['_trackEvent', 'ActivateMirror', request.mirror]);
-        } catch (e) {}
-        sendResponse({});
-    }
-    if (request.action == "desactivateMirror") {
-        desactivateMirror(request.mirror);
-        try {
-            _gaq.push(['_trackEvent', 'DesactivateMirror', request.mirror]);
-        } catch (e) {}
-        sendResponse({});
-    }
-    if (request.action == "isMirrorActivated") {
-        sendResponse({
-            mirror : request.mirror,
-            activated : isMirrorActivated(request.mirror)
-        });
-    }
-    if (request.action == "activatedMirrors") {
-        var lst = activatedMirrors();
-        sendResponse({
-            list : lst
-        });
-    }
-    if (request.action == "addUpdateBookmark") {
-        addBookmark(request);
-        sendResponse({});
-    }
-    if (request.action == "deleteBookmark") {
-        deleteBookmark(request);
-        sendResponse({});
-    }
-    if (request.action == "getBookmarkNote") {
-        var noteBM = getBookmark(request);
-        sendResponse({
-            isBooked : noteBM.booked,
-            note : noteBM.note,
-            scanSrc : noteBM.scanSrc
-        });
-    }
-    if (request.action == "createContextMenu") {
-        var isFound = false;
-        if (ctxIds.length > 0) {
-            for (var i = 0; i < ctxIds.length; i++) {
-                if (ctxIds[i] == request.lstUrls[0]) {
-                    isFound = true;
-                    break;
+            break;
+        case "nbMangaInMirror":
+            var nb = 0;
+            for (var i = 0; i < mangaList.length; i++) {
+                if (mangaList[i].mirror == request.mirror) {
+                    nb++;
                 }
             }
-        }
-        if (!isFound) {
-            ctxIds[ctxIds.length] = request.lstUrls[0];
-            var id = chrome.contextMenus.create({
-                    title : translate("background_bookmark_menu"),
-                    contexts : ["image"],
-                    onclick : function (info, tab) {
+            sendResponse({
+                number: nb,
+                mirror: request.mirror
+            });
+            break;
+        case "activateMirror":
+            activateMirror(request.mirror);
+            try {
+                _gaq.push(['_trackEvent', 'ActivateMirror', request.mirror]);
+            } catch (e) {}
+            sendResponse({});
+            break;
+        case "desactivateMirror":
+            desactivateMirror(request.mirror);
+            try {
+                _gaq.push(['_trackEvent', 'DesactivateMirror', request.mirror]);
+            } catch (e) {}
+            sendResponse({});
+            break;
+        case "isMirrorActivated":
+            sendResponse({
+                mirror: request.mirror,
+                activated: isMirrorActivated(request.mirror)
+            });
+            break;
+        case "activatedMirrors":
+            var lst = activatedMirrors();
+            sendResponse({
+                list: lst
+            });
+            break;
+        case "addUpdateBookmark":
+            addBookmark(request);
+            sendResponse({});
+            break;
+        case "deleteBookmark":
+            deleteBookmark(request);
+            sendResponse({});
+            break;
+        case "getBookmarkNote":
+            var noteBM = getBookmark(request);
+            sendResponse({
+                isBooked: noteBM.booked,
+                note: noteBM.note,
+                scanSrc: noteBM.scanSrc
+            });
+            break;
+        case "createContextMenu":
+            var isFound = false;
+            if (ctxIds.length > 0) {
+                for (var i = 0; i < ctxIds.length; i++) {
+                    if (ctxIds[i] == request.lstUrls[0]) {
+                        isFound = true;
+                        break;
+                    }
+                }
+            }
+            if (!isFound) {
+                ctxIds[ctxIds.length] = request.lstUrls[0];
+                var id = chrome.contextMenus.create({
+                    title: translate("background_bookmark_menu"),
+                    contexts: ["image"],
+                    onclick: function (info, tab) {
                         chrome.tabs.executeScript(tab.id, {
-                            code : "clickOnBM(\"" + info.srcUrl + "\")"
+                            code: "clickOnBM(\"" + info.srcUrl + "\")"
                         }, function () {});
                     },
-                    targetUrlPatterns : [encodeURI(request.lstUrls[0]), request.lstUrls[0]]
+                    targetUrlPatterns: [encodeURI(request.lstUrls[0]), request.lstUrls[0]]
                 }, function () {
                     sendResponse({});
                 });
-        } else {
-            sendResponse({});
-        }
-    }
-    if (request.action == "importMangas") {
-        sendResponse({
-            out : importMangas(request.mangas, request.merge)
-        });
-    }
-    if (request.action == "importBookmarks") {
-        sendResponse({
-            out : importBookmarks(request.bookmarks, request.merge)
-        });
-    }
-    if (request.action == "hideBar") {
-        if (localStorage.isBarVisible == 1) {
-            localStorage.isBarVisible = 0;
-            console.log("hiding bar")
-        } else {
+            } else {
+                sendResponse({});
+            }
+            break;
+        case "importMangas":
+            sendResponse({
+                out: importMangas(request.mangas, request.merge)
+            });
+            break;
+        case "importBookmarks":
+            sendResponse({
+                out: importBookmarks(request.bookmarks, request.merge)
+            });
+            break;
+        case "hideBar":
+            if (localStorage.isBarVisible == 1) {
+                localStorage.isBarVisible = 0;
+                console.log("hiding bar");
+            } else {
+                localStorage.isBarVisible = 1;
+            }
+            sendResponse({
+                res: localStorage.isBarVisible
+            });
+            break;
+        case "showBar":
             localStorage.isBarVisible = 1;
-        }
-        sendResponse({
-            res : localStorage.isBarVisible
-        });
-    }
-    if (request.action == "showBar") {
-        localStorage.isBarVisible = 1;
-        sendResponse({});
-    }
-    if (request.action == "barState") {
-        if (localStorage.isBarVisible === undefined) {
-            sendResponse({
-                barVis : 1
-            });
-        } else {
-            sendResponse({
-                barVis : localStorage.isBarVisible
-            });
-        }
-    }
-    if (request.action == "getNextChapterImages") {
-        $.ajax({
-            url : request.url,
-            success : function (data) {
-                var div = document.createElement("iframe");
-                div.style.display = "none";
-                var id = "mangaNextChap";
-                var i = 0;
-                while ($("#" + id + i).size() > 0) {
-                    i++;
-                }
-                id = id + i;
-                $(div).attr("id", id);
-                document.body.appendChild(div);
-                document.getElementById(id).contentWindow.document.documentElement.innerHTML = data;
-                $(document.getElementById(id).contentWindow.document).ready(function () {
-                    var imagesUrl = getMangaMirror(request.mirrorName).getListImages(document.getElementById(id).contentWindow.document, request.url);
-                    sendResponse({
-                        images : imagesUrl
-                    });
-                    $("#" + id).remove();
-                });
-            },
-            error : function () {
+            sendResponse({});
+            break;
+        case "barState":
+            if (localStorage.isBarVisible === undefined) {
                 sendResponse({
-                    images : null
+                    barVis: 1
+                });
+            } else {
+                sendResponse({
+                    barVis: localStorage.isBarVisible
                 });
             }
-        });
-    }
-    if (request.action == "mangaList") {
-        sendResponse({
-            lst : mangaList,
-            ts : ((getParameters().syncAMR) ? getParameters().syncAMR : 0),
-            haschange : (getParameters().changesSinceSync == 1)
-        });
-    }
-    if (request.action == "updateFromSite") {
-        updateFromSite(request.lst, true);
-        refreshUpdateSyncSite(request.ts);
-        sendResponse({});
-    }
-    if (request.action == "replaceFromSite") {
-        updateFromSite(request.lst, false);
-        refreshUpdateSyncSite(request.ts);
-        sendResponse({});
-    }
-    if (request.action == "siteUpdated") {
-        refreshUpdateSyncSite(request.ts);
-        sendResponse({});
-    }
-    if (request.action == "readMgForStat") {
-        pstat.webdb.addStat(request, function (ltId) {
+            break;
+        case "getNextChapterImages":
+            $.ajax({
+                url: request.url,
+                success: function (data) {
+                    var div = document.createElement("iframe");
+                    div.style.display = "none";
+                    var id = "mangaNextChap";
+                    var i = 0;
+                    while ($("#" + id + i).size() > 0) {
+                        i++;
+                    }
+                    id = id + i;
+                    $(div).attr("id", id);
+                    document.body.appendChild(div);
+                    document.getElementById(id).contentWindow.document.documentElement.innerHTML = data;
+                    $(document.getElementById(id).contentWindow.document).ready(function () {
+                        var imagesUrl = getMangaMirror(request.mirrorName).getListImages(document.getElementById(id).contentWindow.document, request.url);
+                        sendResponse({
+                            images: imagesUrl
+                        });
+                        $("#" + id).remove();
+                    });
+                },
+                error: function () {
+                    sendResponse({
+                        images: null
+                    });
+                }
+            });
+            break;
+        case "mangaList":
             sendResponse({
-                id : ltId
+                lst: mangaList,
+                ts: ((getParameters().syncAMR) ? getParameters().syncAMR : 0),
+                haschange: (getParameters().changesSinceSync == 1)
             });
-        });
-    }
-    if (request.action == "updateMgForStat") {
-        pstat.webdb.updateStat(request.id, request.time_spent, function () {
+            break;
+        case "updateFromSite":
+            updateFromSite(request.lst, true);
+            refreshUpdateSyncSite(request.ts);
             sendResponse({});
-        });
-    }
-    if (request.action == "updateMirrors") {
-        updateMirrors(function (resp) {
-            sendResponse(resp);
-        });
-    }
-    if (request.action == "importimplementation") {
-        importImplentationFromId(request.id, function (mirrorName) {
-            updateMirrors(function () {
+            break;
+        case "replaceFromSite":
+            updateFromSite(request.lst, false);
+            refreshUpdateSyncSite(request.ts);
+            sendResponse({});
+            break;
+        case "siteUpdated":
+            refreshUpdateSyncSite(request.ts);
+            sendResponse({});
+            break;
+        case "readMgForStat":
+            pstat.webdb.addStat(request, function (ltId) {
                 sendResponse({
-                    mirror : mirrorName
+                    id: ltId
                 });
             });
-        });
-    }
-    if (request.action == "releaseimplementation") {
-        releaseImplentationFromId(request.id, function (mirrorName) {
-            updateMirrors(function () {
-                sendResponse({
-                    mirror : mirrorName
+            break;
+        case "updateMgForStat":
+            pstat.webdb.updateStat(request.id, request.time_spent, function () {
+                sendResponse({});
+            });
+            break;
+        case "updateMirrors":
+            updateMirrors(function (resp) {
+                sendResponse(resp);
+            });
+            break;
+        case "importimplementation":
+            importImplentationFromId(request.id, function (mirrorName) {
+                updateMirrors(function () {
+                    sendResponse({
+                        mirror: mirrorName
+                    });
                 });
             });
-        });
+            break;
+        case "releaseimplementation":
+            releaseImplentationFromId(request.id, function (mirrorName) {
+                updateMirrors(function () {
+                    sendResponse({
+                        mirror: mirrorName
+                    });
+                });
+            });
+            break;
+        }
+        return true;
     }
-});
+);
 function updateMirrors(_callback) {
     getMirrors(function (mirrorsT) {
         mirrors = mirrorsT;
@@ -1728,14 +1743,6 @@ function mangaListLoaded(mirror, lst) {
     wssql.webdb.empty(mirror, function () {
         wssql.webdb.storeMangaList(mirror, lst);
     });
-}
-function getMangaMirror(mirror) {
-    for (var i = 0; i < mirrors.length; i++) {
-        if (mirrors[i].mirrorName == mirror) {
-            return mirrors[i];
-        }
-    }
-    return null;
 }
 function saveList() {
     try {
