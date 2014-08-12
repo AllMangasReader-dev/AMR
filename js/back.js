@@ -36,7 +36,8 @@ var debugTimes = false;
 var timeoutAMRbar = 0;
 
 function getMirrorScript() {
-  return currentMirror;
+    "use strict";
+    return currentMirror;
 }
 
 function removeBanner() {
@@ -1289,8 +1290,8 @@ function onLoadNextImage() {
       $(this).data("nbloaded", 1);
     }
     var prog;
-    if ($(".progress", $(this)).size() === 0) {
-      prog = $("<span class='buttonAMR progress'></span>");
+    if ($(".AMRprogress", $(this)).size() === 0) {
+      prog = $("<span class='buttonAMR AMRprogress'></span>");
       prog.css("position", "relative");
       prog.css("top", "0");
       prog.css("left", "0");
@@ -1304,7 +1305,7 @@ function onLoadNextImage() {
 
       prog.appendTo($(this));
     } else {
-      prog = $(".progress", $(this));
+      prog = $(".AMRprogress", $(this));
     }
     //console.log((this[0].offsetWidth * ($(this).data("nbloaded") / $(_self).data("total"))) + " --> " + $(this).data("nbloaded") + " ; " + $(_self).data("total"));
     prog.css("width", (this[0].offsetWidth * ($(this).data("nbloaded") / $(_self).data("total"))) + "px");
