@@ -81,7 +81,7 @@ amrcsql.webdb.getWebsites = function(callback) {
         var ret = [];
         if (res.rows.length > 0) {
           for (var i = 0; i < res.rows.length; i++) {
-            if(res.rows.item(i).idext!=="undefined"){
+            if(res.rows.item(i).websites!=="undefined"){
               ret[ret.length] = {
                 id: res.rows.item(i).id, 
                 idext: res.rows.item(i).idext, 
