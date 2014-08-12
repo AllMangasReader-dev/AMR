@@ -336,295 +336,313 @@ function createDataDiv(res) {
   divData.data("name", res.name);
   divData.data("chapName", res.currentChapter);
 }
+function add_bookmark_button () {
+    "use strict";
+    var obj = {
+        action: "addUpdateBookmark",
+        mirror: $("#bookmarkData").data("mirror"),
+        url: $("#bookmarkData").data("url"),
+        chapUrl: $("#bookmarkData").data("chapUrl"),
+        type: $("#bookmarkData").data("type"),
+        name: $("#bookmarkData").data("name"),
+        chapName: $("#bookmarkData").data("chapName"),
+        note: $("#noteAMR").val()
+    };
+    if ($("#bookmarkData").data("type") !== "chapter") {
+        obj.scanUrl = $("#bookmarkData").data("scanUrl");
+        obj.scanName = $("#bookmarkData").data("scanName");
+        var imgScan = $(".spanForImg img[src='" + obj.scanUrl + "']");
+        imgScan.css("border-color", "#999999");
+        if ($("#noteAMR").val() !== "") {
+            imgScan.attr("title", "Note : " + $("#noteAMR").val());
+        }
+        imgScan.data("note", $("#noteAMR").val());
+        imgScan.data("booked", true);
+    } else {
+        $("#bookmarkData").data("note", $("#noteAMR").val());
+        if ($("#noteAMR").val() !== "") {
+            $(".bookAMR").attr("title", "Note : " + $("#noteAMR").val());
+        }
+        $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmarkred.png"));
+        $("#bookmarkData").data("chapbooked", true);
+    }
 
+    chrome.runtime.sendMessage(obj, function () {});
+    $.modal.close();
+}
+function delete_bookmark_button () {
+    "use strict";
+    var obj = {
+        action: "deleteBookmark",
+        mirror: $("#bookmarkData").data("mirror"),
+        url: $("#bookmarkData").data("url"),
+        chapUrl: $("#bookmarkData").data("chapUrl"),
+        type: $("#bookmarkData").data("type")
+    };
+    if ($("#bookmarkData").data("type") !== "chapter") {
+        obj.scanUrl = $("#bookmarkData").data("scanUrl");
+        var imgScan = $(".spanForImg img[src='" + obj.scanUrl + "']");
+        imgScan.css("border-color", "white");
+        imgScan.removeAttr("title");
+        imgScan.removeData("booked");
+    } else {
+        $(".bookAMR").removeAttr("title");
+        $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmark.png"));
+        $("#bookmarkData").removeData("chapbooked");
+    }
+
+    chrome.runtime.sendMessage(obj, function () {});
+    $.modal.close();
+}
 function writeNavigation(where, select, res, params) {
-  var div = $("<div id='bookmarkPop' style='display:none'></div>");
-  $("<h3>Bookmark</h3>").appendTo(div);
-  $("<div id='descEltAMR'></div>").appendTo(div);
-  $("<table><tr><td style='vertical-align:top'><b>Note:</b></td><td><textarea id='noteAMR' cols='50' rows='5' /></td></tr></table>").appendTo(div);
+    "use strict";
+    var div = $("<div id='bookmarkPop' style='display:none'></div>"),
+        btn = $("<a id='saveBtnAMR' class='buttonAMR'>Save</a>");
+    $("<h3>Bookmark</h3>").appendTo(div);
+    $("<div id='descEltAMR'></div>").appendTo(div);
+    $("<table><tr><td style='vertical-align:top'><b>Note:</b></td><td><textarea id='noteAMR' cols='50' rows='5' /></td></tr></table>").appendTo(div);
 
-  var btn = $("<a id='saveBtnAMR' class='buttonAMR'>Save</a>");
-  btn.click(function() {
-    var obj = {
-      action: "addUpdateBookmark",
-      mirror: $("#bookmarkData").data("mirror"),
-      url: $("#bookmarkData").data("url"),
-      chapUrl: $("#bookmarkData").data("chapUrl"),
-      type: $("#bookmarkData").data("type"),
-      name: $("#bookmarkData").data("name"),
-      chapName: $("#bookmarkData").data("chapName")
-    };
-    if ($("#bookmarkData").data("type") != "chapter") {
-      obj.scanUrl = $("#bookmarkData").data("scanUrl");
-      obj.scanName = $("#bookmarkData").data("scanName");
-    }
-    obj.note = $("#noteAMR").val();
+    btn.click(add_bookmark_button);
 
-    if ($("#bookmarkData").data("type") != "chapter") {
-      var imgScan = $(".spanForImg img[src='" + $("#bookmarkData").data("scanUrl") + "']");
-      imgScan.css("border-color", "#999999");
-      if ($("#noteAMR").val() !== "") imgScan.attr("title", "Note : " + $("#noteAMR").val());
-      imgScan.data("note", $("#noteAMR").val());
-      imgScan.data("booked", true);
-    } else {
-      $("#bookmarkData").data("note", $("#noteAMR").val());
-      if ($("#noteAMR").val() !== "") $(".bookAMR").attr("title", "Note : " + $("#noteAMR").val());
-      $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmarkred.png"));
-      $("#bookmarkData").data("chapbooked", true);
-    }
+    var btndel = $("<a id='delBtnAMR' class='buttonAMR'>Delete Bookmark</a>");
+    btndel.click(delete_bookmark_button);
+    btndel.appendTo(div);
+    btn.appendTo(div);
 
-    chrome.runtime.sendMessage(obj, function(resp) {});
-    $.modal.close();
-  });
-
-  var btndel = $("<a id='delBtnAMR' class='buttonAMR'>Delete Bookmark</a>");
-  btndel.click(function() {
-    var obj = {
-      action: "deleteBookmark",
-      mirror: $("#bookmarkData").data("mirror"),
-      url: $("#bookmarkData").data("url"),
-      chapUrl: $("#bookmarkData").data("chapUrl"),
-      type: $("#bookmarkData").data("type")
-    };
-    if ($("#bookmarkData").data("type") != "chapter") {
-      obj.scanUrl = $("#bookmarkData").data("scanUrl");
-    }
-
-    if ($("#bookmarkData").data("type") != "chapter") {
-      var imgScan = $(".spanForImg img[src='" + $("#bookmarkData").data("scanUrl") + "']");
-      imgScan.css("border-color", "white");
-      imgScan.removeAttr("title");
-      imgScan.removeData("booked");
-    } else {
-      $(".bookAMR").removeAttr("title");
-      $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmark.png"));
-      $("#bookmarkData").removeData("chapbooked");
-    }
-
-    chrome.runtime.sendMessage(obj, function(resp) {});
-    $.modal.close();
-  });
-  btndel.appendTo(div);
-  btn.appendTo(div);
-
-  var divTip = $("<div id='tipBMAMR'></div>");
-  $("<span>To bookmark a scan, right click on it and choose 'Bookmark in AMR'.</span><br /><span>To manage bookmarks, go to </span>").appendTo(divTip);
-  var aBMPage = $("<a href='#'>AMR Bookmark Page</a>");
-  aBMPage.click(function() {
-    chrome.runtime.sendMessage({action: "opentab", url: "/bookmarks.html"}, function(resp){});
-  });
-  aBMPage.appendTo(divTip);
-  divTip.appendTo(div);
-  div.appendTo($(document.body));
-
-  where.empty();
-  where.each(function(index) {
-    var selectIns;
-
-    selectIns = $(select).clone();
-    $(selectIns).css("float", "none");
-  $(selectIns).css("max-width", $(document).width() - 450 + "px");
-    selectIns.attr("value", $(select).children("option:selected").val());
-
-    selectIns.change(function () {
-      window.location.href = $("option:selected", $(this)).val();
+    var divTip = $("<div id='tipBMAMR'></div>");
+    $("<span>To bookmark a scan, right click on it and choose 'Bookmark in AMR'.</span><br /><span>To manage bookmarks, go to </span>").appendTo(divTip);
+    var aBMPage = $("<a href='#'>AMR Bookmark Page</a>");
+    aBMPage.click(function () {
+        chrome.runtime.sendMessage({
+            action: "opentab",
+            url: "/bookmarks.html"
+        }, function (resp) {});
     });
+    aBMPage.appendTo(divTip);
+    divTip.appendTo(div);
+    div.appendTo($(document.body));
 
-    var prevUrl = getMirrorScript().previousChapterUrl(selectIns, document, window.location.href);
-    if (prevUrl !== null) {
-      var aprev=$("<a id='pChapBtn" + index + "' class='buttonAMR' href='"+prevUrl+"'>Previous</a>");
-      aprev.appendTo(this);
-    }
+    where.empty();
+    where.each(function (index) {
+        var selectIns;
 
-    selectIns.appendTo(this);
+        selectIns = $(select).clone();
+        $(selectIns).css("float", "none");
+        $(selectIns).css("max-width", $(document).width() - 450 + "px");
+        selectIns.attr("value", $(select).children("option:selected").val());
 
-    var nextUrl = getMirrorScript().nextChapterUrl(selectIns, document, window.location.href);
-    if (nextUrl !== null) {
-      var anext=$("<a id='nChapBtn" + index + "' class='buttonAMR' href='"+nextUrl+"'>Next</a>");
-      anext.appendTo(this);
-      jQuery.data(document.body, "nexturltoload", nextUrl);
-    }
-
-    //Add bookmark functionality
-    var book = $("<img class='bookAMR' src='" + chrome.extension.getURL("img/bookmark.png") + "'/>");
-    book.appendTo(this);
-    book.click(function() {
-      $("#bookmarkData").data("type", "chapter");
-      $("#noteAMR").val($("#bookmarkData").data("note"));
-      if ($("#bookmarkData").data("chapbooked")) {
-        $("#delBtnAMR").show();
-      } else {
-        $("#delBtnAMR").hide();
-      }
-
-      $("#bookmarkPop").modal({focus:false, onShow: showDialog, zIndex: 10000000});
-
-    });
-    if (index === 0) {
-      var objBM = {
-        action: "getBookmarkNote",
-        mirror: getMirrorScript().mirrorName,
-        url: res.currentMangaURL,
-        chapUrl: res.currentChapterURL,
-        type: "chapter"};
-      chrome.runtime.sendMessage(objBM, function(result) {
-        if (!result.isBooked) {
-          $("#bookmarkData").data("note", "");
-          $(".bookAMR").attr("title", "Click here to bookmark this chapter");
-        } else {
-          $("#bookmarkData").data("note", result.note);
-          if (result.note !== "") $(".bookAMR").attr("title", "Note : " + result.note);
-          $("#bookmarkData").data("chapbooked", true);
-          $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmarkred.png"));
-        }
-      });
-    }
-
-    //Get specific read for currentManga
-    var _self = this;
-    chrome.runtime.sendMessage({action: "mangaInfos", url: res.currentMangaURL}, function(resp) {
-      var isRead = (resp === null ? false : (resp.read == 1));
-      var imgread = $("<img class='butamrread' src='" + chrome.extension.getURL("img/" + (!isRead ? "read_stop.png" : "read_play.png")) + "' title='" + (!isRead ? "Stop following updates for this manga" : "Follow updates for this manga") + "' />");
-      if (resp === null && params.addauto === 0) {
-        imgread.hide();
-      }
-      imgread.appendTo(_self);
-      imgread.data("mangaurl", res.currentMangaURL);
-
-      imgread.click(function() {
-        var curRead = ($(this).attr("src") == chrome.extension.getURL("img/read_play.png"));
-        var obj = {
-          action: "markReadTop",
-          url: $(this).data("mangaurl"),
-          read: (curRead ? 0 : 1),
-          updatesamemangas: true
-        };
-
-        var _but = this;
-        sendExtRequest(obj, $(this), function() {
-          if (curRead) {
-            $(_but).attr("src", chrome.extension.getURL("img/read_stop.png"));
-            $(_but).attr("title", "Stop following updates for this manga");
-          } else {
-            $(_but).attr("src", chrome.extension.getURL("img/read_play.png"));
-            $(_but).attr("title", "Follow updates for this manga");
-          }
-        }, false);
-      });
-
-
-      //Get specific mode for currentManga
-      var curmode = -1;
-      if (resp !== null && resp.display) {
-        curmode = resp.display;
-      }
-      //If not use res.mode
-      if (curmode == -1) {
-        curmode = params.displayMode;
-      }
-      //mode = 1 --> images are displayed on top of one another
-      //mode = 2 --> images are displayed two by two occidental reading mode
-      //mode = 3 --> images are displayed two by two japanese reading mode
-      var imgmode = $("<img src='" + chrome.extension.getURL("img/" + ((curmode == 1) ? "ontop.png" : ((curmode == 2) ? "righttoleft.png" : "lefttoright.png"))) + "' title='" + ((curmode == 1) ? "Scans displayed on top of each other (click to switch display mode for this manga only)" : ((curmode == 2) ? "Scans displayed as a book in occidental mode (left to right) (click to switch display mode for this manga only)" : "Scans displayed as a book in japanese mode (right to left) (click to switch display mode for this manga only)")) + "' />");
-      imgmode.appendTo(_self);
-      imgmode.data("curmode", curmode);
-      imgmode.data("mangaurl", res.currentMangaURL);
-      imgmode.click(function() {
-        var md = $(this).data("curmode");
-        var mdnext = (md  % 3) + 1;
-        var obj = {
-          action: "setDisplayMode",
-          url: $(this).data("mangaurl"),
-          display: mdnext
-        };
-        var _butMode = this;
-        sendExtRequest(obj, $(this), function() {
-          $(_butMode).data("curmode", mdnext);
-          transformImagesInBook(amrWhereScans, mdnext, $(document.body).data("amrparameters"));
-          if (mdnext == 1) {
-            $(_butMode).attr("src", chrome.extension.getURL("img/ontop.png"));
-            $(_butMode).attr("title", "Scans displayed on top of each other (click to switch display mode for this manga only)");
-          } else if (mdnext == 2) {
-            $(_butMode).attr("src", chrome.extension.getURL("img/righttoleft.png"));
-            $(_butMode).attr("title", "Scans displayed as a book in occidental mode (left to right) (click to switch display mode for this manga only)");
-          } else {
-            $(_butMode).attr("src", chrome.extension.getURL("img/lefttoright.png"));
-            $(_butMode).attr("title", "Scans displayed as a book in japanese mode (right to left) (click to switch display mode for this manga only)");
-          }
-        }, false);
-      });
-
-      var imgstop = $("<img class='butamrstop' src='" + chrome.extension.getURL("img/stop.gif") + "' title='Mark this chapter as latest chapter read' />");
-      if (resp === null && params.addauto === 0) {
-        imgstop.hide();
-      }
-      imgstop.appendTo(_self);
-      imgstop.data("mangainfo", res);
-
-      imgstop.click(function() {
-        var ret = confirm("This action will reset your reading state for this manga and this chapter will be considered as the latest you have read. Do you confirm this action ?");
-        if (ret) {
-          var obj = {"action": "setMangaChapter",
-                   "url": $(this).data("mangainfo").currentMangaURL,
-                   "mirror": getMirrorScript().mirrorName,
-                   "lastChapterReadName": $(this).data("mangainfo").currentChapter,
-                   "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
-                   "name": $(this).data("mangainfo").name};
-          sendExtRequest(obj, $(this), function() {
-          }, true);
-        }
-      });
-
-      if (params.addauto === 0 && resp === null) {
-        var imgadd = $("<img src='" + chrome.extension.getURL("img/add.png") + "' title='Add this manga to your reading list' />");
-        imgadd.appendTo(_self);
-        imgadd.data("mangainfo", res);
-
-        imgadd.click(function() {
-          var obj = {"action": "readManga",
-                   "url": $(this).data("mangainfo").currentMangaURL,
-                   "mirror": getMirrorScript().mirrorName,
-                   "lastChapterReadName": $(this).data("mangainfo").currentChapter,
-                   "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
-                   "name": $(this).data("mangainfo").name};
-          var _butadd = this;
-          sendExtRequest(obj, $(this), function() {
-            $(".butamrstop").show();
-            $(".butamrread").show();
-            $(_butadd).remove();
-          }, true);
+        selectIns.change(function () {
+            window.location.href = $("option:selected", $(this)).val();
         });
-      }
 
-      $(_self).addClass("amrbarlayout");
+        var prevUrl = getMirrorScript().previousChapterUrl(selectIns, document, window.location.href);
+        if (prevUrl !== null) {
+            var aprev = $("<a id='pChapBtn" + index + "' class='buttonAMR' href='" + prevUrl + "'>Previous</a>");
+            aprev.appendTo(this);
+        }
 
-      //TODO : change pub !!! (facebook + donate)...
-      if (params.pub == 1) {
-        var linkPub = $("<div class=\"titleAMRPub\"></div>");
-        var linkP2 = $("<span>You like reading your mangas this way with All Mangas Reader Extension, please donate !!&nbsp;&nbsp;</span><form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" style='display:inline-block;'><input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\"><input type=\"hidden\" name=\"hosted_button_id\" value=\"7GQN3EZ6KK5MU\"><input type=\"image\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\"><img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\"></form>");
-        linkP2.css("vertical-align", "middle");
-        linkP2.css("color", "red!important");
-        /*linkP2.click(function() {
-          chrome.runtime.sendMessage({action: "openExtensionMainPage"}, function(response) {});
-        });*/
-        linkP2.appendTo(linkPub);
-        var deletePub = $("<img src=\"" + chrome.extension.getURL("img/cancel.png") + "\" />");
-        deletePub.attr("title", "Remove this banner...");
-        deletePub.css("cursor", "pointer");
-        deletePub.css("vertical-align", "middle");
-        deletePub.css("margin-left", "10px");
-        deletePub.click(function() {
-          chrome.runtime.sendMessage({action: "deletepub"}, function(response) {
-            $(".titleAMRPub").remove();
-          });
+        selectIns.appendTo(this);
+
+        var nextUrl = getMirrorScript().nextChapterUrl(selectIns, document, window.location.href);
+        if (nextUrl !== null) {
+            var anext = $("<a id='nChapBtn" + index + "' class='buttonAMR' href='" + nextUrl + "'>Next</a>");
+            anext.appendTo(this);
+            jQuery.data(document.body, "nexturltoload", nextUrl);
+        }
+
+        //Add bookmark functionality
+        var book = $("<img class='bookAMR' src='" + chrome.extension.getURL("img/bookmark.png") + "'/>");
+        book.appendTo(this);
+        book.click(function () {
+            $("#bookmarkData").data("type", "chapter");
+            $("#noteAMR").val($("#bookmarkData").data("note"));
+            if ($("#bookmarkData").data("chapbooked")) {
+                $("#delBtnAMR").show();
+            } else {
+                $("#delBtnAMR").hide();
+            }
+
+            $("#bookmarkPop").modal({
+                focus: false,
+                onShow: showDialog,
+                zIndex: 10000000
+            });
+
         });
-        deletePub.appendTo(linkPub);
-        linkPub.appendTo(_self);
-      }
-      var whereNavToTrail = getMirrorScript().whereDoIWriteNavigation(document, window.location.href);
-      addTrailingLastChap($(whereNavToTrail).last());
+        if (index === 0) {
+            var objBM = {
+                action: "getBookmarkNote",
+                mirror: getMirrorScript().mirrorName,
+                url: res.currentMangaURL,
+                chapUrl: res.currentChapterURL,
+                type: "chapter"
+            };
+            chrome.runtime.sendMessage(objBM, function (result) {
+                if (!result.isBooked) {
+                    $("#bookmarkData").data("note", "");
+                    $(".bookAMR").attr("title", "Click here to bookmark this chapter");
+                } else {
+                    $("#bookmarkData").data("note", result.note);
+                    if (result.note !== "") $(".bookAMR").attr("title", "Note : " + result.note);
+                    $("#bookmarkData").data("chapbooked", true);
+                    $(".bookAMR").attr("src", chrome.extension.getURL("img/bookmarkred.png"));
+                }
+            });
+        }
+
+        //Get specific read for currentManga
+        var _self = this;
+        chrome.runtime.sendMessage({
+            action: "mangaInfos",
+            url: res.currentMangaURL
+        }, function (resp) {
+            var isRead = (resp === null ? false : (resp.read == 1));
+            var imgread = $("<img class='butamrread' src='" + chrome.extension.getURL("img/" + (!isRead ? "read_stop.png" : "read_play.png")) + "' title='" + (!isRead ? "Stop following updates for this manga" : "Follow updates for this manga") + "' />");
+            if (resp === null && params.addauto === 0) {
+                imgread.hide();
+            }
+            imgread.appendTo(_self);
+            imgread.data("mangaurl", res.currentMangaURL);
+
+            imgread.click(function () {
+                var curRead = ($(this).attr("src") == chrome.extension.getURL("img/read_play.png"));
+                var obj = {
+                    action: "markReadTop",
+                    url: $(this).data("mangaurl"),
+                    read: (curRead ? 0 : 1),
+                    updatesamemangas: true
+                };
+
+                var _but = this;
+                sendExtRequest(obj, $(this), function () {
+                    if (curRead) {
+                        $(_but).attr("src", chrome.extension.getURL("img/read_stop.png"));
+                        $(_but).attr("title", "Stop following updates for this manga");
+                    } else {
+                        $(_but).attr("src", chrome.extension.getURL("img/read_play.png"));
+                        $(_but).attr("title", "Follow updates for this manga");
+                    }
+                }, false);
+            });
+
+
+            //Get specific mode for currentManga
+            var curmode = -1;
+            if (resp !== null && resp.display) {
+                curmode = resp.display;
+            }
+            //If not use res.mode
+            if (curmode == -1) {
+                curmode = params.displayMode;
+            }
+            //mode = 1 --> images are displayed on top of one another
+            //mode = 2 --> images are displayed two by two occidental reading mode
+            //mode = 3 --> images are displayed two by two japanese reading mode
+            var imgmode = $("<img src='" + chrome.extension.getURL("img/" + ((curmode == 1) ? "ontop.png" : ((curmode == 2) ? "righttoleft.png" : "lefttoright.png"))) + "' title='" + ((curmode == 1) ? "Scans displayed on top of each other (click to switch display mode for this manga only)" : ((curmode == 2) ? "Scans displayed as a book in occidental mode (left to right) (click to switch display mode for this manga only)" : "Scans displayed as a book in japanese mode (right to left) (click to switch display mode for this manga only)")) + "' />");
+            imgmode.appendTo(_self);
+            imgmode.data("curmode", curmode);
+            imgmode.data("mangaurl", res.currentMangaURL);
+            imgmode.click(function () {
+                var md = $(this).data("curmode");
+                var mdnext = (md % 3) + 1;
+                var obj = {
+                    action: "setDisplayMode",
+                    url: $(this).data("mangaurl"),
+                    display: mdnext
+                };
+                var _butMode = this;
+                sendExtRequest(obj, $(this), function () {
+                    $(_butMode).data("curmode", mdnext);
+                    transformImagesInBook(amrWhereScans, mdnext, $(document.body).data("amrparameters"));
+                    if (mdnext == 1) {
+                        $(_butMode).attr("src", chrome.extension.getURL("img/ontop.png"));
+                        $(_butMode).attr("title", "Scans displayed on top of each other (click to switch display mode for this manga only)");
+                    } else if (mdnext == 2) {
+                        $(_butMode).attr("src", chrome.extension.getURL("img/righttoleft.png"));
+                        $(_butMode).attr("title", "Scans displayed as a book in occidental mode (left to right) (click to switch display mode for this manga only)");
+                    } else {
+                        $(_butMode).attr("src", chrome.extension.getURL("img/lefttoright.png"));
+                        $(_butMode).attr("title", "Scans displayed as a book in japanese mode (right to left) (click to switch display mode for this manga only)");
+                    }
+                }, false);
+            });
+
+            var imgstop = $("<img class='butamrstop' src='" + chrome.extension.getURL("img/stop.gif") + "' title='Mark this chapter as latest chapter read' />");
+            if (resp === null && params.addauto === 0) {
+                imgstop.hide();
+            }
+            imgstop.appendTo(_self);
+            imgstop.data("mangainfo", res);
+
+            imgstop.click(function () {
+                var ret = confirm("This action will reset your reading state for this manga and this chapter will be considered as the latest you have read. Do you confirm this action ?");
+                if (ret) {
+                    var obj = {
+                        "action": "setMangaChapter",
+                        "url": $(this).data("mangainfo").currentMangaURL,
+                        "mirror": getMirrorScript().mirrorName,
+                        "lastChapterReadName": $(this).data("mangainfo").currentChapter,
+                        "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
+                        "name": $(this).data("mangainfo").name
+                    };
+                    sendExtRequest(obj, $(this), function () {}, true);
+                }
+            });
+
+            if (params.addauto === 0 && resp === null) {
+                var imgadd = $("<img src='" + chrome.extension.getURL("img/add.png") + "' title='Add this manga to your reading list' />");
+                imgadd.appendTo(_self);
+                imgadd.data("mangainfo", res);
+
+                imgadd.click(function () {
+                    var obj = {
+                        "action": "readManga",
+                        "url": $(this).data("mangainfo").currentMangaURL,
+                        "mirror": getMirrorScript().mirrorName,
+                        "lastChapterReadName": $(this).data("mangainfo").currentChapter,
+                        "lastChapterReadURL": $(this).data("mangainfo").currentChapterURL,
+                        "name": $(this).data("mangainfo").name
+                    };
+                    var _butadd = this;
+                    sendExtRequest(obj, $(this), function () {
+                        $(".butamrstop").show();
+                        $(".butamrread").show();
+                        $(_butadd).remove();
+                    }, true);
+                });
+            }
+
+            $(_self).addClass("amrbarlayout");
+
+            //TODO : change pub !!! (facebook + donate)...
+            if (params.pub == 1) {
+                var linkPub = $("<div class=\"titleAMRPub\"></div>");
+                var linkP2 = $("<span>You like reading your mangas this way with All Mangas Reader Extension, please donate !!&nbsp;&nbsp;</span><form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" style='display:inline-block;'><input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\"><input type=\"hidden\" name=\"hosted_button_id\" value=\"7GQN3EZ6KK5MU\"><input type=\"image\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\"><img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\"></form>");
+                linkP2.css("vertical-align", "middle");
+                linkP2.css("color", "red!important");
+                /*linkP2.click(function() {
+                  chrome.runtime.sendMessage({action: "openExtensionMainPage"}, function(response) {});
+                });*/
+                linkP2.appendTo(linkPub);
+                var deletePub = $("<img src=\"" + chrome.extension.getURL("img/cancel.png") + "\" />");
+                deletePub.attr("title", "Remove this banner...");
+                deletePub.css("cursor", "pointer");
+                deletePub.css("vertical-align", "middle");
+                deletePub.css("margin-left", "10px");
+                deletePub.click(function () {
+                    chrome.runtime.sendMessage({
+                        action: "deletepub"
+                    }, function (response) {
+                        $(".titleAMRPub").remove();
+                    });
+                });
+                deletePub.appendTo(linkPub);
+                linkPub.appendTo(_self);
+            }
+            var whereNavToTrail = getMirrorScript().whereDoIWriteNavigation(document, window.location.href);
+            addTrailingLastChap($(whereNavToTrail).last());
+        });
     });
-  });
 }
 
 //Used to request background page action
@@ -672,7 +690,7 @@ function sendExtRequest(request, button, callback, backsrc) {
 function callbackListChaps(list, select) {
   var hasSelected = false;
   for (var j = 0; j < list.length; j++) {
-    var optTmp = $("<option value=\"" + list[j][1] + "\">" + list[j][0] + "</option>");
+      var optTmp = $("<option value=\"" + list[j][1] + "\">" + list[j][0] + "</option>");
     if ($(select).data("mangaCurUrl").indexOf(list[j][1]) != - 1 && !hasSelected) {
       optTmp.attr("selected", true);
       if ($(select).data("mangaCurUrl") == list[j][1]) {
