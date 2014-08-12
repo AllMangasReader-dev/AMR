@@ -81,18 +81,20 @@ amrcsql.webdb.getWebsites = function(callback) {
         var ret = [];
         if (res.rows.length > 0) {
           for (var i = 0; i < res.rows.length; i++) {
-            ret[ret.length] = {
-              id: res.rows.item(i).id, 
-              idext: res.rows.item(i).idext, 
-              objectName: res.rows.item(i).objectName, 
-              mirrorName: res.rows.item(i).mirrorName, 
-              webSites: JSON.parse(res.rows.item(i).websites), 
-              revision: res.rows.item(i).revision, 
-              developer: res.rows.item(i).developer, 
-              mirrorIcon: res.rows.item(i).icon, 
-              mirrorUrl: res.rows.item(i).url, 
-              jsCode: res.rows.item(i).code, 
-              activated: (res.rows.item(i).activated == 1), 
+            if(res.rows.item(i).websites!=="undefined"){
+              ret[ret.length] = {
+                id: res.rows.item(i).id, 
+                idext: res.rows.item(i).idext, 
+                objectName: res.rows.item(i).objectName, 
+                mirrorName: res.rows.item(i).mirrorName, 
+                webSites: JSON.parse(res.rows.item(i).websites), 
+                revision: res.rows.item(i).revision, 
+                developer: res.rows.item(i).developer, 
+                mirrorIcon: res.rows.item(i).icon, 
+                mirrorUrl: res.rows.item(i).url, 
+                jsCode: res.rows.item(i).code, 
+                activated: (res.rows.item(i).activated == 1), 
+              };
             };
           }
         }
