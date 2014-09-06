@@ -107,6 +107,11 @@ function MangaElt(obj) {
         }
       }
     }
+    
+    //if the current manga doesnt have a name, and the request does, then we fix the current name
+    if(this.name === "" && obj.name !== this.name){
+      this.name=obj.name;
+    }
 
     //This happens when incoming updates comes from sync
     //if obj.display, obj.read, obj.cats, MAJ this....
