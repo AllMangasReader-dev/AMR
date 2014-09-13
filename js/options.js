@@ -332,7 +332,6 @@ function restore_mirrors() {
       } else {
         isfound = false;
         ck = $("<input type=\"checkbox\" />");
-        dummy();
         for (j = 0; j < actmirrors.length; ++j) {
           if (actmirrors[j].mirrorName === mirrors[i].mirrorName) {
             isfound = true;
@@ -342,7 +341,6 @@ function restore_mirrors() {
         ck.prop("checked", isfound);
         ck.appendTo(tdMgs);
         ck.click(function () {
-          "use strict";
           var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
           if ($(this).is(":checked")) {
             // activate the mirror
