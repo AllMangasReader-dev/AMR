@@ -1222,12 +1222,31 @@ function getBookmark(obj) {
         note : ""
     };
 }
+
+function bookmarkHaveChapter(obj) {
+    for (var j = 0; j < bookmarks.length; j++) {
+        if (obj.mirror == bookmarks[j].mirror &&
+            obj.url == bookmarks[j].url &&
+            obj.chapUrl == bookmarks[j].chapUrl &&
+            obj.type == bookmarks[j].type) {
+            if (obj.type == "chapter" ||
+                obj.scanUrl == bookmarks[j].scanUrl) {
+                return j;
+            }
+        }
+    }
+    return -1;
+}
+
 function addBookmark(obj) {
     var isFound = false;
     var posFound;
     if (bookmarks.length > 0) {
         for (var j = 0; j < bookmarks.length; j++) {
-            if (obj.mirror == bookmarks[j].mirror && obj.url == bookmarks[j].url && obj.chapUrl == bookmarks[j].chapUrl && obj.type == bookmarks[j].type) {
+            if (obj.mirror == bookmarks[j].mirror &&
+                obj.url == bookmarks[j].url &&
+                obj.chapUrl == bookmarks[j].chapUrl &&
+                obj.type == bookmarks[j].type) {
                 if (obj.type == "chapter") {
                     isFound = true;
                     posFound = j;
@@ -1242,6 +1261,7 @@ function addBookmark(obj) {
             }
         }
     }
+    //if (bookmarkHaveChapter(obj) = -1) {
     if (!isFound) {
         bookmarks[bookmarks.length] = {
             mirror : obj.mirror,
