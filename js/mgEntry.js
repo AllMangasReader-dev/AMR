@@ -16,9 +16,12 @@
   along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-var amrc_repository = "https://ssl10.ovh.net/~allmanga/community/latest_v2/";
-var amrc_root = "https://ssl10.ovh.net/~allmanga/community/";
+var amrc_repository        = "https://ssl10.ovh.net/~allmanga/community/latest_v2/";
+var amrc_root              = "https://ssl10.ovh.net/~allmanga/community/";
 var amrc_repository_backup = "https://raw.github.com/AllMangasReader-dev/mirrors/master/";
+
+/*** CONFIG OPTIONS ***/
+var localMirrors = [];
 
 //##############################################################################
 // Load websites description and code in one array. Do first load if necessary.
@@ -54,6 +57,7 @@ function getMirrorsDescription(callback) {
           });
           break;
         }
+        websites[i].jsCode = ($.inArray(websites[i].mirrorName, localMirrors) !== -1 ? chrome.extension.getURL('js/mirrors/' + websites[i].mirrorName + '.js') : websites[i].jsCode);
       }
       if (!mustUpdate) {
         callback(websites);
@@ -483,7 +487,7 @@ function loadJSFromRepositoryForMirrors(list, pos, input) {
     console.log(input);
     list[pos] = {
       loadedscript : true,
-      error : "Script " + input.mirrorName + " failed to be loaded..."
+      error : "Script " + input.mirrorName + " failed to be loaded...  || "+input.jsCode
     };
   });
 }
