@@ -227,6 +227,8 @@ function init() {
                 lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "submanga.me", "submanga.com");
                 lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.mangafox.com", "mangafox.me");
                 lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.mangafox.com", "mangafox.me");
+                lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.batoto.net", "bato.to");
+                lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.batoto.net", "bato.to");
                 mangaList[i] = new MangaElt(lstTmp[i]);
             }
         }
