@@ -57,7 +57,10 @@ function getMirrorsDescription(callback) {
           });
           break;
         }
-        websites[i].jsCode = ($.inArray(websites[i].mirrorName, localMirrors) !== -1 ? chrome.extension.getURL('js/mirrors/' + websites[i].mirrorName + '.js') : websites[i].jsCode);
+        if($.inArray(websites[i].objectName, localMirrors) !== -1) {
+          websites[i].jsCode = chrome.extension.getURL('js/mirrors/' + websites[i].objectName + '.js');
+          console.log('Injected local js: '+'js/mirrors/' + websites[i].objectName + '.js');
+        }
       }
       if (!mustUpdate) {
         callback(websites);
