@@ -227,6 +227,8 @@ function init() {
                 lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "submanga.me", "submanga.com");
                 lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.mangafox.com", "mangafox.me");
                 lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.mangafox.com", "mangafox.me");
+                lstTmp[i].url = replaceInUrls(lstTmp[i].url, "www.batoto.net", "bato.to");
+                lstTmp[i].lastChapterReadURL = replaceInUrls(lstTmp[i].lastChapterReadURL, "www.batoto.net", "bato.to");
                 mangaList[i] = new MangaElt(lstTmp[i]);
             }
         }
@@ -1222,27 +1224,25 @@ function getBookmark(obj) {
         note : ""
     };
 }
-function addBookmark(obj) {
-    var isFound = false;
-    var posFound;
-    if (bookmarks.length > 0) {
-        for (var j = 0; j < bookmarks.length; j++) {
-            if (obj.mirror == bookmarks[j].mirror && obj.url == bookmarks[j].url && obj.chapUrl == bookmarks[j].chapUrl && obj.type == bookmarks[j].type) {
-                if (obj.type == "chapter") {
-                    isFound = true;
-                    posFound = j;
-                    break;
-                } else {
-                    if (obj.scanUrl == bookmarks[j].scanUrl) {
-                        isFound = true;
-                        posFound = j;
-                        break;
-                    }
-                }
+
+function bookmarkHaveChapter(obj) {
+    for (var j = 0; j < bookmarks.length; j++) {
+        if (obj.mirror == bookmarks[j].mirror &&
+            obj.url == bookmarks[j].url &&
+            obj.chapUrl == bookmarks[j].chapUrl &&
+            obj.type == bookmarks[j].type) {
+            if (obj.type == "chapter" ||
+                obj.scanUrl == bookmarks[j].scanUrl) {
+                return j;
             }
         }
     }
-    if (!isFound) {
+    return -1;
+}
+
+function addBookmark(obj) {
+    var p = bookmarkHaveChapter(obj);
+    if (p = -1) {
         bookmarks[bookmarks.length] = {
             mirror : obj.mirror,
             url : obj.url,
@@ -1255,32 +1255,14 @@ function addBookmark(obj) {
             note : obj.note
         };
     } else {
-        bookmarks[posFound].note = obj.note;
+        bookmarks[p].note = obj.note;
     }
     localStorage["bookmarks"] = JSON.stringify(bookmarks);
 }
 function deleteBookmark(obj) {
-    var isFound = false;
-    var posFound;
-    if (bookmarks.length > 0) {
-        for (var j = 0; j < bookmarks.length; j++) {
-            if (obj.mirror == bookmarks[j].mirror && obj.url == bookmarks[j].url && obj.chapUrl == bookmarks[j].chapUrl && obj.type == bookmarks[j].type) {
-                if (obj.type == "chapter") {
-                    isFound = true;
-                    posFound = j;
-                    break;
-                } else {
-                    if (obj.scanUrl == bookmarks[j].scanUrl) {
-                        isFound = true;
-                        posFound = j;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    if (isFound) {
-        bookmarks.remove(posFound, posFound);
+    var p = bookmarkHaveChapter(obj);
+    if (p > -1) {
+        bookmarks.remove(p, p);
         localStorage["bookmarks"] = JSON.stringify(bookmarks);
     }
 }
@@ -2086,24 +2068,8 @@ function importBookmarks(bms, merge) {
         var isFound = false;
         var posFound;
         var obj = lstTmp[i];
-        if (bookmarks.length > 0) {
-            for (var j = 0; j < bookmarks.length; j++) {
-                if (obj.mirror == bookmarks[j].mirror && obj.url == bookmarks[j].url && obj.chapUrl == bookmarks[j].chapUrl && obj.type == bookmarks[j].type) {
-                    if (obj.type == "chapter") {
-                        isFound = true;
-                        posFound = j;
-                        break;
-                    } else {
-                        if (obj.scanUrl == bookmarks[j].scanUrl) {
-                            isFound = true;
-                            posFound = j;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (!isFound) {
+        var p = bookmarkHaveChapter(obj);
+        if (p = -1) {
             textOut += "\t  --> " + translate("background_impexp_new_bm") + "\n";
             bookmarks[bookmarks.length] = {
                 mirror : obj.mirror,
@@ -2118,7 +2084,7 @@ function importBookmarks(bms, merge) {
             };
         } else {
             textOut += "\t  --> " + translate("background_impexp_bm_merge") + "\n";
-            bookmarks[posFound].note = obj.note;
+            bookmarks[p].note = obj.note;
         }
     }
     localStorage["bookmarks"] = JSON.stringify(bookmarks);

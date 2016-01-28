@@ -332,7 +332,6 @@ function restore_mirrors() {
       } else {
         isfound = false;
         ck = $("<input type=\"checkbox\" />");
-        dummy();
         for (j = 0; j < actmirrors.length; ++j) {
           if (actmirrors[j].mirrorName === mirrors[i].mirrorName) {
             isfound = true;
@@ -342,7 +341,6 @@ function restore_mirrors() {
         ck.prop("checked", isfound);
         ck.appendTo(tdMgs);
         ck.click(function () {
-          "use strict";
           var mirrorName = $(".mirrorName", $(this).parent().parent()).attr("name");
           if ($(this).is(":checked")) {
             // activate the mirror
@@ -363,7 +361,12 @@ function restore_mirrors() {
     }
   }
   $(".discuss").click(function () {
-    openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
+      var amrc_alias = "https://community.allmangasreader.com/";
+      if (amrc_root.match(/ssl10\.ovh\.net/)) {
+          openTab(amrc_alias + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
+      } else {
+          openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
+      }
   });
   $(".comebacktorelease").click(function () {
     var req = {
