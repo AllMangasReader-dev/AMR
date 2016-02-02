@@ -20,7 +20,9 @@ var amrc_repository        = "https://ssl10.ovh.net/~allmanga/community/latest_v
 var amrc_root              = "https://ssl10.ovh.net/~allmanga/community/";
 var amrc_repository_backup = "https://raw.github.com/AllMangasReader-dev/mirrors/master/";
 
-/*** CONFIG OPTIONS ***/
+/*** LOCAL LOADING ***/
+//To enable local loading, you must add "'unsafe-eval'" to "content_security_policy" in the manifest.json. This is not enabled by default due to security reasons.
+//How to use: Put mirror file in js/mirrors/, add filename (without ext) to localMirrors. Reload extension.
 var localMirrors = [];
 
 //##############################################################################
