@@ -1426,10 +1426,10 @@ function setKeys() {
       if (e.which == 83) { //S
         window.scrollBy(0, 40);
       }
-      if (e.which == 107) { //+
+      if (e.which == 107 || e.which == 187) { //+
         zoomin();
       }
-      if (e.which == 109) { //-
+      if (e.which == 109 || e.which == 189) { //-
          zoomout();
       }
       if (e.which == 66) { //b
