@@ -362,7 +362,6 @@ function restore_mirrors() {
   }
   $(".discuss").click(function () {
       openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
-      }
   });
   $(".comebacktorelease").click(function () {
     var req = {
