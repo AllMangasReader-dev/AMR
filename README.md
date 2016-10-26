@@ -46,3 +46,7 @@ comply with manifest v2 rules as can be seen here:
 https://code.google.com/p/google-visualization-api-issues/issues/detail?id=978
 
 See COPYING and file headers for license info
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/AllMangasReader-dev/amr/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

@@ -16,8 +16,8 @@
   along with All Mangas Reader.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-var amrc_repository        = "https://ssl10.ovh.net/~allmanga/community/latest_v2/";
-var amrc_root              = "https://ssl10.ovh.net/~allmanga/community/";
+var amrc_repository        = "https://community.allmangasreader.com/latest_v2/";
+var amrc_root              = "https://community.allmangasreader.com/latest_v2/";
 var amrc_repository_backup = "https://raw.github.com/AllMangasReader-dev/mirrors/master/";
 
 /*** LOCAL LOADING ***/

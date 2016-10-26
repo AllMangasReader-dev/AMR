@@ -361,11 +361,7 @@ function restore_mirrors() {
     }
   }
   $(".discuss").click(function () {
-      var amrc_alias = "https://community.allmangasreader.com/";
-      if (amrc_root.match(/ssl10\.ovh\.net/)) {
-          openTab(amrc_alias + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
-      } else {
-          openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
+      openTab(amrc_root + "comments.php?type=1&from=home&id=" + $(this).closest("td").data("idext"));
       }
   });
   $(".comebacktorelease").click(function () {
