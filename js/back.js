@@ -968,6 +968,7 @@ function onErrorImage() {
       //== loadImage
       $(imgSave).data("urlToLoad", $(this).data("urlToLoad"));
       $(imgSave).css("border", "5px solid white");
+      $(imgSave).addClass("imageAMR");
       $(imgSave).load(onLoadImage);
       $(imgSave).error(onErrorImage);
       getMirrorScript().getImageFromPageAndWrite($(this).data("urlToLoad"), imgSave, document, window.location.href);
